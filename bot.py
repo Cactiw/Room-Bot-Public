@@ -676,6 +676,7 @@ def remove_trigger(bot, update):
             if row:
                 print(row)
             bot.send_message(chat_id=update.message.chat_id, text='Триггер успешно удалён')
+            cache_full()
 
 def add_admin(bot, update):
     mes = update.message
@@ -2423,7 +2424,7 @@ def cache_full():
         triggers_in.append(row[0])
 
         row = cursor.fetchone()
-    print(triggers_in)
+    #print(triggers_in)
     return
 
 
