@@ -45,7 +45,7 @@ updater = Updater(token=Production_token) # Токен API к Telegram        # 
 dispatcher = updater.dispatcher
 
 #Подключаем базу данных, выставляем кодировку
-conn = MySQLdb.connect(MYSQL_creditals)
+conn = MySQLdb.connect(MYSQL_creditals['host'], MYSQL_creditals['user'], MYSQL_creditals['pass'], MYSQL_creditals['db'])
 cursor = conn.cursor()
 conn.set_character_set('utf8mb4')
 cursor.execute('SET NAMES utf8mb4;')
@@ -2078,7 +2078,7 @@ def textMessage(bot, update):
 
     #Поиск и вывод триггеров в сообщении
 
-    if mes.text in triggers_in:
+    if mes.text.lower() in triggers_in:
         request = "SELECT trigger_out, type FROM triggers WHERE (chat_id = '{0}' OR chat_id = 0) AND trigger_in = '{1}'".format(mes.chat_id, trigger_mes.lower())
         cursor.execute(request)
         row = cursor.fetchone()
@@ -2415,6 +2415,7 @@ def stats_send(bot, update):
 
 
 def cache_full():
+    triggers_in.clear()
     __request = "select trigger_in from triggers"
     cursor.execute(__request)
     row = cursor.fetchone()
@@ -2422,6 +2423,8 @@ def cache_full():
         triggers_in.append(row[0])
 
         row = cursor.fetchone()
+    print(triggers_in)
+    return
 
 
 
