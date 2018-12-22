@@ -20,7 +20,10 @@ import threading
 import sys
 
 from mwt import MWT     # Для кэширования
-from config import MYSQL_creditals, Production_token, DEV_token
+from work_materials.globals import *
+from libs.chat_stats import *
+
+from bin.chat_stats import *
 
 status = 0
 globalstatus = 0
@@ -39,23 +42,10 @@ ranks_specials = ['','🎗','🎖']
 
 triggers_in = []
 
-updater = Updater(token=Production_token) # Токен API к Telegram        # Сам бот
-#updater = Updater(token=DEV_token) # Токен API к Telegram         # DEV - версия
+all_chats_stats = ChatStats(0, None, 0, 0, 0, 0, 0, 0, 0, 0)
+all_chats_stats.update_from_database()
 
-dispatcher = updater.dispatcher
-
-#Подключаем базу данных, выставляем кодировку
-conn = MySQLdb.connect(MYSQL_creditals['host'], MYSQL_creditals['user'], MYSQL_creditals['pass'], MYSQL_creditals['db'])
-cursor = conn.cursor()
-conn.set_character_set('utf8mb4')
-cursor.execute('SET NAMES utf8mb4;')
-cursor.execute('SET CHARACTER SET utf8mb4;')
-cursor.execute('SET character_set_connection=utf8mb4;')
-
-cursor_2 = conn.cursor()
-cursor_2.execute('SET NAMES utf8mb4;')
-cursor_2.execute('SET CHARACTER SET utf8mb4;')
-cursor_2.execute('SET character_set_connection=utf8mb4;')
+stats.update({0 : all_chats_stats})
 
 
 ######### a.read().split() - выдаёт массив строк, из файла . которые были разделены пробелом или(может быть) \n
@@ -2415,6 +2405,20 @@ def stats_send(bot, update):
 
 
 
+def stats_count(bot, update):
+    data = stats.get(update.message.chat_id)
+    if data is None:
+        title = update.message.chat.title
+        if title is None:
+            title = update.message.chat.username
+        data = ChatStats(update.message.chat_id, title, 0, 0, 0, 0, 0, 0, 0, 0)
+        data.update_from_database()
+        stats.update({update.message.chat_id : data})
+    data.process_message(update.message)
+    data = stats.get(0)
+    data.process_message(update.message)
+
+
 def cache_full():
     triggers_in.clear()
     __request = "select trigger_in from triggers"
@@ -2763,6 +2767,11 @@ dispatcher.add_handler(CommandHandler("stats", battle_stats_send, filters=Filter
 
 
 
+dispatcher.add_handler(MessageHandler(filter_any_message, stats_count), group=1)
+dispatcher.add_handler(CommandHandler("chat_stats", chat_stats_send, filters=Filters.user(user_id=231900398)))
+dispatcher.add_handler(CommandHandler("current_chat_stats", current_chat_stats_send, filters=Filters.user(user_id=231900398)))
+
+
 
 dispatcher.add_handler(text_message_handler)
 
@@ -2782,6 +2791,9 @@ job_silence = job.run_once(empty, 0)
 
 # Останавливаем бота, если были нажаты Ctrl + C
 updater.idle()
+# Загружаем необновлённую статистику в базу данных
+update_chat_stats()
+
 # Разрываем подключение.
 conn.close()
 #print("COMPLETED, FEEL SAFE TO CLOSE THE BOT")
