@@ -16,8 +16,8 @@ admin_ids = [231900398]
 
 
 
-#updater = Updater(token=Production_token) # Токен API к Telegram        # Сам бот
-updater = Updater(token=DEV_token) # Токен API к Telegram         # DEV - версия
+updater = Updater(token=Production_token) # Токен API к Telegram        # Сам бот
+#updater = Updater(token=DEV_token) # Токен API к Telegram         # DEV - версия
 
 dispatcher = updater.dispatcher
 
