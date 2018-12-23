@@ -23,7 +23,11 @@ from mwt import MWT     # Для кэширования
 from work_materials.globals import *
 from libs.chat_stats import *
 
+from libs.filters.todo import *
+
 from bin.chat_stats import *
+from bin.todo import *
+
 
 status = 0
 globalstatus = 0
@@ -42,7 +46,7 @@ ranks_specials = ['','🎗','🎖']
 
 triggers_in = []
 
-all_chats_stats = ChatStats(0, None, 0, 0, 0, 0, 0, 0, 0, 0)
+all_chats_stats = ChatStats(0, "all", 0, 0, 0, 0, 0, 0, 0, 0)
 all_chats_stats.update_from_database()
 
 stats.update({0 : all_chats_stats})
@@ -2762,6 +2766,12 @@ dispatcher.add_handler(MessageHandler(Filters.command & filter_play_song, play_s
 dispatcher.add_handler(MessageHandler(Filters.command & filter_remove_song, remove_song))
 
 dispatcher.add_handler(CommandHandler("stats", battle_stats_send, filters=Filters.user(user_id=231900398)))
+
+dispatcher.add_handler(CommandHandler("todo", todo, filters=Filters.user(user_id=231900398)))
+dispatcher.add_handler(CommandHandler("todo_list", todo_list, filters=Filters.user(user_id=231900398)))
+dispatcher.add_handler(MessageHandler(Filters.command & filter_complete_todo, complete_todo))
+
+
 
 
 
