@@ -9,7 +9,7 @@ import MySQLdb
 import psycopg2
 
 
-
+from mwt import MWT     # Для кэширования
 from config import psql_creditals, Production_token, DEV_token
 
 
@@ -26,16 +26,13 @@ dispatcher = updater.dispatcher
 #conn = MySQLdb.connect(MYSQL_creditals['host'], MYSQL_creditals['user'], MYSQL_creditals['pass'], MYSQL_creditals['db'])
 conn = psycopg2.connect("dbname={0} user={1} password={2}".format(psql_creditals['dbname'], psql_creditals['user'], psql_creditals['pass']))
 cursor = conn.cursor()
-"""conn.set_character_set('utf8mb4')
-cursor.execute('SET NAMES utf8mb4;')
-cursor.execute('SET CHARACTER SET utf8mb4;')
-cursor.execute('SET character_set_connection=utf8mb4;')
 
-cursor_2 = conn.cursor()
-cursor_2.execute('SET NAMES utf8mb4;')
-cursor_2.execute('SET CHARACTER SET utf8mb4;')
-cursor_2.execute('SET character_set_connection=utf8mb4;')
-"""
 cursor_2 = conn.cursor()
 
 stats = {}
+
+
+@MWT(timeout=60*60)
+def get_admin_ids(bot, chat_id):
+    """Returns a list of admin IDs for a given chat. Results are cached for 1 hour."""
+    return [admin.user.id for admin in bot.get_chat_administrators(chat_id)]
