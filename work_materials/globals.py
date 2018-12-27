@@ -11,19 +11,19 @@ import psycopg2
 
 from mwt import MWT     # Для кэширования
 from config import psql_creditals, Production_token, DEV_token
+from libs.bot_async_messaging import AsyncBot
+from libs.updater_async import AsyncUpdater
 
 
 admin_ids = [231900398]
 
 
-
-updater = Updater(token=Production_token) # Токен API к Telegram        # Сам бот
-#updater = Updater(token=DEV_token) # Токен API к Telegram         # DEV - версия
+bot = AsyncBot(token=Production_token)
+updater = AsyncUpdater(bot = bot)
 
 dispatcher = updater.dispatcher
 
 #Подключаем базу данных, выставляем кодировку
-#conn = MySQLdb.connect(MYSQL_creditals['host'], MYSQL_creditals['user'], MYSQL_creditals['pass'], MYSQL_creditals['db'])
 conn = psycopg2.connect("dbname={0} user={1} password={2}".format(psql_creditals['dbname'], psql_creditals['user'], psql_creditals['pass']))
 cursor = conn.cursor()
 
