@@ -12,12 +12,11 @@ logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s
 
 import time
 import datetime
-
-import MySQLdb
-
 import threading
 
 import sys
+
+from psycopg2 import ProgrammingError
 
 from mwt import MWT     # Для кэширования
 from work_materials.globals import *
@@ -110,9 +109,6 @@ class Trigger:
             request = "INSERT INTO triggers(trigger_in, trigger_out, type, chat_id, creator, date_created) VALUES ('{0}', '{1}', '{2}', '{3}', '{4}', '{5}')".format(incoming.text.lower()[13:], str(self.text), self.type, incoming.chat_id, incoming.from_user.username, time.strftime('%Y-%m-%d %H:%M:%S'))
         cursor.execute(request)
         conn.commit()
-        row = cursor.fetchone()
-        if row != None:
-            print(row)
         cache_full()
 
 
@@ -176,9 +172,6 @@ def add_pin(bot, update):
     request = "INSERT INTO pins(chat_id, chat_name) VALUES('{0}', '{1}')".format(mes.chat_id, mes.chat.title)
     cursor.execute(request)
     conn.commit()
-    row = cursor.fetchone()
-    if row != None:
-        print(row)
     bot.send_message(chat_id=update.message.chat_id, text='Беседа успешо подключена к рассылке')
 
 
@@ -217,9 +210,6 @@ def pinset(bot, update):
     request = "UPDATE pins SET enabled = '{0}' WHERE pin_id = '{1}'".format(mes1[2], mes1[1])
     cursor.execute(request)
     conn.commit()
-    row = cursor.fetchone()
-    if row != None:
-        print(row)
     bot.send_message(chat_id=update.message.chat_id, text='Выполнено')
 
 
@@ -230,9 +220,6 @@ def pinpin(bot, update):
     request = "UPDATE pins SET pin = '{0}' WHERE pin_id = '{1}'".format(mes1[2], mes1[1])
     cursor.execute(request)
     conn.commit()
-    row = cursor.fetchone()
-    if row != None:
-        print(row)
     bot.send_message(chat_id=update.message.chat_id, text='Выполнено')
 
 def pinmute(bot, update):
@@ -241,9 +228,6 @@ def pinmute(bot, update):
     request = "UPDATE pins SET disable_notification = '{0}' WHERE pin_id = '{1}'".format(mes1[2], mes1[1])
     cursor.execute(request)
     conn.commit()
-    row = cursor.fetchone()
-    if row != None:
-        print(row)
     bot.send_message(chat_id=update.message.chat_id, text='Выполнено')
 
 
@@ -344,9 +328,6 @@ def add_silent(bot, update):
     request = "INSERT INTO silent(chat_id, chat_name) VALUES('{0}', '{1}')".format(mes.chat_id, mes.chat.title)
     cursor.execute(request)
     conn.commit()
-    row = cursor.fetchone()
-    if row != None:
-        print(row)
     bot.send_message(chat_id=update.message.chat_id, text='Беседа успешо добавлена к тишине')
 
 
@@ -511,9 +492,6 @@ def sil_run(bot, update):
     request = "UPDATE silent SET enabled = '{0}' WHERE silent_id = '{1}'".format(mes1[3], mes1[2])
     cursor.execute(request)
     conn.commit()
-    row = cursor.fetchone()
-    if row != None:
-        print(row)
     bot.send_message(chat_id=update.message.chat_id, text='Выполнено')
 
 
@@ -666,9 +644,6 @@ def remove_trigger(bot, update):
             request = "DELETE FROM triggers WHERE trigger_in = '{0}' AND (chat_id = '{1}' OR chat_id = 0)".format(mes.text[16:], mes.chat_id)
             cursor.execute(request)
             conn.commit()
-            row = cursor.fetchone()
-            if row:
-                print(row)
             bot.send_message(chat_id=update.message.chat_id, text='Триггер успешно удалён')
             cache_full()
 
@@ -683,9 +658,6 @@ def add_admin(bot, update):
         request = "INSERT INTO admins(user_id, user_name) VALUES ('{0}', '{1}')".format(mes.reply_to_message.from_user.id, mes.reply_to_message.from_user.username)
         cursor.execute(request)
         conn.commit()
-        row = cursor.fetchone()
-        if row != None:
-            print(row)
 
         response = 'Админ добавлен'
         bot.send_message(chat_id=update.message.chat_id, text=response)
@@ -1252,9 +1224,6 @@ def setdr(bot, update):#Задание дня рождения
     request = "UPDATE users SET birthday = '{0}' WHERE room_bot.users.telegram_id = '{1}'".format(a, mes.from_user.id)
     cursor.execute(request)
     conn.commit()
-    row = cursor.fetchone()
-    if row != None:
-        print(row)
     bot.send_message(chat_id=update.message.chat_id, text='День рождения обновлён')
 
 class Dr_user:
@@ -1930,16 +1899,18 @@ def sql(bot, update, user_data):
         bot.send_message(chat_id=mes.chat_id, text=response)
         return
     conn.commit()
-    row = cursor.fetchone()
+    row = None
+    try:
+        row = cursor.fetchone()
+    except ProgrammingError:
+        bot.send_message(chat_id=mes.chat_id, text="Пустой ответ. Успешная операция, или таких строк не найдено")
+        return
     response = ""
     while row:
         for i in range(0, len(row)):
             response += str(row[i]) + " "
         row = cursor.fetchone()
         response += "\n\n"
-    if response is None:
-        bot.send_message(chat_id=mes.chat_id, text="Пустой ответ. Успешная операция, или таких строк не найдено")
-        return
     bot.send_message(chat_id=mes.chat_id, text=response)
 
 
@@ -2220,9 +2191,6 @@ def textMessage(bot, update):
                 request = "INSERT INTO users(telegram_id, telegram_username, user_castle, username, guild, user_lvl, user_attack, user_defense, last_update) VALUES ('{0}', '{1}', '{2}', '{3}', '{4}', '{5}', '{6}', '{7}', '{8}')".format(mes.from_user.id, mes.from_user.username, mes.text[0], username, guild, lvl, attack, defense, time.strftime('%Y-%m-%d %H:%M:%S'))
                 cursor.execute(request)
                 conn.commit()
-                row = cursor.fetchone()
-                if row != None:
-                    print(row)
                 bot.send_message(chat_id=update.message.chat_id, text='Профиль успешно добавлен')
             else:
                 username = mes.text[1:].split('\n')[0]
@@ -2238,9 +2206,6 @@ def textMessage(bot, update):
                 request = "UPDATE users SET telegram_id='{0}', telegram_username = '{1}',user_castle='{2}', username='{3}', guild = '{4}', user_lvl='{5}', user_attack='{6}', user_defense='{7}', last_update='{8}' WHERE telegram_id = '{9}'".format(mes.from_user.id, mes.from_user.username,mes.text[0], username, guild, lvl, attack, defense, time.strftime('%Y-%m-%d %H:%M:%S'), mes.from_user.id)
                 cursor.execute(request)
                 conn.commit()
-                row = cursor.fetchone()
-                if row != None:
-                    print(row)
 
                 bot.send_message(chat_id=-1001197381190, text='Профиль успешно обновлён для пользователя @' + mes.from_user.username)
                 try:
@@ -2323,7 +2288,6 @@ def textMessage(bot, update):
                                   " '{5}', '{6}', '{7}', '{8}', '{9}', '{10}', '{11}', '{12}')".format(row[0], battle_id, time.strftime('%Y-%m-%d %H:%M:%S'), attack, defense, lvl, exp, gold, stock, critical, guardian, additional_attack, additional_defense)
                         cursor.execute(request)
                         conn.commit()
-                        row = cursor.fetchone()
 
                         bot.send_message(chat_id=-1001197381190, text='Репорт успешно учтён для пользователя @' + mes.from_user.username)
                         try:
@@ -2428,6 +2392,7 @@ def cache_full():
     __request = "select trigger_in from triggers"
     cursor.execute(__request)
     row = cursor.fetchone()
+
     while row:
         triggers_in.append(row[0])
 
