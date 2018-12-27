@@ -147,7 +147,7 @@ def attackCommand(bot, update):
     chats_count = 0
     while row:
         if row[1]:
-            mes_current = bot.send_message(chat_id = row[0], text = response)#Отправка в текущий чат
+            mes_current = bot.sync_send_message(chat_id = row[0], text = response)#Отправка в текущий чат
             chats_count += 1
             if row[2]:
                 bot.pinChatMessage(chat_id = row[0], message_id = mes_current.message_id, disable_notification = row[3])
