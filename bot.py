@@ -18,14 +18,15 @@ import sys
 
 from psycopg2 import ProgrammingError
 
-from mwt import MWT     # Для кэширования
 from work_materials.globals import *
 from libs.chat_stats import *
 
 from libs.filters.todo import *
+from libs.filters.playlist import *
 
 from bin.chat_stats import *
 from bin.todo import *
+from bin.playlist import *
 
 
 status = 0
@@ -154,11 +155,6 @@ def attackCommand(bot, update):
     stats += "Выполнено в {0}, отправлено в {1} чатов".format(time.ctime(), chats_count)
     bot.send_message(chat_id=update.message.chat_id, text=stats)
 
-
-@MWT(timeout=60*60)
-def get_admin_ids(bot, chat_id):
-    """Returns a list of admin IDs for a given chat. Results are cached for 1 hour."""
-    return [admin.user.id for admin in bot.get_chat_administrators(chat_id)]
 
 
 def add_pin(bot, update):
@@ -1691,173 +1687,6 @@ def battles_stats(bot, update):
     bot.send_message(chat_id=update.message.chat_id, text=response, parse_mode='HTML')
 
 
-def add_playlist(bot, update, args):
-    mes = update.message
-    if (mes.from_user.id != 231900398) and (mes.from_user.id not in get_admin_ids(bot, chat_id=mes.chat_id)):
-        return
-    if not args:
-        bot.send_message(chat_id=update.message.chat_id, text='Неверный синтаксис')
-        return
-    request = "SELECT * FROM playlists WHERE playlist_name = '{0}' and chat_id = '{1}'".format(mes.text.partition(' ')[2], mes.chat_id)
-    cursor.execute(request)
-    row = cursor.fetchone()
-    if row is not None:
-        bot.send_message(chat_id=update.message.chat_id, text= 'Данный плейлист уже существует!')
-        return
-    request = "INSERT INTO playlists(playlist_name, chat_id, created_by, date_created) VALUES ('{0}', '{1}', '{2}', '{3}')".format(mes.text.partition(' ')[2].upper(), mes.chat_id, mes.from_user.username, time.strftime('%Y-%m-%d %H:%M:%S'))
-    cursor.execute(request)
-    conn.commit()
-    bot.send_message(chat_id=update.message.chat_id, text='Плейлист успешно добавлен!')
-
-
-def list_playlists(bot, update):
-    mes = update.message
-    if (mes.from_user.id != 231900398) and (mes.from_user.id not in get_admin_ids(bot, chat_id=mes.chat_id)):
-        bot.send_message(chat_id=update.message.chat_id, text= 'Только админы. Хватит засорять чаты')
-        return
-    response = "Список плейлистов:\n"
-    request = "SELECT * from playlists WHERE chat_id = '{0}'".format(mes.chat_id)
-    cursor.execute(request)
-    row = cursor.fetchone()
-    while row:
-        response_new = '\n<b>' + row[1] + '</b>\n' + "id: {0}, Created by:{1}, date_created : {2}\nView: /view_playlist_{0}\nPlay random :/play_random_from_playlist_{0}".format(row[0], row[3], row[4]) +'\n\n'
-        if len(response + response_new) >= 4096:
-            bot.send_message(chat_id=update.message.chat_id, text=response, parse_mode='HTML')
-            response = ""
-        response += response_new
-        row = cursor.fetchone()
-    bot.send_message(chat_id=update.message.chat_id, text=response, parse_mode='HTML')
-
-def view_playlist(bot, update):
-    mes = update.message
-    #if (mes.from_user.id != 231900398) and (mes.from_user.id not in get_admin_ids(bot, chat_id=mes.chat_id)):
-        #bot.send_message(chat_id=update.message.chat_id, text= 'Только админы. Хватит засорять чаты')
-        #return
-    request = "SELECT song_id, title, performer, duration FROM songs WHERE playlist_id = '{0}'".format(mes.text.partition('@')[0].partition('_')[2].partition('_')[2])
-    cursor.execute(request)
-    row = cursor.fetchone()
-    if row is None:
-        bot.send_message(chat_id=update.message.chat_id, text='Плейлист пуст. Добавьте песни!')
-        return
-    response = "Список песен в плейлисте:\n"
-    while row:
-        response_new = "\n<b> {0}</b>,\nid : {1}, performer: <b>{2}</b>\nduration: {3}\nplay: /play_song_{1}\nremove: /remove_song_{1}".format(row[1], row[0], row[2], row[3])
-        if len(response + response_new) >= 4096:
-            bot.send_message(chat_id=update.message.chat_id, text=response, parse_mode='HTML')
-            response = ""
-        response += response_new
-        row = cursor.fetchone()
-    #print(response)
-    bot.send_message(chat_id=update.message.chat_id, text=response, parse_mode='HTML')
-
-
-
-def add_to_playlist(bot, update, args):
-    mes = update.message
-    if (mes.from_user.id != 231900398) and (mes.from_user.id not in get_admin_ids(bot, chat_id=mes.chat_id)):
-        bot.send_message(chat_id=update.message.chat_id, text= 'Только админы. <b>ТОЛЬКО!!!</b>', parse_mode='HTML')
-        return
-    if not args:
-        bot.send_message(chat_id=update.message.chat_id, text='Неверный синтаксис')
-        return
-    if mes.reply_to_message is None:
-        bot.send_message(chat_id=update.message.chat_id, text='Сообщение должно быть ответом на песню', parse_mode='HTML')
-        return
-    if mes.reply_to_message.audio.file_id is None:
-        bot.send_message(chat_id=update.message.chat_id, text='Сообщение должно быть ответом на песню',
-                         parse_mode='HTML')
-        return
-    request = "SELECT * FROM songs WHERE file_id = '{0}' AND playlist_id = '{1}'".format(mes.reply_to_message.audio.file_id, mes.text.partition(' ')[2])
-    cursor.execute(request)
-    row = cursor.fetchone()
-    if row is not None:
-        bot.send_message(chat_id=update.message.chat_id, text='Песня уже находится в этом плейлисте')
-        return
-    if mes.reply_to_message.audio.performer:
-        performer = mes.reply_to_message.audio.performer.translate({ord(c): None for c in {'\'', '<', '>'}})
-    else:
-        performer = None
-    if mes.reply_to_message.audio.title:
-        title = mes.reply_to_message.audio.title.translate({ord(c): None for c in {'\'', '<', '>'}})
-    else:
-        title = None
-    request = "INSERT INTO songs(file_id, playlist_id, performer, title, duration) VALUES ('{0}', '{1}', '{2}'," \
-              " '{3}', '{4}')".format(mes.reply_to_message.audio.file_id, mes.text.partition(' ')[2],
-                                      performer,
-                                      title,
-                                      mes.reply_to_message.audio.duration)
-    ###trigger_mes = mes.text.translate({ord(c): None for c in '\''})
-    try:
-        cursor.execute(request)
-    except:
-        bot.send_message(chat_id=update.message.chat_id, text='Что-то пошло не так, проверьте правильность id плейлиста')
-        return
-    conn.commit()
-    bot.send_message(chat_id=update.message.chat_id, text='Песня успешно добавлена!')
-
-
-def play_random_from_playlist(bot, update, args = None):
-    mes = update.message
-    #if (mes.from_user.id != 231900398) and (mes.from_user.id not in get_admin_ids(bot, chat_id=mes.chat_id)):
-        #bot.send_message(chat_id=update.message.chat_id, text= 'Только админы. <b>ТОЛЬКО!!!</b>', parse_mode='HTML')
-        #return
-    if not args:
-        try:
-            arg = int(mes.text.partition('@')[0].partition('_')[2].partition('_')[2].partition('_')[2].partition('_')[2])
-        except ValueError:
-            bot.send_message(chat_id=update.message.chat_id, text='Неверный синтаксис')
-            return
-        request = "SELECT file_id FROM songs WHERE playlist_id = '{0}' ORDER BY RAND() LIMIT 1".format(arg)
-        cursor.execute(request)
-        row = cursor.fetchone()
-        if row is None:
-            bot.send_message(chat_id=update.message.chat_id,
-                             text='Песня не найдена. Проверьте корректность ввода id плейлиста. Возможно, что он пуст.')
-            return
-        bot.send_audio(chat_id=mes.chat_id, audio=row[0])
-        return
-    request = "SELECT file_id FROM songs WHERE playlist_id = '{0}' ORDER BY RAND() LIMIT 1".format(args[0])
-    cursor.execute(request)
-    row = cursor.fetchone()
-    if row is None:
-        bot.send_message(chat_id=update.message.chat_id, text='Песня не найдена. Проверьте корректность ввода id плейлиста. Возможно, что он пуст.')
-        return
-    bot.send_audio(chat_id = mes.chat_id, audio = row[0])
-
-
-def play_song(bot, update):
-    mes = update.message
-    #if (mes.from_user.id != 231900398) and (mes.from_user.id not in get_admin_ids(bot, chat_id=mes.chat_id)):
-        #bot.send_message(chat_id=update.message.chat_id, text= 'Только админы. <b>ТОЛЬКО!!!</b>', parse_mode='HTML')
-        #return
-    request = "SELECT file_id FROM songs WHERE song_id = '{0}'".format(mes.text.partition('@')[0].partition('_')[2].partition('_')[2])
-    cursor.execute(request)
-    row = cursor.fetchone()
-    if row is None:
-        bot.send_message(chat_id=update.message.chat_id, text='Песня не найдена. Проверьте корректность ввода id песни.')
-        return
-    bot.send_audio(chat_id = mes.chat_id, audio = row[0])
-
-def remove_song(bot, update):
-    mes = update.message
-    if (mes.from_user.id != 231900398) and (mes.from_user.id not in get_admin_ids(bot, chat_id=mes.chat_id)):
-        bot.send_message(chat_id=update.message.chat_id, text= 'Только админы. <b>ТОЛЬКО!!!</b>', parse_mode='HTML')
-        return
-    request = "SELECT file_id FROM songs WHERE song_id = '{0}'".format(mes.text.partition('@')[0].partition('_')[2].partition('_')[2])
-    cursor.execute(request)
-    row = cursor.fetchone()
-    if row is None:
-        bot.send_message(chat_id=update.message.chat_id,
-                         text='Песня не найдена. Проверьте корректность ввода id песни.')
-        return
-    request = "DELETE FROM songs WHERE song_id = '{0}'".format(mes.text.partition('@')[0].partition('_')[2].partition('_')[2])
-    try:
-        cursor.execute(request)
-    except:
-        bot.send_message(chat_id=update.message.chat_id, text='Ошибка', parse_mode='HTML')
-        return
-    conn.commit()
-    bot.send_message(chat_id=update.message.chat_id, text='Выполнено', parse_mode='HTML')
 
 
 def battle_history(bot, update):
@@ -2685,41 +2514,6 @@ dispatcher.add_handler(battles_stats_handler)
 
 dispatcher.add_handler(CommandHandler("sql", sql, pass_user_data = True, filters=Filters.user(user_id=231900398)))
 
-class Filter_View_Playlist(BaseFilter):
-    def filter(self, message):
-        if message.text:
-            return 'view_playlist_' in message.text
-        return 0
-
-
-filter_view_playlist = Filter_View_Playlist()
-
-class Filter_Play_Song(BaseFilter):
-    def filter(self, message):
-        if message.text:
-            return 'play_song' in message.text
-        return 0
-
-
-filter_play_song = Filter_Play_Song()
-
-class Filter_Remove_Song(BaseFilter):
-    def filter(self, message):
-        if message.text:
-            return 'remove_song' in message.text
-        return 0
-
-
-filter_remove_song = Filter_Remove_Song()
-
-class Filter_Play_Random_From_Playlist(BaseFilter):
-    def filter(self, message):
-        if message.text:
-            return 'play_random_from_playlist' in message.text
-        return 0
-
-
-filter_play_random_from_playlist = Filter_Play_Random_From_Playlist()
 
 dispatcher.add_handler(CommandHandler("add_playlist", add_playlist, pass_args=True))
 dispatcher.add_handler(CommandHandler("list_playlists", list_playlists))
