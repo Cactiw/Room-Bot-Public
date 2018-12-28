@@ -1,4 +1,5 @@
 from work_materials.globals import *
+import time
 
 class Trigger:
     def __init__(self, type, text):
