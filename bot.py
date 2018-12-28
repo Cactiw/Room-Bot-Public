@@ -832,9 +832,10 @@ def textMessage(bot, update):
                                     guild_reports = GuildReports(guild_tag, int(row[0]))
                                 current_report = Report(mes.text[0], mes.text[1:].partition('⚔')[0], lvl, exp, gold, stock, attack, defense)
                                 guild_reports.add_report(current_report)
+                                reports_count.update({guild_tag : guild_reports})
                                 chat_id = guilds_chat_ids.get(guild_tag)
                                 if chat_id is not None:
-                                    response = "Репорт от <b>{0}</b> принят.\nВсего сдало репортов {1} человек, это {2}% " \
+                                    response = "Репорт от <b>{0}</b> принят.\nВсего сдало репортов <b>{1}</b> человек, это <b>{2:.2f}</b>% " \
                                                "от общего числа".format(current_report.nickname, guild_reports.num_reports,
                                                                         (guild_reports.num_reports / guild_reports.num_players) * 100)
                                     try:
