@@ -9,7 +9,7 @@ def battle_stats_send(bot, update = None):
     if update is not None:
         chat_id = update.message.chat_id
     else:
-        chat_id = -1001381505036
+        chat_id = -1001377426029
     d = datetime.datetime(2018, 5, 27, 7, 0, 0, 0)  # 8 для летнего времени
     c = datetime.datetime(2018, 5, 26, 23, 0, 0, 0)
     c = d - c
@@ -146,17 +146,14 @@ def silent_clear(bot, job_queue):
     except TelegramError:
         pass
 
-    d = datetime.datetime(2018, 5, 27, 8, 57, 0, 0)
-    c = datetime.datetime(2018, 5, 27, 1, 0, 0, 0)  # Разница в 7 часов 57 минут
-    c = d - c
-    job_silence = job.run_once(silent_clear_start, c)
-    print("Silence is running in", c)
+    silent_start(bot, admin_ids[0], None)
     global g_defending_users
     global g_defending_users
     global g_added_attack
     global g_added_defense
     g_attacking_users.clear()
     g_defending_users.clear()
+    reports_count.clear()
     g_added_attack = 0
     g_added_defense = 0
     battle_stats_send(bot)
@@ -189,6 +186,13 @@ def silent_start(bot, update, job_queue):
     global job_silence
     global silent_running
     print("Starting...")
+    try:
+        chat_id = update.message.chat_id
+    except AttributeError:
+        try:
+            chat_id = int(update)
+        except TypeError:
+            return
     b = datetime.time(0, 0, 0, 0)  # Вернуть на 00 (01-1)
     #summer = datetime.timedelta(0, 0, 0, 1) # Д:Ч:М:С
     #####b = datetime.time(21, 28, 0, 0)
@@ -232,12 +236,12 @@ def silent_start(bot, update, job_queue):
     print(a)
     if (a < zero):
         print("ERROR", a)
-        bot.send_message(chat_id=update.message.chat_id, text="Отрицательное время, прерываю. Получено {0}".format(a))
+        bot.send_message(chat_id=chat_id, text="Отрицательное время, прерываю. Получено {0}".format(a))
         return 1
     job_silence = job.run_once(silent_clear_start, a)
     silent_running = 1
     print("OK")
-    bot.send_message(chat_id=update.message.chat_id, text="Режим тишины активирован, осталось {0}".format(a))
+    bot.send_message(chat_id=chat_id, text="Режим тишины активирован, осталось {0}".format(a))
 
 
 def silent_delete_message(bot, update):

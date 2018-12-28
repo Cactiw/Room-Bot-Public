@@ -11,6 +11,7 @@ import logging
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',level=logging.INFO)
 
 import time
+import pytz
 import datetime
 import threading
 
@@ -21,7 +22,7 @@ from psycopg2 import ProgrammingError
 from work_materials.globals import *
 from libs.chat_stats import *
 from libs.trigger import *
-from libs.report import *
+from libs.guild_reports_stats import  *
 
 from libs.filters.todo import *
 from libs.filters.playlist import *
@@ -37,9 +38,6 @@ from bin.todo import *
 from bin.playlist import *
 from bin.dspam import *
 from bin.guild import *
-
-
-
 
 
 all_chats_stats = ChatStats(0, "all", 0, 0, 0, 0, 0, 0, 0, 0)
@@ -820,13 +818,37 @@ def textMessage(bot, update):
                             bot.send_message(chat_id=update.message.from_user.id, text='Репорт учтён. Спасибо!')
                         except TelegramError:
                             pass
-                        if row != None:
-                            print(row)
+                        if datetime.datetime.now(tz = pytz.utc).replace(tzinfo=None) - update.message.forward_date < datetime.timedelta(hours = 8):
+                            print(mes.text.find("]"))
+                            if mes.text.find("]") > 0:
+                                guild_tag = str(mes.text[2:mes.text.find(']')].upper())
+                                print(guild_tag)
+                                guild_reports = reports_count.get(guild_tag)
+                                if guild_reports is None:
+                                    request = "select count(1) from users where guild = '{0}'".format(guild_tag)
+                                    cursor.execute(request)
+                                    row = cursor.fetchone()
+                                    print("num_players =", row[0])
+                                    guild_reports = GuildReports(guild_tag, int(row[0]))
+                                current_report = Report(mes.text[0], mes.text[1:].partition('⚔')[0], lvl, exp, gold, stock, attack, defense)
+                                guild_reports.add_report(current_report)
+                                chat_id = guilds_chat_ids.get(guild_tag)
+                                if chat_id is not None:
+                                    response = "Репорт от <b>{0}</b> принят.\nВсего сдало репортов {1} человек, это {2}% " \
+                                               "от общего числа".format(current_report.nickname, guild_reports.num_reports,
+                                                                        (guild_reports.num_reports / guild_reports.num_players) * 100)
+                                    try:
+                                        bot.sync_send_message(chat_id = chat_id, text = response, parse_mode = 'HTML')
+                                    except TelegramError:
+                                        bot.send_message(chat_id = admin_ids[0], text = response, parse_mode = 'HTML')
+
                 else:
                     try:
                         bot.send_message(chat_id=update.message.from_user.id, text='Это не ваш репорт. В случае возникновения ошибок обновите профиль')
                     except TelegramError:
                         return
+
+
 
 
 class user_stats:

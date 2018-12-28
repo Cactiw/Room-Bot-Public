@@ -41,6 +41,9 @@ g_added_attack = 0
 g_added_defense = 0
 g_attacking_users = []
 g_defending_users = []
+reports_count = {}
+
+guilds_chat_ids = { "KYS" : -1001377426029, "СКИ" : -1001315600160}
 
 status = 0
 globalstatus = 0
