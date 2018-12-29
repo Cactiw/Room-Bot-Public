@@ -11,7 +11,7 @@ def todo(bot, update):
     request = "insert into todo(priority, data, date_created) values ('{0}', '{1}', '{2}')".format(priority, data, time.strftime('%Y-%m-%d %H:%M:%S'))
     cursor.execute(request)
     conn.commit()
-    bot.send_message(chat_id = update.message.chat_id, text = "Успешно добавлено.\nИзменить приоритет: /todo_change_priority_{0}".format(cursor.execute("SELECT LAST_INSERT_ID();")))
+    bot.send_message(chat_id = update.message.chat_id, text = "Успешно добавлено.\nИзменить приоритет: /todo_change_priority_...")
 
 def todo_list(bot, update):
     response = "Список дел, которые нужно сделать:\n\n"
