@@ -100,7 +100,7 @@ def infoCommand(bot, update):
     response = response + 'text: ' + str(update.message.reply_to_message.text) + '\n'
     response = response + 'chat_id = ' + str(update.message.reply_to_message.chat.id) + '\n'
     response = response + 'message from:\n   username: ' + str (update.message.reply_to_message.from_user.username) + '\n   id: ' + str(update.message.reply_to_message.from_user.id) + '\n'
-    response = response + 'date: ' + str(update.message.reply_to_message.date) + '\n'
+    response = response + 'date: ' + str(update.message.reply_to_message.date.astimezone(tz=pytz.timezone('Europe/Moscow'))) + ' (Europe/Moscow)\n'
     #response = response + 'photo_id: ' + str(update.message.reply_to_message.photo) + '\n'
     if update.message.reply_to_message.video:
         response = response + 'video_id: ' + str(update.message.reply_to_message.video.file_id) + '\n'
