@@ -23,7 +23,10 @@ castles = ['🍁', '☘', '🖤', '🐢', '🦇', '🌹', '🍆']
 ranks_specials = ['','🎗','🎖']
 
 moscow_tz = pytz.timezone('Europe/Moscow')
-local_tz = tzlocal.get_localzone()
+try:
+    local_tz = tzlocal.get_localzone()
+except pytz.UnknownTimeZoneError:
+    local_tz = pytz.timezone('Europe/Andorra')
 
 bot = AsyncBot(token=Production_token)
 updater = AsyncUpdater(bot = bot)
