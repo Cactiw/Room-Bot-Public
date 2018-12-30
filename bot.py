@@ -96,11 +96,12 @@ def infoCommand(bot, update):
     mes = update.message
     if update.message.reply_to_message is None:
         return
-    response = 'message_id = ' + str(update.message.reply_to_message.message_id) + '\n'
+    response = 'message_id = <b>' + str(update.message.reply_to_message.message_id) + '</b>\n'
     response = response + 'text: ' + str(update.message.reply_to_message.text) + '\n'
-    response = response + 'chat_id = ' + str(update.message.reply_to_message.chat.id) + '\n'
-    response = response + 'message from:\n   username: ' + str (update.message.reply_to_message.from_user.username) + '\n   id: ' + str(update.message.reply_to_message.from_user.id) + '\n'
-    response = response + 'date: ' + str(update.message.reply_to_message.date.astimezone(tz=pytz.timezone('Europe/Moscow'))) + ' (Europe/Moscow)\n'
+    response = response + 'chat_id = <b>' + str(update.message.reply_to_message.chat.id) + '</b>\n'
+    response = response + 'message from:\n   username: <b>' + str (update.message.reply_to_message.from_user.username) + \
+               '</b>\n   id: <b>' + str(update.message.reply_to_message.from_user.id) + '</b>\n'
+    response = response + 'date: <b>' + str(update.message.reply_to_message.date.astimezone(tz=pytz.timezone('Europe/Moscow'))) + ' (Europe/Moscow)</b>\n'
     #response = response + 'photo_id: ' + str(update.message.reply_to_message.photo) + '\n'
     if update.message.reply_to_message.video:
         response = response + 'video_id: ' + str(update.message.reply_to_message.video.file_id) + '\n'
@@ -120,17 +121,16 @@ def infoCommand(bot, update):
 
     #response = response + 'animation_id: ' + str(update.message.reply_to_message.animation.file_id) + '\n'
 
-
-
-    response = response + 'forward from: ' + str(update.message.reply_to_message.forward_from) + '\n'
+    if update.message.reply_to_message.forward_from is not None:
+        response = response + 'forward from: <b>' + str(update.message.reply_to_message.forward_from) + '</b>\n'
     try:
-        response = response + 'forward date: ' + \
-                   str(update.message.reply_to_message.forward_date.astimezone(tz=pytz.timezone('Europe/Moscow'))) + ' (Europe/Moscow)\n'
-    except TypeError:
+        response = response + 'forward date: <b>' + \
+                   str(update.message.reply_to_message.forward_date.astimezone(tz=pytz.timezone('Europe/Moscow'))) + ' (Europe/Moscow)</b>\n'
+    except AttributeError:
         pass
     #response = response + 'message text: ' + str(update.message.reply_to_message.text) + '\n'
     #response = response + 'date: ' + str(update.message.reply_to_message.date) + '\n'
-    bot.send_message(chat_id=update.message.chat_id, text=response)
+    bot.send_message(chat_id=update.message.chat_id, text=response, parse_mode = 'HTML')
 
 
 
