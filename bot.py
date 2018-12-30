@@ -1207,6 +1207,7 @@ cache_full()
 
 # Начинаем поиск обновлений
 updater.start_polling(clean=False)
+bot.send_message(chat_id = admin_ids[0], text = "Бот запущен.\nНе забудьте запустить тишину!: /silent_start")
 #job_stats = job.run_repeating(stats_send, interval=(1*60*60), first=0) #Рассылка статистики - отключена на текущий момент //TODO починить статистику
 #global silent_running = 1
 job_silence = job.run_once(empty, 0)
