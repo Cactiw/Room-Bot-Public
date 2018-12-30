@@ -7,6 +7,7 @@ from telegram.error import (TelegramError, Unauthorized, BadRequest,
                             TimedOut, ChatMigrated, NetworkError)
 import MySQLdb
 import psycopg2
+import pytz
 
 
 from mwt import MWT     # Для кэширования
@@ -20,6 +21,7 @@ admin_ids = [231900398]
 castles = ['🍁', '☘', '🖤', '🐢', '🦇', '🌹', '🍆']
 ranks_specials = ['','🎗','🎖']
 
+local_tz = pytz.timezone('Europe/Moscow')
 
 bot = AsyncBot(token=Production_token)
 updater = AsyncUpdater(bot = bot)
