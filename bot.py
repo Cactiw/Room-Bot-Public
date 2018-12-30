@@ -819,25 +819,28 @@ def textMessage(bot, update):
                         except TelegramError:
                             pass
                         if datetime.datetime.now(tz = pytz.utc).replace(tzinfo=None) - update.message.forward_date < datetime.timedelta(hours = 8):
-                            print(mes.text.find("]"))
+                            #   Репорт с последней битвы
                             if mes.text.find("]") > 0:
                                 guild_tag = str(mes.text[2:mes.text.find(']')].upper())
                                 print(guild_tag)
                                 guild_reports = reports_count.get(guild_tag)
                                 if guild_reports is None:
-                                    request = "select count(1) from users where guild = '{0}'".format(guild_tag)
-                                    cursor.execute(request)
-                                    row = cursor.fetchone()
-                                    print("num_players =", row[0])
-                                    guild_reports = GuildReports(guild_tag, int(row[0]))
-                                current_report = Report(mes.text[0], mes.text[1:].partition('⚔')[0], lvl, exp, gold, stock, attack, defense)
+                                    guild_reports = GuildReports(guild_tag)
+                                current_report = Report(mes.from_user.id, mes.text[0], mes.text[1:].partition('⚔')[0], lvl, exp, gold, stock, attack, defense)
                                 guild_reports.add_report(current_report)
                                 reports_count.update({guild_tag : guild_reports})
                                 chat_id = guilds_chat_ids.get(guild_tag)
                                 if chat_id is not None:
+                                    percent = (guild_reports.num_reports / guild_reports.num_players) * 100
                                     response = "Репорт от <b>{0}</b> принят.\nВсего сдало репортов <b>{1}</b> человек, это <b>{2:.2f}</b>% " \
-                                               "от общего числа".format(current_report.nickname, guild_reports.num_reports,
-                                                                        (guild_reports.num_reports / guild_reports.num_players) * 100)
+                                               "от общего числа\n".format(current_report.nickname, guild_reports.num_reports, percent)
+                                    if percent == 100:
+                                        response += "Все сдали репорты! Какие вы лапочки!"
+                                    else:
+                                        response += "Всё ещё не сдали репорты:\n"
+                                    for user in guild_reports.users:
+                                        if not user.report_sent:
+                                            response += "<b>{0}</b>,    ".format(user.username)
                                     try:
                                         bot.sync_send_message(chat_id = chat_id, text = response, parse_mode = 'HTML')
                                     except TelegramError:
