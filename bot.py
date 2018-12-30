@@ -109,7 +109,15 @@ def infoCommand(bot, update):
     response = response + 'chat_id = <b>' + str(update.message.reply_to_message.chat.id) + '</b>\n'
     response = response + 'message from:\n   username: <b>' + str (update.message.reply_to_message.from_user.username) + \
                '</b>\n   id: <b>' + str(update.message.reply_to_message.from_user.id) + '</b>\n'
-    response = response + 'date: <b>' + str(update.message.reply_to_message.date.astimezone(tz=pytz.timezone('Europe/Moscow'))) + ' (Europe/Moscow)</b>\n'
+    try:
+        message_date = local_tz.localize(update.message.reply_to_message.date)
+    except ValueError:
+        try:
+            message_date = update.message.reply_to_message.date.astimezone(tz=pytz.timezone('Europe/Moscow'))
+        except ValueError:
+            message_date = update.message.reply_to_message.date
+
+    response = response + 'date: <b>' + str(message_date) + ' (Europe/Moscow)</b>\n'
     #response = response + 'photo_id: ' + str(update.message.reply_to_message.photo) + '\n'
     if update.message.reply_to_message.video:
         response = response + 'video_id: ' + str(update.message.reply_to_message.video.file_id) + '\n'
@@ -132,8 +140,15 @@ def infoCommand(bot, update):
     if update.message.reply_to_message.forward_from is not None:
         response = response + 'forward from: <b>' + str(update.message.reply_to_message.forward_from) + '</b>\n'
     try:
+        try:
+            forward_message_date = local_tz.localize(update.message.reply_to_message.forward_date)
+        except ValueError:
+            try:
+                forward_message_date = update.message.reply_to_message.forward_date.astimezone(tz=pytz.timezone('Europe/Moscow'))
+            except ValueError:
+                forward_message_date = update.message.reply_to_message.forward_date
         response = response + 'forward date: <b>' + \
-                   str(update.message.reply_to_message.forward_date.astimezone(tz=pytz.timezone('Europe/Moscow'))) + ' (Europe/Moscow)</b>\n'
+                   str(forward_message_date) + ' (Europe/Moscow)</b>\n'
     except AttributeError:
         pass
     #response = response + 'message text: ' + str(update.message.reply_to_message.text) + '\n'
