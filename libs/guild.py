@@ -16,3 +16,7 @@ class User:
         self.username = username
         self.attack = attack
         self.defense = defense
+        self.report_sent = False
+
+    def __eq__(self, other):
+        return self.id == other.id
