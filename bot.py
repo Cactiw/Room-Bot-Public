@@ -8,7 +8,6 @@ from telegram.error import (TelegramError, Unauthorized, BadRequest,
                             TimedOut, ChatMigrated, NetworkError)
 
 import logging
-logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',level=logging.INFO)
 
 import time
 import pytz
@@ -39,6 +38,15 @@ from bin.playlist import *
 from bin.dspam import *
 from bin.guild import *
 
+#--------------------------------------------------------------     Выставляем логгирование
+console = logging.StreamHandler()
+console.setLevel(logging.INFO)
+
+log_file = logging.FileHandler(filename='error.log', mode='a')
+log_file.setLevel(logging.ERROR)
+
+logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level = logging.INFO, handlers=[log_file, console])
+#--------------------------------------------------------------
 
 all_chats_stats = ChatStats(0, "all", 0, 0, 0, 0, 0, 0, 0, 0)
 all_chats_stats.update_from_database()
