@@ -1,5 +1,6 @@
 import time
 from work_materials.globals import *
+from psycopg2 import ProgrammingError
 
 def todo(bot, update):
     if update.message.reply_to_message is None:
@@ -8,10 +9,14 @@ def todo(bot, update):
         return
     priority = 5
     data = update.message.reply_to_message.text
-    request = "insert into todo(priority, data, date_created) values ('{0}', '{1}', '{2}')".format(priority, data, time.strftime('%Y-%m-%d %H:%M:%S'))
+    request = "insert into todo(priority, data, date_created) values ('{0}', '{1}', '{2}') returning id".format(priority, data, time.strftime('%Y-%m-%d %H:%M:%S'))
     cursor.execute(request)
     conn.commit()
-    bot.send_message(chat_id = update.message.chat_id, text = "Успешно добавлено.\nИзменить приоритет: /todo_change_priority_...")
+    try:
+        row = cursor.fetchone()
+    except ProgrammingError:
+        pass
+    bot.send_message(chat_id = update.message.chat_id, text = "Успешно добавлено.\nИзменить приоритет: /todo_change_priority_{0}".format(row[0]))
 
 def todo_list(bot, update):
     response = "Список дел, которые нужно сделать:\n\n"
@@ -20,7 +25,7 @@ def todo_list(bot, update):
     row = cursor.fetchone()
     while row is not None:
         response_new = "{0}\n    Создано: {1}\n".format(row[2], row[3])
-        response_new += "<b>    Выполнено:</b> {0}".format(row[5]) if row[4] else "<b>  Не выполнено:</b> /complete_todo_{0}\n".format(row[0])
+        response_new += "<b>    Выполнено:</b> {0}\n\n".format(row[5]) if row[4] else "<b>  Не выполнено:</b> /complete_todo_{0}\n\n".format(row[0])
 
 
         if len(response + response_new) >= 4096:  # Превышение лимита длины сообщения
