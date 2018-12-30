@@ -123,7 +123,11 @@ def infoCommand(bot, update):
 
 
     response = response + 'forward from: ' + str(update.message.reply_to_message.forward_from) + '\n'
-    response = response + 'forward date: ' + str(update.message.reply_to_message.forward_date) + '\n'
+    try:
+        response = response + 'forward date: ' + \
+                   str(update.message.reply_to_message.forward_date.astimezone(tz=pytz.timezone('Europe/Moscow'))) + ' (Europe/Moscow)\n'
+    except TypeError:
+        pass
     #response = response + 'message text: ' + str(update.message.reply_to_message.text) + '\n'
     #response = response + 'date: ' + str(update.message.reply_to_message.date) + '\n'
     bot.send_message(chat_id=update.message.chat_id, text=response)
@@ -756,14 +760,14 @@ def textMessage(bot, update):
                     return
             else:
                 #Эээээээээксперименты
-                #d = datetime.datetime(2018, 5, 27, 9, 0, 0, 0)     Для нормального времени
-                #c = datetime.datetime(2018, 5, 27, 1, 0, 0, 0)
+                d = datetime.datetime(2018, 5, 27, 9, 0, 0, 0)  #   Для нормального времени
+                c = datetime.datetime(2018, 5, 27, 1, 0, 0, 0)
                 #_________________________________________________________________________________-
-                d = datetime.datetime(2018, 5, 27, 7, 0, 0, 0) #8 для летнего времени
-                c = datetime.datetime(2018, 5, 26, 23, 0, 0, 0)
+                ###d = datetime.datetime(2018, 5, 27, 7, 0, 0, 0) #8 для летнего времени    # Без плясок с временными зонами
+                ###c = datetime.datetime(2018, 5, 26, 23, 0, 0, 0)
                 c = d - c
                 #print(c)
-                a = update.message.forward_date
+                a = update.message.forward_date.astimezone(tz=pytz.timezone('Europe/Moscow')).replace(tzinfo=None)
                 a = a - d
                 battle_id = 0
                 while a > c:
@@ -818,7 +822,22 @@ def textMessage(bot, update):
                             bot.send_message(chat_id=update.message.from_user.id, text='Репорт учтён. Спасибо!')
                         except TelegramError:
                             pass
-                        if datetime.datetime.now(tz = pytz.utc).replace(tzinfo=None) - update.message.forward_date < datetime.timedelta(hours = 8):
+                        now = datetime.datetime.now(tz=pytz.timezone('Europe/Moscow')).replace(
+                            tzinfo=None) - datetime.datetime.combine(datetime.datetime.now().date(), datetime.time(hour=0))
+                        if now < datetime.timedelta(hours=1, minutes=10):
+                            remaining_time = datetime.timedelta(hours=1, minutes=10) - now
+                            time_from_battle = datetime.timedelta(hours=8) - remaining_time
+                            print("interval =", (datetime.timedelta(hours=1, minutes=10) - now))
+                        else:
+                            time_from_battle = now - datetime.timedelta(hours=1, minutes=10)
+                            while time_from_battle > datetime.timedelta(hours=8):
+                                time_from_battle -= datetime.timedelta(hours=8)
+
+                        print("forward date: ", update.message.forward_date)
+
+                        time_from_receiving_report = datetime.datetime.now() - update.message.forward_date
+
+                        if time_from_receiving_report < time_from_battle:
                             #   Репорт с последней битвы
                             if mes.text.find("]") > 0:
                                 guild_tag = str(mes.text[2:mes.text.find(']')].upper())
@@ -836,11 +855,13 @@ def textMessage(bot, update):
                                                "от общего числа\n".format(current_report.nickname, guild_reports.num_reports, percent)
                                     if percent == 100:
                                         response += "Все сдали репорты! Какие вы лапочки!"
+
                                     else:
-                                        response += "Всё ещё не сдали репорты:\n"
-                                    for user in guild_reports.users:
-                                        if not user.report_sent:
-                                            response += "<b>{0}</b>,    ".format(user.username)
+                                        if time_from_battle > datetime.timedelta(hours = 1):
+                                            response += "Всё ещё не сдали репорты:\n"
+                                            for user in guild_reports.users:
+                                                if not user.report_sent:
+                                                    response += "<b>{0}</b>,    ".format(user.username)
                                     try:
                                         bot.sync_send_message(chat_id = chat_id, text = response, parse_mode = 'HTML')
                                     except TelegramError:
