@@ -110,7 +110,7 @@ def infoCommand(bot, update):
     response = response + 'message from:\n   username: <b>' + str (update.message.reply_to_message.from_user.username) + \
                '</b>\n   id: <b>' + str(update.message.reply_to_message.from_user.id) + '</b>\n'
     try:
-        message_date = local_tz.localize(update.message.reply_to_message.date)
+        message_date = local_tz.localize(update.message.reply_to_message.date).astimezone(tz=pytz.timezone('Europe/Moscow'))
     except ValueError:
         try:
             message_date = update.message.reply_to_message.date.astimezone(tz=pytz.timezone('Europe/Moscow'))
@@ -141,7 +141,7 @@ def infoCommand(bot, update):
         response = response + 'forward from: <b>' + str(update.message.reply_to_message.forward_from) + '</b>\n'
     try:
         try:
-            forward_message_date = local_tz.localize(update.message.reply_to_message.forward_date)
+            forward_message_date = local_tz.localize(update.message.reply_to_message.forward_date).astimezone(tz=pytz.timezone('Europe/Moscow'))
         except ValueError:
             try:
                 forward_message_date = update.message.reply_to_message.forward_date.astimezone(tz=pytz.timezone('Europe/Moscow'))
@@ -791,8 +791,8 @@ def textMessage(bot, update):
                 c = d - c
                 #print(c)
                 try:
-                    forward_message_date = local_tz.localize(update.message.forward_date).replace(
-                            tzinfo=None)
+                    forward_message_date = local_tz.localize(update.message.forward_date).astimezone(
+                        tz=pytz.timezone('Europe/Moscow')).replace(tzinfo=None)
                 except ValueError:
                     print("value error")
                     try:
