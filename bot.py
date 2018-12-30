@@ -790,8 +790,19 @@ def textMessage(bot, update):
                 ###c = datetime.datetime(2018, 5, 26, 23, 0, 0, 0)
                 c = d - c
                 #print(c)
-                a = update.message.forward_date.astimezone(tz=pytz.timezone('Europe/Moscow')).replace(tzinfo=None)
-                a = a - d
+                try:
+                    forward_message_date = local_tz.localize(update.message.forward_date).replace(
+                            tzinfo=None)
+                except ValueError:
+                    print("value error")
+                    try:
+                        forward_message_date = update.message.forward_date.astimezone(
+                            tz=pytz.timezone('Europe/Moscow')).replace(
+                            tzinfo=None)
+                    except ValueError:
+                        forward_message_date = update.message.forward_date
+                print(forward_message_date)
+                a = forward_message_date - d
                 battle_id = 0
                 while a > c:
                     a = a - c
@@ -856,9 +867,7 @@ def textMessage(bot, update):
                             while time_from_battle > datetime.timedelta(hours=8):
                                 time_from_battle -= datetime.timedelta(hours=8)
 
-                        print("forward date: ", update.message.forward_date)
-
-                        time_from_receiving_report = datetime.datetime.now() - update.message.forward_date
+                        time_from_receiving_report = datetime.datetime.now() - forward_message_date
 
                         if time_from_receiving_report < time_from_battle:
                             #   Репорт с последней битвы
