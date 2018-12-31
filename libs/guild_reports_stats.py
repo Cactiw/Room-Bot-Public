@@ -1,5 +1,5 @@
 from libs.guild import User
-from work_materials.globals import cursor
+from work_materials.globals import cursor, conn
 
 class Report:
     def __init__(self, id, castle, nickname, lvl, exp, gold, stock, attack, defense):
