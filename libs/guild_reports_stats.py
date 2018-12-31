@@ -1,5 +1,5 @@
 from libs.guild import User
-from work_materials.globals import cursor_2, conn
+from work_materials.globals import conn
 
 class Report:
     def __init__(self, id, castle, nickname, lvl, exp, gold, stock, attack, defense):
@@ -25,8 +25,9 @@ class GuildReports:
         self.defense = 0
         self.reports = []
         request = "select telegram_id, telegram_username, user_attack, user_defense from users where guild = '{0}'".format(guild_tag)
-        cursor_2.execute(request)
-        row = cursor_2.fetchone()
+        cursor = conn.cursor()
+        cursor.execute(request)
+        row = cursor.fetchone()
         self.users = []
         self.num_players = 0
         while row:
@@ -34,7 +35,8 @@ class GuildReports:
             user = User(row[0], row[1], row[2], row[3])
             self.users.append(user)
 
-            row = cursor_2.fetchone()
+            row = cursor.fetchone()
+        cursor.close()
 
 
     def add_report(self, report):

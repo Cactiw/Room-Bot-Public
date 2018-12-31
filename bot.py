@@ -852,12 +852,12 @@ def textMessage(bot, update):
                             pass
                         now = datetime.datetime.now(tz=pytz.timezone('Europe/Moscow')).replace(
                             tzinfo=None) - datetime.datetime.combine(datetime.datetime.now().date(), datetime.time(hour=0))
-                        if now < datetime.timedelta(hours=1, minutes=10):
-                            remaining_time = datetime.timedelta(hours=1, minutes=10) - now
+                        if now < datetime.timedelta(hours=1):
+                            remaining_time = datetime.timedelta(hours=1) - now
                             time_from_battle = datetime.timedelta(hours=8) - remaining_time
-                            print("interval =", (datetime.timedelta(hours=1, minutes=10) - now))
+                            print("interval =", (datetime.timedelta(hours=1) - now))
                         else:
-                            time_from_battle = now - datetime.timedelta(hours=1, minutes=10)
+                            time_from_battle = now - datetime.timedelta(hours=1)
                             while time_from_battle > datetime.timedelta(hours=8):
                                 time_from_battle -= datetime.timedelta(hours=8)
 
@@ -981,10 +981,6 @@ def reports_sent_restore():
         battle_id = battle_id + 1
     logging.info("restoring reports with battle_id = {0}".format(battle_id))
 
-    request = "select count(1) from reports where battle_id = '{0}'".format(battle_id)
-    cursor.execute(request)
-    logging.info("response = {0}".format(cursor.fetchone()))
-
     request = "select user_id, report_attack, report_defense, report_lvl, report_exp, report_gold, report_stock " \
               "from reports where battle_id = '{0}'".format(battle_id)
     cursor.execute(request)
@@ -999,7 +995,7 @@ def reports_sent_restore():
             row = cursor.fetchone()
             continue
         guild_tag = row2[3]
-        logging.info("guild_tag = {0}".format(guild_tag))
+        logging.debug("guild_tag = {0}".format(guild_tag))
         if guild_tag == 'None':
             row = cursor.fetchone()
             continue
@@ -1010,7 +1006,7 @@ def reports_sent_restore():
             guild_reports = GuildReports(guild_tag)
         guild_reports.add_report(current_report)
         reports_count.update({guild_tag: guild_reports})
-        logging.info(str(guild_reports.num_reports))
+        logging.debug(str(guild_reports.num_reports))
 
 
         row = cursor.fetchone()

@@ -193,46 +193,20 @@ def silent_start(bot, update, job_queue):
             chat_id = int(update)
         except TypeError:
             return
-    b = datetime.time(0, 0, 0, 0)  # Вернуть на 00 (01-1)
-    #summer = datetime.timedelta(0, 0, 0, 1) # Д:Ч:М:С
-    #####b = datetime.time(21, 28, 0, 0)
-    summer_a = datetime.datetime(2018, 5, 27, 2, 0, 0, 0)
-    summer_b = datetime.datetime(2018, 5, 27, 0, 0, 0, 0)
-    hour = datetime.datetime(2018, 5, 27, 1, 0, 0, 0) - summer_b
-    summer = summer_a - summer_b
-    b = datetime.datetime.combine(datetime.date.today(), b)
-    a = datetime.datetime.now()
-    print(a)
-    print(b)
-    print(summer)
-    # summer - разница времени сервера / мск
-    a = a - b + summer
-    # a - Просто текущее время
+    zero = datetime.timedelta(hours = 0)
 
-    #print(a)
-    d = datetime.datetime(2018, 5, 27, 9, 0, 0, 0)
-    c = datetime.datetime(2018, 5, 27, 1, 0, 0, 0)  # Разница в 8 часов
-    e = datetime.datetime(2018, 5, 27, 8, 57, 0, 0) # Летом 8 57 0 0 # Теперь всегда, хватит говнокода
-    e = d - e
-    # e - время, за которое должна начинаться    тишина перед битвой
-    c = d - c
-    print(a)
-    zero = c - c
-    if (a < hour):
-        a = hour - a
+    now = datetime.datetime.now(tz=pytz.timezone('Europe/Moscow')).replace(
+        tzinfo=None) - datetime.datetime.combine(datetime.datetime.now().date(), datetime.time(hour=0))
+    if now < datetime.timedelta(hours=1):
+        remaining_time = datetime.timedelta(hours=1) - now
     else:
-        a -= hour
-        print(c)
-        print("e =", e)
-        while not(a <= c):
-            a = a - c
-        if (a < zero):
-            print("ERROR", a)
-            return 1
-        print(a)
-        a = c - a##########
-    print(a)
-    a = a - e# Чтобы тишина началась в 57 минут, а не ровно
+        time_from_battle = now - datetime.timedelta(hours=1)
+        while time_from_battle > datetime.timedelta(hours=8):
+            time_from_battle -= datetime.timedelta(hours=8)
+        remaining_time = datetime.timedelta(hours=8) - time_from_battle
+
+
+    a = remaining_time - datetime.timedelta(minutes=3)# Чтобы тишина началась в 57 минут, а не ровно
     print(a)
     if (a < zero):
         print("ERROR", a)
