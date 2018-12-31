@@ -782,14 +782,8 @@ def textMessage(bot, update):
                 except TelegramError:
                     return
             else:
-                #Эээээээээксперименты
-                d = datetime.datetime(2018, 5, 27, 9, 0, 0, 0)  #   Для нормального времени
-                c = datetime.datetime(2018, 5, 27, 1, 0, 0, 0)
-                #_________________________________________________________________________________-
-                ###d = datetime.datetime(2018, 5, 27, 7, 0, 0, 0) #8 для летнего времени    # Без плясок с временными зонами
-                ###c = datetime.datetime(2018, 5, 26, 23, 0, 0, 0)
-                c = d - c
-                #print(c)
+                d = datetime.datetime(2018, 5, 27, 9, 0, 0, 0)
+                c = datetime.timedelta(hours=8)
                 try:
                     forward_message_date = local_tz.localize(update.message.forward_date).astimezone(
                         tz=pytz.timezone('Europe/Moscow')).replace(tzinfo=None)
@@ -976,6 +970,47 @@ def stats_send(bot, update):
         #bot.send_message(chat_id = 231900398, text = response, parse_mode = 'Markdown')
         print("YES")
 
+def reports_sent_restore():
+    d = datetime.datetime(2018, 5, 27, 9, 0, 0, 0)
+    c = datetime.timedelta(hours=8)
+    now = datetime.datetime.now(tz = moscow_tz).replace(tzinfo=None)
+    a = now - d
+    battle_id = 0
+    while a > c:
+        a = a - c
+        battle_id = battle_id + 1
+    logging.info("restoring reports with battle_id = {0}".format(battle_id))
+
+
+
+    request = "select user_id, report_attack, report_defense, report_lvl, report_exp, report_gold, report_stock " \
+              "from reports where battle_id = '{0}'".format(battle_id)
+    cursor.execute(request)
+    row = cursor.fetchone()
+    while row:
+        request = "select telegram_id, user_castle, telegram_username, guild from users " \
+                  "where user_id = '{0}'".format(row[0])
+        cursor_2.execute(request)
+        row2 = cursor_2.fetchone()
+
+        if row2 is None:
+            row = cursor.fetchone()
+            continue
+        guild_tag = row2[3]
+        if guild_tag == 'None':
+            row = cursor.fetchone()
+            continue
+
+        current_report = Report(row2[0], row2[1], row2[2], row[3], row[4], row[5], row[6], row[1], row[2])
+        guild_reports = reports_count.get(guild_tag)
+        if guild_reports is None:
+            guild_reports = GuildReports(guild_tag)
+        guild_reports.add_report(current_report)
+        reports_count.update({guild_tag: guild_reports})
+        logging.info(str(guild_reports.num_reports))
+        row = cursor.fetchone()
+
+    logging.info("reports restoring complete")
 
 
 def stats_count(bot, update):
@@ -1203,7 +1238,7 @@ dispatcher.add_handler(stats_send_handler)
 
 
 cache_full()
-
+reports_sent_restore()
 
 # Начинаем поиск обновлений
 updater.start_polling(clean=False)
