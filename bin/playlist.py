@@ -118,7 +118,7 @@ def play_random_from_playlist(bot, update, args = None):
         except ValueError:
             bot.send_message(chat_id=update.message.chat_id, text='Неверный синтаксис')
             return
-        request = "SELECT file_id FROM songs WHERE playlist_id = '{0}' ORDER BY RAND() LIMIT 1".format(arg)
+        request = "SELECT file_id FROM songs WHERE playlist_id = '{0}' ORDER BY RANDOM() LIMIT 1".format(arg)
         cursor.execute(request)
         row = cursor.fetchone()
         if row is None:
@@ -127,7 +127,7 @@ def play_random_from_playlist(bot, update, args = None):
             return
         bot.send_audio(chat_id=mes.chat_id, audio=row[0])
         return
-    request = "SELECT file_id FROM songs WHERE playlist_id = '{0}' ORDER BY RAND() LIMIT 1".format(args[0])
+    request = "SELECT file_id FROM songs WHERE playlist_id = '{0}' ORDER BY RANDOM() LIMIT 1".format(args[0])
     cursor.execute(request)
     row = cursor.fetchone()
     if row is None:

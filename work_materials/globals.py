@@ -37,6 +37,7 @@ job = updater.job_queue
 
 #Подключаем базу данных, выставляем кодировку
 conn = psycopg2.connect("dbname={0} user={1} password={2}".format(psql_creditals['dbname'], psql_creditals['user'], psql_creditals['pass']))
+conn.set_session(autocommit = True)
 cursor = conn.cursor()
 
 cursor_2 = conn.cursor()
