@@ -23,11 +23,13 @@ from libs.chat_stats import *
 from libs.trigger import *
 from libs.guild_reports_stats import  *
 
+from libs.filters.service_filters import *
 from libs.filters.todo import *
 from libs.filters.playlist import *
 from libs.filters.dspam_filters import *
 from libs.filters.silent import *
 from libs.filters.pin import *
+from libs.filters.mute_filters import *
 
 from bin.pin import *
 from bin.silent import *
@@ -37,6 +39,7 @@ from bin.todo import *
 from bin.playlist import *
 from bin.dspam import *
 from bin.guild import *
+from bin.mute import *
 
 #--------------------------------------------------------------     Выставляем логгирование
 console = logging.StreamHandler()
@@ -1134,6 +1137,9 @@ dispatcher.add_handler(pinpin_command_handler)
 dispatcher.add_handler(pinmute_command_handler)
 
 dispatcher.add_handler(CommandHandler('mute', mute, pass_args=True))
+dispatcher.add_handler(CommandHandler('mute_admin', mute_admin, pass_args=True))#, filters=filter_super_admin))
+dispatcher.add_handler(CommandHandler('unmute_all_admins', unmute_all_admins))#, filters=filter_super_admin))
+dispatcher.add_handler(MessageHandler(filter_delete_admin, delete_admin))
 
 dispatcher.add_handler(silent_setup_command_handler)
 dispatcher.add_handler(add_silent_command_handler)

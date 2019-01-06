@@ -150,7 +150,7 @@ def silent_start_delete(bot, job_queue):
     globals.silent_delete = True
     minute = datetime.timedelta(minutes = 1)
     job.run_once(silent_end, minute)
-    logging.info("running silent in chats {0}".format(silent_chats))
+    logging.info("running silent in chats {0}".format(globals.silent_chats))
 
 
 def silent_setup(bot, update, job_queue):
