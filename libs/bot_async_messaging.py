@@ -5,6 +5,8 @@ from telegram.error import (TelegramError, Unauthorized, BadRequest,
 import multiprocessing
 import threading
 import time
+import logging
+import traceback
 
 MESSAGE_PER_SECOND_LIMIT = 29
 MESSAGE_PER_CHAT_LIMIT = 3
@@ -69,6 +71,8 @@ class AsyncBot(Bot):
             super(AsyncBot, self).send_message(*args, **kwargs)
         except Unauthorized:
             print("Unauthorized")
+        except BadRequest:
+            logging.error(traceback.format_exc())
         except TimedOut:
             super(AsyncBot, self).send_message(*args, **kwargs)
         except NetworkError:

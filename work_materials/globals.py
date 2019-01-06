@@ -55,9 +55,9 @@ guilds_chat_ids = { "KYS" : -1001377426029, "СКИ" : -1001315600160}
 
 status = 0
 globalstatus = 0
-silent_running = 0
-silent_delete = 0
-silent_chats = [int] * 100
+silent_running = False
+silent_delete = False
+silent_chats = []
 
 
 def build_menu(buttons,

@@ -606,14 +606,15 @@ def textMessage(bot, update):
     status = 0
 
     # Вывод списка триггеров
-    if (update.message.text.lower()) == 'список триггеров':
+    if update.message.text.lower() == 'список триггеров':
         mes = update.message
         request = "SELECT * FROM triggers WHERE chat_id = '{0}'".format(mes.chat_id)
         cursor.execute(request)
         row = cursor.fetchone()
+        types = {0 : "text", 1 : "video", 2 : "audio", 3 : "photo", 4 : "document", 5 : "sticker", 6 : "voice"}
         response = "<em>Локальные триггеры:</em>\n"
         while row:
-            response_new = "<b>" + row[1] + '</b>\ntype = ' + str(row[2]) + ' created by ' + row[5] + ' on ' + str(row[6]) + '\n\n'
+            response_new = "<b>" + row[1] + '</b>\ntype = ' + str(types.get(row[2])) + ', created by ' + row[5] + ' on ' + str(row[6]) + '\n\n'
             if len(response + response_new) >= 4096:    #   Превышение лимита длины сообщения
                 bot.send_message(chat_id=update.message.chat_id, text=response, parse_mode='HTML')
                 response = ""

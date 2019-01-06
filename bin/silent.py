@@ -1,7 +1,8 @@
 from work_materials.globals import *
 import datetime
 import time
-import threading
+import logging
+import work_materials.globals as globals
 
 
 
@@ -37,7 +38,7 @@ def battle_stats_send(bot, update = None):
     guardian_angels = 0
     i = 1
     while row:
-        request = "SELECT user_castle, username FROM users WHERE user_id = '{0}'".format(row[0])
+        request = "SELECT user_castle, username FROM users WHERE user_id = '{0}' and (guild = 'KYS' or guild = 'СКИ')".format(row[0])
         cursor_2.execute(request)
         user = cursor_2.fetchone()
         if user is None:
@@ -105,61 +106,51 @@ def add_silent(bot, update):
     bot.send_message(chat_id=update.message.chat_id, text='Беседа успешо добавлена к тишине')
 
 
-def silent_clear(bot, job_queue):
-    global silent_delete
-    global silent_chats
-    global job_silence
+def silent_end(bot, job_queue):
+    globals.silent_delete = False
+    logging.info("ending silent in chats".format(globals.silent_chats))
+    for chat_id in globals.silent_chats:
+        try:
+            bot.send_message(chat_id = chat_id, text = "Режим тишины отменён!")
+        except TelegramError:
+            pass
+    silent_start(bot, admin_ids[0], None)
+    g_attacking_users.clear()
+    g_defending_users.clear()
+    reports_count.clear()
+    globals.g_added_attack = 0
+    globals.g_added_defense = 0
+    battle_stats_send(bot)
+
+def silent_clear_start(bot, job_queue):
     request = "SELECT COUNT(1) FROM silent where enabled = 1"
     cursor.execute(request)
     row = cursor.fetchone()
     print(row[0])
-    silent_chats = [int] * row[0]
     print("started successful")
     request = "SELECT chat_id FROM silent WHERE enabled = 1"
     cursor.execute(request)
     row = cursor.fetchone()
-    i = 0
+    globals.silent_chats.clear()
     while row:
-        bot.send_message(chat_id = row[0], text = "Через 2 минуты будет активирован режим тишины. Все сообщения, кроме приказов и админов, будут удаляться автоматически.")
-        print(silent_chats)
-        print(row)
-        silent_chats[i] = row[0]
+        bot.send_message(chat_id=row[0],
+                         text="Через 2 минуты будет активирован режим тишины. Все сообщения, кроме приказов и админов, будут удаляться автоматически.")
+        globals.silent_chats.append(row[0])
         row = cursor.fetchone()
-        i = i + 1
-    time.sleep(120)
-    silent_delete = 1
-    time.sleep(60) #Вернуть на 60
-    silent_delete = 0
-    for i in silent_chats:
-        if i != None:
-            print("i =", i)
-            try:
-                bot.send_message(chat_id = i, text="Режим тишины отменён.")
-            except TypeError:
-                pass
-            try:
-                bot.unpinChatMessage(chat_id = -1001381505036)  # Убираем пин в GH
-            except TelegramError:
-                pass
-    try:
-        bot.unpinChatMessage(chat_id = -1001381505036)  # Убираем пин в GH
-    except TelegramError:
-        pass
+    time_to_start = datetime.timedelta(minutes = 2)
+    #--------------------------------------------------------------------------------       # TEST ONLY
 
-    silent_start(bot, admin_ids[0], None)
-    global g_defending_users
-    global g_defending_users
-    global g_added_attack
-    global g_added_defense
-    g_attacking_users.clear()
-    g_defending_users.clear()
-    reports_count.clear()
-    g_added_attack = 0
-    g_added_defense = 0
-    battle_stats_send(bot)
+    #time_to_start = datetime.timedelta(seconds = 1)
 
-def silent_clear_start(bot, job_queue):
-    threading.Thread(target = silent_clear(bot, job)).start()
+    #--------------------------------------------------------------------------------
+    job.run_once(silent_start_delete, time_to_start)
+
+
+def silent_start_delete(bot, job_queue):
+    globals.silent_delete = True
+    minute = datetime.timedelta(minutes = 1)
+    job.run_once(silent_end, minute)
+    logging.info("running silent in chats {0}".format(silent_chats))
 
 
 def silent_setup(bot, update, job_queue):
@@ -212,6 +203,13 @@ def silent_start(bot, update, job_queue):
         print("ERROR", a)
         bot.send_message(chat_id=chat_id, text="Отрицательное время, прерываю. Получено {0}".format(a))
         return 1
+
+    #----------------------------------------------------------------------------------------------     TEST ONLY
+
+    #a = datetime.timedelta(seconds = 10)
+
+    #______________________________________________________________________________________________
+
     job_silence = job.run_once(silent_clear_start, a)
     silent_running = 1
     print("OK")
@@ -221,14 +219,17 @@ def silent_start(bot, update, job_queue):
 def silent_delete_message(bot, update):
     mes = update.message
     if update.message.from_user.id not in get_admin_ids(bot, update.message.chat_id):
-        bot.deleteMessage(chat_id = mes.chat_id, message_id = mes.message_id)
+        try:
+            bot.deleteMessage(chat_id = mes.chat_id, message_id = mes.message_id)
+        except TelegramError:
+            pass
 
 
 def silent_stop(bot, update, job_queue):
-    global silent_running
     global job_silence
-    job_silence = job_silence.schedule_removal()
-    silent_running = 0
+    job_silence.schedule_removal()
+    globals.silent_running = False
+    globals.silent_delete = False
     bot.send_message(chat_id=update.message.chat_id, text='Тишина отменена')
 
 
