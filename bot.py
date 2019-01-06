@@ -865,7 +865,9 @@ def textMessage(bot, update):
                             while time_from_battle > datetime.timedelta(hours=8):
                                 time_from_battle -= datetime.timedelta(hours=8)
 
-                        time_from_receiving_report = datetime.datetime.now() - forward_message_date
+                        time_from_receiving_report = datetime.datetime.now(tz=pytz.timezone('Europe/Moscow')).replace(
+                            tzinfo=None) - forward_message_date
+                        logging.info("time_from_receiving_report = {0}, time_from_battle = {1}".format(time_from_receiving_report, time_from_battle))
 
                         if time_from_receiving_report < time_from_battle:
                             #   Репорт с последней битвы
