@@ -59,6 +59,8 @@ silent_running = False
 silent_delete = False
 silent_chats = []
 
+mute_chats = {}
+
 
 def build_menu(buttons,
                n_cols,
