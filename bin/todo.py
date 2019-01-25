@@ -19,8 +19,10 @@ def todo(bot, update):
     bot.send_message(chat_id = update.message.chat_id, text = "Успешно добавлено.\nИзменить приоритет: /todo_change_priority_{0}".format(row[0]))
 
 def todo_list(bot, update):
+    mes = update.message
     response = "Список дел, которые нужно сделать:\n\n"
     request = "select id, priority, data, date_created, completed, date_completed from todo"
+    request += " where completed = '0'" if mes.text.partition("@")[0].find("full") == -1 else ""
     cursor.execute(request)
     row = cursor.fetchone()
     while row is not None:

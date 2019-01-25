@@ -238,7 +238,7 @@ def setdr(bot, update):#Задание дня рождения
 
     a = mes.text[7:]
     a = '2000-' + a
-    request = "UPDATE users SET birthday = '{0}' WHERE room_bot.users.telegram_id = '{1}'".format(a, mes.from_user.id)
+    request = "UPDATE users SET birthday = '{0}' WHERE telegram_id = '{1}'".format(a, mes.from_user.id)
     cursor.execute(request)
     conn.commit()
     bot.send_message(chat_id=update.message.chat_id, text='День рождения обновлён')
@@ -838,6 +838,9 @@ def textMessage(bot, update):
                         if mes.text.find('⚡Critical strike') != -1:
                             critical = 1
                             additional_attack = int(mes.text[mes.text.find('+') + 1:mes.text.find(')')])
+                        elif mes.text.find('⚡Lucky Defender!') != -1:
+                            critical = 1
+                            additional_defense = int(mes.text[mes.text.find('+') + 1:mes.text.find(')')])
                         elif mes.text.find('🔱Guardian angel') != -1:
                             guardian = 1
                             additional_defense = int(mes.text[mes.text.find('+') + 1:mes.text.find(')')])
@@ -1228,6 +1231,7 @@ dispatcher.add_handler(CommandHandler("stats", battle_stats_send, filters=Filter
 
 dispatcher.add_handler(CommandHandler("todo", todo, filters=Filters.user(user_id=231900398)))
 dispatcher.add_handler(CommandHandler("todo_list", todo_list, filters=Filters.user(user_id=231900398)))
+dispatcher.add_handler(CommandHandler("todo_list_full", todo_list, filters=Filters.user(user_id=231900398)))
 dispatcher.add_handler(MessageHandler(Filters.command & filter_complete_todo, complete_todo))
 
 

@@ -5,14 +5,13 @@ from telegram import KeyboardButton, ReplyKeyboardMarkup, ReplyKeyboardRemove
 
 from telegram.error import (TelegramError, Unauthorized, BadRequest,
                             TimedOut, ChatMigrated, NetworkError)
-import MySQLdb
 import psycopg2
 import pytz
 import tzlocal
 
 
 from mwt import MWT     # Для кэширования
-from config import psql_creditals, Production_token, DEV_token
+from config import psql_creditals, Production_token, DEV_token, request_kwargs
 from libs.bot_async_messaging import AsyncBot
 from libs.updater_async import AsyncUpdater
 
@@ -28,7 +27,7 @@ try:
 except pytz.UnknownTimeZoneError:
     local_tz = pytz.timezone('Europe/Andorra')
 
-bot = AsyncBot(token=Production_token)
+bot = AsyncBot(token=Production_token, workers=8, request_kwargs=request_kwargs)
 updater = AsyncUpdater(bot = bot)
 
 dispatcher = updater.dispatcher

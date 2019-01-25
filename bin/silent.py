@@ -54,10 +54,14 @@ def battle_stats_send(bot, update = None):
         total_attack += row[1]
         total_defense += row[2]
 
-        if row[7]:
+        if row[7] and row[9] > 0:
             response_new += '<b>⚡️Critical strike</b>\n'
             critical_strikes += 1
             additional_attack += row[9]
+        elif row[7] and row[10] > 0:
+            response_new += '<b>⚡️️Lucky Defender!</b>\n'
+            critical_strikes += 1
+            additional_defense += row[10]
         if row[8]:
             response_new += '<b>🔱Guardian angel</b>\n'
             guardian_angels += 1
@@ -78,7 +82,8 @@ def battle_stats_send(bot, update = None):
         response_new += "🗡Атаки получено с критов: <b>" + str(additional_attack) + "</b>\n"
     if guardian_angels > 0:
         response_new += "🔱Guardian angels: <b>" + str(guardian_angels) + "</b>\n"
-        response_new += "🛡Защиты получено с ангела: <b>" + str(additional_defense) + "</b>\n"
+    if additional_defense > 0:
+        response_new += "🛡Защиты получено с ангела или критов: <b>" + str(additional_defense) + "</b>\n"
 
 
     if len(response + response_new) >= 4096:  # Превышение лимита длины сообщения
