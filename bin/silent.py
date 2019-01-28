@@ -45,12 +45,13 @@ def battle_stats_send(bot, update = None):
             row = cursor.fetchone()
             continue
         response_new = "<b>" + str(i) + "</b>. " + user[0] + "<b>" + user[1] + "</b>\n🏅:" + str(row[3]) + ' ⚔:' + str(row[1])
-        if row[7]:
+        if row[7] and row[9] > 0:
             response_new += "(+{0})".format(row[9])
         response_new +=' 🛡:'
-        if row[8]:
-            response_new += "(+{0})".format(row[10])
-        response_new += str(row[2])  + '\n' + ' 🔥:' + str(row[4]) + ' 💰:' + str(row[5]) + ' 📦:' + str(row[6]) + '\n'
+        response_add = ""
+        if row[8] or (row[7] and row[10] > 0):
+            response_add += "(+{0})".format(row[10])
+        response_new += str(row[2])  + response_add + '\n' + ' 🔥:' + str(row[4]) + ' 💰:' + str(row[5]) + ' 📦:' + str(row[6]) + '\n'
         total_attack += row[1]
         total_defense += row[2]
 

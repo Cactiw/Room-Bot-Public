@@ -13,6 +13,7 @@ import time
 import pytz
 import datetime
 import threading
+import traceback
 
 import sys
 
@@ -837,13 +838,23 @@ def textMessage(bot, update):
                         additional_defense = 0
                         if mes.text.find('⚡Critical strike') != -1:
                             critical = 1
-                            additional_attack = int(mes.text[mes.text.find('+') + 1:mes.text.find(')')])
+                            text = mes.text.partition('🛡')[0]
+                            try:
+                                additional_attack = int(mes.text[mes.text.find('+') + 1:mes.text.find(')')])
+                            except ValueError:
+                                try:
+                                    additional_attack = int(mes.text[mes.text.find('-') : mes.text.find(')')])
+                                except ValueError:
+                                    logging.error(traceback.format_exc())
+                                    additional_attack = 0
                         elif mes.text.find('⚡Lucky Defender!') != -1:
                             critical = 1
-                            additional_defense = int(mes.text[mes.text.find('+') + 1:mes.text.find(')')])
+                            text = mes.text.partition('🛡')[2]
+                            additional_defense = int(text[text('+') + 1:text.find(')')])
                         elif mes.text.find('🔱Guardian angel') != -1:
                             guardian = 1
-                            additional_defense = int(mes.text[mes.text.find('+') + 1:mes.text.find(')')])
+                            text = mes.text.partition('🛡')[2]
+                            additional_defense = int(text[text.find('+') + 1:text.find(')')])
 
                         request = "INSERT INTO reports(user_id, battle_id, date_in, report_attack, report_defense," \
                                   " report_lvl, report_exp, report_gold, report_stock, critical_strike, guardian_angel," \
