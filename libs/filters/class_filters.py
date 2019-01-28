@@ -6,7 +6,6 @@ class FilterSetClass(BaseFilter):
         if message.text:
             if message.forward_from is None:
                 return False
-            print('skills levels' in message.text, message.forward_from.id == chat_wars_id, message.chat_id == message.from_user.id)
             return 'skills levels' in message.text and message.forward_from.id == chat_wars_id and message.chat_id == message.from_user.id
         return False
 
