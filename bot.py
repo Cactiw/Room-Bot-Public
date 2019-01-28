@@ -31,6 +31,7 @@ from libs.filters.dspam_filters import *
 from libs.filters.silent import *
 from libs.filters.pin import *
 from libs.filters.mute_filters import *
+from libs.filters.class_filters import filter_set_class
 
 from bin.pin import *
 from bin.silent import *
@@ -41,6 +42,7 @@ from bin.playlist import *
 from bin.dspam import *
 from bin.guild import *
 from bin.mute import *
+from bin.class_func import set_class
 
 #--------------------------------------------------------------     Выставляем логгирование
 console = logging.StreamHandler()
@@ -1175,7 +1177,7 @@ dispatcher.add_handler(add_trigger_handler)
 dispatcher.add_handler(add_global_trigger_handler)
 dispatcher.add_handler(remove_trigger_handler)
 
-
+dispatcher.add_handler(MessageHandler(filter_set_class, set_class))
 dispatcher.add_handler(profile_handler)
 dispatcher.add_handler(pr_handler)
 dispatcher.add_handler(rank_list_handler)

@@ -4,6 +4,8 @@ import time
 import logging
 import work_materials.globals as globals
 
+from bin.class_func import rangers_notify_start
+
 
 
 def battle_stats_send(bot, update = None):
@@ -220,6 +222,7 @@ def silent_start(bot, update, job_queue):
     silent_running = 1
     print("OK")
     bot.send_message(chat_id=chat_id, text="Режим тишины активирован, осталось {0}".format(a))
+    rangers_notify_start(bot, update, remaining_time)
 
 
 def silent_delete_message(bot, update):
