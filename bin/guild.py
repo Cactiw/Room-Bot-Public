@@ -15,9 +15,9 @@ def g_info(bot, update):
     max_lvl = 0
     max_lvl_user = ""
 
-
+    count = 1
     while row:
-        response = response + '\n' + "<b>" + row[0] + "</b>" + "\n🏅" + str(row[1]) + " ⚔" + str(row[2]) + " 🛡" + str(row[3]) + '\n'
+        response = response + '\n' + "{0}: <b>".format(count) + row[0] + "</b>" + "\n🏅" + str(row[1]) + " ⚔" + str(row[2]) + " 🛡" + str(row[3]) + '\n'
         total_attack += row[2]
         total_defense += row[3]
         if row[1] > max_lvl:
@@ -25,7 +25,9 @@ def g_info(bot, update):
             max_lvl_user = row[0]
 
         row = cursor.fetchone()
-    response += "\n\n" + "Всего атаки: ⚔" + str(total_attack) + ", всего защиты: 🛡" + str(total_defense)
+        count += 1
+    count -= 1
+    response += "\n\n" + "Всего игроков: {0}\nВсего атаки: ⚔".format(count) + str(total_attack) + ", всего защиты: 🛡" + str(total_defense)
     response += "\n" + "Максимальный уровень у <b>" + max_lvl_user + "</b>, 🏅" + str(max_lvl)
     bot.send_message(chat_id=update.message.chat_id, text=response, parse_mode='HTML')
 

@@ -14,8 +14,8 @@ MESSAGE_PER_CHAT_LIMIT = 3
 UNAUTHORIZED_ERROR_CODE = 2
 BADREQUEST_ERROR_CODE = 3
 
-class AsyncBot(Bot):
 
+class AsyncBot(Bot):
 
     def __init__(self, token, workers = 4, request_kwargs = None):
         counter_rlock = threading.RLock()
@@ -34,7 +34,6 @@ class AsyncBot(Bot):
         self._request = Request(**request_kwargs)
         super(AsyncBot, self).__init__(token=token, request=self._request)
         self.start()
-
 
     def send_message(self, *args, **kwargs):
         message = MessageInQueue(*args, **kwargs)
