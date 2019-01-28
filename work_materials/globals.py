@@ -24,7 +24,7 @@ admin_ids = [231900398]
 chat_wars_id = 265204902
 
 classes_list = ['Alchemist', 'Blacksmith', 'Collector', 'Ranger', 'Knight', 'Sentinel']
-ranger_aiming_minutes = [0, 180, 165, 150, 135, 120, 105, 95, 85, 75, 65, 60, 55, 50, 45, 40, 35]
+ranger_aiming_minutes = [0, 180, 165, 150, 135, 120, 105, 95, 85, 75, 65, 60, 55, 50, 45, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40]
 
 castles = ['🍁', '☘', '🖤', '🐢', '🦇', '🌹', '🍆']
 ranks_specials = ['','🎗','🎖']
