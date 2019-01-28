@@ -11,10 +11,14 @@ import tzlocal
 
 
 from mwt import MWT     # Для кэширования
-from config import psql_creditals, Production_token, DEV_token, request_kwargs
+from config import psql_creditals, Production_token, DEV_token
 from libs.bot_async_messaging import AsyncBot
 from libs.updater_async import AsyncUpdater
 
+try:
+    from config import request_kwargs
+except ImportError:
+    request_kwargs = None
 
 admin_ids = [231900398]
 
