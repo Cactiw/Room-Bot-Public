@@ -6,7 +6,18 @@ photo_ids = ['AgADAgADZqoxG6FDeEopaNAfHJyqCsRFXw8ABM1KXzxYZ8oC1EcBAAEC',
              'AgADAgADZ6oxG6FDeEqZfNoeKhCerClMOQ8ABJMXJ6sBF7i_wxACAAEC',
              'AgADAgADaKoxG6FDeEref06d_7R9qURFOQ8ABCo-MZ4mAe2r_xACAAEC',
              'AgADAgADaaoxG6FDeEowvAG50PFWHnteOQ8ABApYnLTxs53zVxICAAEC',
-             'AgADAgAD7KoxG5BReUo0DFf7Z_CYF5xXXw8ABEXNR_JlVzKNi0YBAAEC'
+             'AgADAgAD7KoxG5BReUo0DFf7Z_CYF5xXXw8ABEXNR_JlVzKNi0YBAAEC',
+             'AgADAgADb6oxG6FDeEqgImEt1Ubm-mNzXw8ABJGjT_lm1kCnMUcBAAEC',
+             'AgADAgADcKoxG6FDeEourua1oPApHzPktw4ABN-AOzUfwLseXTkGAAEC',
+             'AgADAgADcaoxG6FDeEq9jy4a6zCZIdo78w4ABP3cg2-nSF5i6EIGAAEC',
+             'AgADAgADcqoxG6FDeEp_5W4KvI6IUBCZOQ8ABHYBAYsrRe89RCAEAAEC',
+             'AgADAgADc6oxG6FDeEpXcu3wVjyEBRafOQ8ABLE5AcSMCTn0mBwEAAEC',
+             'AgADAgADdKoxG6FDeEofkNiqSTrC4Qo9OQ8ABPNInLZEPmcaJhICAAEC',
+             'AgADAgADdaoxG6FDeEr8inrvCBk1EhM98w4ABChDe4r17QMhdTgGAAEC',
+             'AgADAgADdqoxG6FDeEopJptiYNs0mPT5tw4ABPmiWPhHN54dLUIGAAEC',
+             'AgADAgADd6oxG6FDeEomydUkErfqtstH8w4ABIgVhalrwsx0Ez4GAAEC',
+             'AgADAgADeKoxG6FDeEppqyMaAzez6MtmXw8ABFRG0hpVK2wbXkgBAAEC',
+             'AgADAgADeaoxG6FDeErvk5NO1P4s7LZZOQ8ABD702vPG0g_ExhECAAEC'
              ]
 
 def set_class(bot, update):
@@ -55,5 +66,5 @@ def rangers_notify_start(bot, update, time_to_battle):
 
             row = cursor.fetchone()
             count += 1
-    bot.send_message(chat_id = update.message.chat_id, text = "Запланровано оповещение <b>{0}</b> бедных лучников".format(count),
+    bot.send_message(chat_id = update.message.chat_id, text = "Запланировано оповещение <b>{0}</b> бедных лучников".format(count),
                      parse_mode = 'HTML')
