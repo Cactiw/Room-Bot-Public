@@ -11,6 +11,9 @@ import traceback
 MESSAGE_PER_SECOND_LIMIT = 29
 MESSAGE_PER_CHAT_LIMIT = 3
 
+UNAUTHORIZED_ERROR_CODE = 2
+BADREQUEST_ERROR_CODE = 3
+
 class AsyncBot(Bot):
 
 
@@ -63,28 +66,33 @@ class AsyncBot(Bot):
                 lock.release()
             except RuntimeError:
                 pass
-
+        message = None
         try:
-            super(AsyncBot, self).send_message(*args, **kwargs)
+            message = super(AsyncBot, self).send_message(*args, **kwargs)
         except Unauthorized:
-            print("Unauthorized")
+            release = threading.Timer(interval=1, function=self.__releasing_resourse, args=[chat_id])
+            release.start()
+            return UNAUTHORIZED_ERROR_CODE
         except BadRequest:
             logging.error(traceback.format_exc())
+            release = threading.Timer(interval=1, function=self.__releasing_resourse, args=[chat_id])
+            release.start()
+            return BADREQUEST_ERROR_CODE
         except TimedOut:
             time.sleep(0.1)
-            super(AsyncBot, self).send_message(*args, **kwargs)
+            message = super(AsyncBot, self).send_message(*args, **kwargs)
         except NetworkError:
             time.sleep(0.1)
-            super(AsyncBot, self).send_message(*args, **kwargs)
+            message = super(AsyncBot, self).send_message(*args, **kwargs)
+        release = threading.Timer(interval=1, function=self.__releasing_resourse, args=[chat_id])
+        release.start()
+        return message
 
     def start(self):
-        self.message_counter_thread = threading.Thread(target = self.__message_counter, args = ())
-        self.message_counter_thread.start()
         for i in range(0, self.num_workers):
             worker = threading.Thread(target = self.__work, args = ())
             worker.start()
             self.workers.append(worker)
-
 
     def stop(self):
         self.processing = False
@@ -92,7 +100,6 @@ class AsyncBot(Bot):
             self.message_queue.put(None)
         for i in self.workers:
             i.join()
-        self.message_counter_thread.join()
 
     def __del__(self):
         self.processing = False
@@ -105,13 +112,20 @@ class AsyncBot(Bot):
             pass
 
 
-    def __message_counter(self):
-        while self.processing:
-            with self.counter_lock:
-                self.messages_per_second = 0
-                self.messages_per_chat.clear()
+    def __releasing_resourse(self, chat_id):
+        with self.counter_lock:
+            self.messages_per_second -= 1
+            mes_per_chat = self.messages_per_chat.get(chat_id)
+            if mes_per_chat is None:
                 self.counter_lock.notify_all()
-            time.sleep(1)
+                return
+            if mes_per_chat == 1:
+                self.messages_per_chat.pop(chat_id)
+                self.counter_lock.notify_all()
+                return
+            mes_per_chat -= 1
+            self.messages_per_chat.update({chat_id : mes_per_chat})
+            self.counter_lock.notify_all()
 
     def __work(self):
         message_in_queue = self.message_queue.get()
