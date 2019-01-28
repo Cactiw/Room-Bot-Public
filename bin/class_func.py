@@ -45,10 +45,10 @@ def ranger_notify(bot, job):
 
 def rangers_notify_start(bot, update, time_to_battle):
     try:
-        chat_id = update.message.chat_id
+        callback_chat_id = update.message.chat_id
     except AttributeError:
         try:
-            chat_id = int(update)
+            callback_chat_id = int(update)
         except TypeError:
             return
     guild_names = guilds_chat_ids.keys()
@@ -73,5 +73,5 @@ def rangers_notify_start(bot, update, time_to_battle):
 
             row = cursor.fetchone()
             count += 1
-    bot.send_message(chat_id = chat_id, text = "Запланировано оповещение <b>{0}</b> бедных лучников".format(count),
+    bot.send_message(chat_id = callback_chat_id, text = "Запланировано оповещение <b>{0}</b> бедных лучников".format(count),
                      parse_mode = 'HTML')
