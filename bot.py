@@ -43,6 +43,7 @@ from bin.dspam import *
 from bin.guild import *
 from bin.mute import *
 from bin.class_func import set_class
+from bin.help import help, dspam_help
 
 #--------------------------------------------------------------     Выставляем логгирование
 console = logging.StreamHandler()
@@ -992,6 +993,7 @@ def stats_send(bot, update):
         #bot.send_message(chat_id = 231900398, text = response, parse_mode = 'Markdown')
         print("YES")
 
+
 def reports_sent_restore():
     d = datetime.datetime(2018, 5, 27, 9, 0, 0, 0)
     c = datetime.timedelta(hours=8)
@@ -1258,6 +1260,8 @@ dispatcher.add_handler(CommandHandler("chat_stats", chat_stats_send, filters=Fil
 dispatcher.add_handler(CommandHandler("current_chat_stats", current_chat_stats_send, filters=Filters.user(user_id=231900398)))
 
 
+dispatcher.add_handler(CommandHandler('help', help))
+dispatcher.add_handler(CommandHandler('dspam_help', dspam_help))
 
 dispatcher.add_handler(text_message_handler)
 
