@@ -42,7 +42,7 @@ from bin.playlist import *
 from bin.dspam import *
 from bin.guild import *
 from bin.mute import *
-from bin.class_func import set_class
+from bin.class_func import set_class, knight_critical, sentinel_critical
 from bin.help import help, dspam_help
 
 #--------------------------------------------------------------     Выставляем логгирование
@@ -834,30 +834,52 @@ def textMessage(bot, update):
                     response = cursor.fetchone()
                     if response != None:
                         bot.send_message(chat_id=update.message.chat_id, text='Репорт за эту битву уже учтён!')
+                        return
                     else:
                         #print(mes.text)
                         #print (mes.text.find('⚡Critical strike'))
                         additional_attack = 0
                         additional_defense = 0
+                        guild_tag = str(mes.text[2:mes.text.find(']')].upper())
                         if mes.text.find('⚡Critical strike') != -1:
                             critical = 1
+                            if guild_tag in list(guilds_chat_ids):
+                                knight_critical(bot, update)
                             text = mes.text.partition('🛡')[0]
                             try:
-                                additional_attack = int(mes.text[mes.text.find('+') + 1:mes.text.find(')')])
+                                additional_attack = int(text[text.find('+') + 1:text.find(')')])
                             except ValueError:
                                 try:
-                                    additional_attack = int(mes.text[mes.text.find('-') : mes.text.find(')')])
+                                    additional_attack = int(text[text.find('-') : text.find(')')])
                                 except ValueError:
                                     logging.error(traceback.format_exc())
                                     additional_attack = 0
                         elif mes.text.find('⚡Lucky Defender!') != -1:
                             critical = 1
+                            if guild_tag in list(guilds_chat_ids):
+                                sentinel_critical(bot, update)
                             text = mes.text.partition('🛡')[2]
-                            additional_defense = int(text[text('+') + 1:text.find(')')])
+                            try:
+                                additional_defense = int(text[text('+') + 1:text.find(')')])
+                            except ValueError:
+                                try:
+                                    additional_defense = int(text[text.find('-') : text.find(')')])
+                                except ValueError:
+                                    logging.error(traceback.format_exc())
+                                    additional_defense = 0
                         elif mes.text.find('🔱Guardian angel') != -1:
                             guardian = 1
+                            if guild_tag in list(guilds_chat_ids):
+                                sentinel_critical(bot, update)
                             text = mes.text.partition('🛡')[2]
-                            additional_defense = int(text[text.find('+') + 1:text.find(')')])
+                            try:
+                                additional_defense = int(text[text.find('+') + 1:text.find(')')])
+                            except ValueError:
+                                try:
+                                    additional_defense = int(text[text.find('-') : text.find(')')])
+                                except ValueError:
+                                    logging.error(traceback.format_exc())
+                                    additional_defense = 0
 
                         request = "INSERT INTO reports(user_id, battle_id, date_in, report_attack, report_defense," \
                                   " report_lvl, report_exp, report_gold, report_stock, critical_strike, guardian_angel," \
@@ -866,7 +888,7 @@ def textMessage(bot, update):
                         cursor.execute(request)
                         conn.commit()
 
-                        bot.send_message(chat_id=-1001197381190, text='Репорт успешно учтён для пользователя @' + mes.from_user.username)
+                        #bot.send_message(chat_id=-1001197381190, text='Репорт успешно учтён для пользователя @' + mes.from_user.username)
                         try:
                             bot.send_message(chat_id=update.message.from_user.id, text='Репорт учтён. Спасибо!')
                         except TelegramError:

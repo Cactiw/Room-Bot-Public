@@ -1,7 +1,7 @@
 import logging, datetime, random
 
 from work_materials.globals import *
-from work_materials.constants import archer_photo_ids
+from work_materials.constants import archer_photo_ids, sentinel_photo_ids, knight_photo_ids
 
 
 def set_class(bot, update):
@@ -19,6 +19,19 @@ def set_class(bot, update):
         bot.send_message(chat_id = mes.chat_id, text = "Класс успешно обновлён, <b>{0}</b>".format(current_class),
                          parse_mode = 'HTML')
 
+def knight_critical(bot, update):
+    file_id = random.choice(knight_photo_ids)
+    response = "Сегодня на поле боя ты показал невиданную храбрость, и удача к тебе была благосконна - твоя ярость" \
+               " не знала границ, твои соратники уважительно преклоняют голову перед тобой"
+    bot.sendPhoto(chat_id = update.message.chat_id, reply_to_message_id = update.message.message_id,
+                     caption = response, photo=file_id)
+
+def sentinel_critical(bot, update):
+    file_id = random.choice(sentinel_photo_ids)
+    response = "Зачастую люди рискуют другими, чтобы защитить себя. Истинный Защитник рискует собой, дабы защитить других.\n" \
+               "Сегодня ты сражался за всех тех людей, что остались в замке и со страхом ждали конца сражения."
+    bot.sendPhoto(chat_id = update.message.chat_id, reply_to_message_id = update.message.message_id,
+                     caption = response, photo=file_id)
 
 def ranger_notify(bot, job):
     context = job.context
