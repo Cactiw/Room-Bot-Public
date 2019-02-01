@@ -37,7 +37,10 @@ def ranger_notify(bot, job):
     context = job.context
     response = "Поднимай свой лук, <b>{0}</b>\n@{1}".format(context[1], context[0])
     file_id = random.choice(archer_photo_ids)
-    bot.sendPhoto(chat_id=context[2], caption=response, photo=file_id, parse_mode='HTML')
+    try:
+        bot.sendPhoto(chat_id=context[2], caption=response, photo=file_id, parse_mode='HTML')
+    except BadRequest:
+        bot.send_message(chat_id = admin_ids[0], text = "Ошибка при отправке уведомления лучнику, photo_id =\n{0}".format(file_id))
 
 
 def rangers_notify_start(bot, update, time_to_battle):
