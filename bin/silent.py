@@ -12,7 +12,7 @@ def battle_stats_send(bot, update = None):
     if update is not None:
         chat_id = update.message.chat_id
     else:
-        chat_id = -1001377426029
+        chat_id = -372516164
     d = datetime.datetime(2018, 5, 27, 7, 0, 0, 0)  # 8 для летнего времени
     c = datetime.datetime(2018, 5, 26, 23, 0, 0, 0)
     c = d - c
