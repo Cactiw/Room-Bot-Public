@@ -1248,6 +1248,7 @@ dispatcher.add_handler(CommandHandler("g_del_defense", g_del_defense, filters=(F
 dispatcher.add_handler(CommandHandler("g_defending_list", g_defending_list, filters=(Filters.user(user_id=231900398)  | Filters.user(user_id = 116028074))))
 
 dispatcher.add_handler(CommandHandler('calculate_pogs', calculate_pogs, pass_args=True))
+dispatcher.add_handler(CommandHandler('pogs', calculate_pogs, pass_args=True))
 
 dispatcher.add_handler(battle_history_handler)
 dispatcher.add_handler(add_battle_handler)
