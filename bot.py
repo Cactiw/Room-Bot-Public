@@ -930,6 +930,7 @@ def textMessage(bot, update):
 
                                     else:
                                         if time_from_battle > datetime.timedelta(hours = 1):
+                                            return # В первый час бот не сообщает о репорте в чат
                                             response += "Всё ещё не сдали репорты:\n"
                                             for user in guild_reports.users:
                                                 if not user.report_sent:
