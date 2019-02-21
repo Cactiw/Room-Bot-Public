@@ -930,11 +930,12 @@ def textMessage(bot, update):
 
                                     else:
                                         if time_from_battle > datetime.timedelta(hours = 1):
-                                            return # В первый час бот не сообщает о репорте в чат
                                             response += "Всё ещё не сдали репорты:\n"
                                             for user in guild_reports.users:
                                                 if not user.report_sent:
                                                     response += "<b>{0}</b>,    ".format(user.username)
+                                        else:
+                                            return # В первый час бот не сообщает о репорте в чат
                                     try:
                                         bot.sync_send_message(chat_id = chat_id, text = response, parse_mode = 'HTML')
                                     except TelegramError:
