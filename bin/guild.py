@@ -4,8 +4,8 @@ from libs.guild import *
 
 def g_info(bot, update):
     mes = update.message
-    request = "SELECT username, user_lvl, user_attack, user_defense FROM users WHERE guild = '{0}' ORDER BY user_lvl DESC".format(mes.text.split(' ')[1])
-    cursor.execute(request)
+    request = "SELECT username, user_lvl, user_attack, user_defense FROM users WHERE guild = %s ORDER BY user_lvl DESC"
+    cursor.execute(request, (mes.text.split(' ')[1],))
     row = cursor.fetchone()
 
     response = "Статистика по гильдии <b>" + mes.text.split(' ')[1] + "</b>:\n"
@@ -104,7 +104,7 @@ def g_all_attack(bot, update):
     request = "SELECT COUNT(1) FROM users WHERE guild = '{0}'".format(mes.text.split(' ')[2])
     request2 = "SELECT username, user_attack FROM users WHERE guild = '{0}'".format(mes.text.split(' ')[2])
     for i in range (1, num_attacking_guilds):
-        request += " OR guild = '{0}'".format(mes.text.split(' ')[i + 2])
+        request += " OR guild = '{0}'".format(mes.text.split(' ')[i + 2])    # TODO: сделать нормально
         request2 += " OR guild = '{0}'".format(mes.text.split(' ')[i + 2])
 
     request2 += " ORDER BY user_attack DESC"
@@ -191,8 +191,8 @@ def g_add_attack(bot, update):
     id = mes.reply_to_message.from_user.id
     global g_added_attack
     global g_attacking_users
-    request = "SELECT user_attack, username FROM users WHERE telegram_id = '{0}'".format(mes.reply_to_message.from_user.id)
-    cursor.execute(request)
+    request = "SELECT user_attack, username FROM users WHERE telegram_id = %s"
+    cursor.execute(request, (mes.reply_to_message.from_user.id,))
     row = cursor.fetchone()
     if row is None:
         bot.send_message(chat_id=update.message.chat_id, text="Пользователь не найден в базе данных")
@@ -240,8 +240,8 @@ def g_add_defense(bot, update):
     id = mes.reply_to_message.from_user.id
     global g_added_defense
     global g_defending_users
-    request = "SELECT user_defense, username FROM users WHERE telegram_id = '{0}'".format(mes.reply_to_message.from_user.id)
-    cursor.execute(request)
+    request = "SELECT user_defense, username FROM users WHERE telegram_id = %s"
+    cursor.execute(request, (mes.reply_to_message.from_user.id,))
     row = cursor.fetchone()
     if row is None:
         bot.send_message(chat_id=update.message.chat_id, text="Пользователь не найден в базе данных")

@@ -1,5 +1,5 @@
 from work_materials.globals import *
-import time
+import time, datetime
 
 class Trigger:
     def __init__(self, type, text):
@@ -32,10 +32,12 @@ class Trigger:
             self.type = 6
             self.text = incoming.reply_to_message.voice.file_id
         if global_trigger:
-            request = "INSERT INTO triggers(trigger_in, trigger_out, type, chat_id, creator, date_created) VALUES ('{0}', '{1}', '{2}', '{3}', '{4}', '{5}')".format(incoming.text.lower()[20:], str(self.text), self.type, 0, incoming.from_user.username, time.strftime('%Y-%m-%d %H:%M:%S'))
+            request = "INSERT INTO triggers(trigger_in, trigger_out, type, chat_id, creator, date_created) VALUES (%s, %s, %s, %s, %s, %s)"
+            args = [incoming.text.lower()[20:], str(self.text), self.type, 0, incoming.from_user.username, datetime.datetime.now(tz=moscow_tz).replace(tzinfo=None).strftime('%Y-%m-%d %H:%M:%S')]
         else:
-            request = "INSERT INTO triggers(trigger_in, trigger_out, type, chat_id, creator, date_created) VALUES ('{0}', '{1}', '{2}', '{3}', '{4}', '{5}')".format(incoming.text.lower()[13:], str(self.text), self.type, incoming.chat_id, incoming.from_user.username, time.strftime('%Y-%m-%d %H:%M:%S'))
-        cursor.execute(request)
+            request = "INSERT INTO triggers(trigger_in, trigger_out, type, chat_id, creator, date_created) VALUES (%s, %s, %s, %s, %s, %s)"
+            args = [incoming.text.lower()[13:], str(self.text), self.type, incoming.chat_id, incoming.from_user.username, datetime.datetime.now(tz=moscow_tz).replace(tzinfo=None).strftime('%Y-%m-%d %H:%M:%S')]
+        cursor.execute(request, args)
         conn.commit()
         cache_full()
 

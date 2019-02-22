@@ -25,8 +25,8 @@ def battle_stats_send(bot, update = None):
     print(battle_id)
     request = "SELECT user_id, report_attack, report_defense, report_lvl, report_exp, " \
               "report_gold, report_stock, critical_strike, guardian_angel, additional_attack, additional_defense " \
-              "FROM reports WHERE battle_id = '{0}' ORDER BY report_lvl DESC".format(battle_id)
-    cursor.execute(request)
+              "FROM reports WHERE battle_id = %s ORDER BY report_lvl DESC"
+    cursor.execute(request, (battle_id,))
     row = cursor.fetchone()
     if row is None:
         bot.send_message(chat_id = chat_id, text = "Я не нашёл репорты за прошедшую битву. Вы их кидали? Возможно, на сервере сбилось время")  # GH: -1001381505036 #Test: -1001468891144
@@ -40,8 +40,8 @@ def battle_stats_send(bot, update = None):
     guardian_angels = 0
     i = 1
     while row:
-        request = "SELECT user_castle, username FROM users WHERE user_id = '{0}' and (guild = 'KYS' or guild = 'СКИ')".format(row[0])
-        cursor_2.execute(request)
+        request = "SELECT user_castle, username FROM users WHERE user_id = '{0}' and (guild = 'KYS' or guild = 'СКИ')"
+        cursor_2.execute(request, (row[0],))
         user = cursor_2.fetchone()
         if user is None:
             row = cursor.fetchone()
@@ -108,8 +108,8 @@ def battle_stats_send(bot, update = None):
 
 def add_silent(bot, update):
     mes = update.message
-    request = "INSERT INTO silent(chat_id, chat_name) VALUES('{0}', '{1}')".format(mes.chat_id, mes.chat.title)
-    cursor.execute(request)
+    request = "INSERT INTO silent(chat_id, chat_name) VALUES(%s, %s)"
+    cursor.execute(request, (mes.chat_id, mes.chat.title,))
     conn.commit()
     bot.send_message(chat_id=update.message.chat_id, text='Беседа успешо добавлена к тишине')
 
@@ -245,13 +245,13 @@ def silent_stop(bot, update, job_queue):
 def sil_run(bot, update):
     mes = update.message
     mes1 = mes.text.split("_")
-    request = "SELECT * FROM silent WHERE silent_id = '{0}'".format(mes1[2])
-    cursor.execute(request)
+    request = "SELECT * FROM silent WHERE silent_id = '{0}'"
+    cursor.execute(request, (mes1[2],))
     row = cursor.fetchone()
     if row == None:
         bot.send_message(chat_id=update.message.chat_id, text='Ошибка. Такого чата не найдено')
         return
-    request = "UPDATE silent SET enabled = '{0}' WHERE silent_id = '{1}'".format(mes1[3], mes1[2])
-    cursor.execute(request)
+    request = "UPDATE silent SET enabled = %s WHERE silent_id = %s"
+    cursor.execute(request, (mes1[3], mes1[2]))
     conn.commit()
     bot.send_message(chat_id=update.message.chat_id, text='Выполнено')

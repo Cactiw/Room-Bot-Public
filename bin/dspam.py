@@ -6,14 +6,14 @@ def pr(bot, update):
     #if (mes.from_user.id != 231900398) and (mes.from_user.id not in get_admin_ids(bot, chat_id = -1001330929174)):
         #return
 
-    request = "SELECT * FROM users WHERE user_id = '{0}'".format(mes.text.split('_')[1])
-    cursor.execute(request)
+    request = "SELECT * FROM users WHERE user_id = %s"
+    cursor.execute(request, (mes.text.split('_')[1],))
     row = cursor.fetchone()
     if row != None:
         response = row[1] + "<b>" + row[4] + '</b>\nБоец замка ' + row[1] + '\n'
         if int(row[12]):
-            request = "SELECT * FROM dspam_users WHERE user_id = '{0}'".format(row[0])
-            cursor.execute(request)
+            request = "SELECT * FROM dspam_users WHERE user_id = %s"
+            cursor.execute(request, (row[0],))
             dspam_row = cursor.fetchone()
             if row is not None:
                 response += "\nПозывной: <b>" + str(dspam_row[3]) + "</b>\n"
@@ -35,8 +35,8 @@ def pr(bot, update):
             #return
         bot.send_message(chat_id=update.message.chat_id, text=response, parse_mode='HTML')
     else:
-        request = "SELECT * FROM dspam_users WHERE telegram_id = %s" % mes.from_user.id
-        cursor.execute(request)
+        request = "SELECT * FROM dspam_users WHERE telegram_id = %s"
+        cursor.execute(request, (mes.from_user.id,))
         dspam_row = cursor.fetchone()
         if row is not None:
             response = "Позывной: <b>" + str(dspam_row[3]) + "</b>\n"
@@ -56,8 +56,8 @@ def rank_list(bot, update, args):
         arg = 0
     else:
         arg = args[0]
-    request = "SELECT * FROM ranks WHERE rank_unique = '{0}'".format(arg)
-    cursor.execute(request)
+    request = "SELECT * FROM ranks WHERE rank_unique = %s"
+    cursor.execute(request, (arg,))
     row = cursor.fetchone()
     if row is None:
         response = 'Званий ещё нет. Добавьте!'
@@ -102,8 +102,8 @@ def add_rank(bot, update):
 
 def rank(bot, update):
     mes = update.message
-    request = "SELECT * FROM ranks WHERE rank_id = '{0}'".format(mes.text.split("_")[1])
-    cursor.execute(request)
+    request = "SELECT * FROM ranks WHERE rank_id = %s"
+    cursor.execute(request, (mes.text.split("_")[1],))
     row = cursor.fetchone()
     if row is None:
         response = 'Звание не обнаружено'
@@ -131,33 +131,33 @@ def set_rank(bot, update, args):
         response = 'Неверный синтаксис'
         bot.send_message(chat_id=update.message.chat_id, text=response)
         return
-    request = "SELECT rank_name FROM ranks WHERE rank_id = '{0}'".format(args[1])
-    cursor.execute(request)
+    request = "SELECT rank_name FROM ranks WHERE rank_id = %s"
+    cursor.execute(request, (args[1],))
     row = cursor.fetchone()
     if row is None:
         response = 'Звание не найдено'
         bot.send_message(chat_id=update.message.chat_id, text=response)
         return
-    request = "SELECT * FROM dspam_users WHERE user_id = '{0}'".format(args[0])
-    cursor.execute(request)
+    request = "SELECT * FROM dspam_users WHERE user_id = %s"
+    cursor.execute(request, (args[0],))
     row = cursor.fetchone()
     if row is None:
         response = 'Профиль не найден'
         bot.send_message(chat_id=update.message.chat_id, text=response)
         return
-    request = "UPDATE dspam_users SET rank = '{0}' WHERE user_id = '{1}'".format(args[1], args[0])
-    cursor.execute(request)
+    request = "UPDATE dspam_users SET rank = %s WHERE user_id = %s"
+    cursor.execute(request, (args[1], args[0]))
     conn.commit()
 
     response = 'Звание успешно изменено!'
     bot.send_message(chat_id=update.message.chat_id, text=response)
     response_to_id = row[1]
-    request = "SELECT username FROM dspam_users WHERE telegram_id = '{0}'".format(mes.from_user.id)
-    cursor.execute(request)
+    request = "SELECT username FROM dspam_users WHERE telegram_id = %s"
+    cursor.execute(request, (mes.from_user.id,))
     row = cursor.fetchone()
     username = row[0]
-    request = "SELECT rank_name FROM ranks WHERE rank_id = '{0}'".format(args[1])
-    cursor.execute(request)
+    request = "SELECT rank_name FROM ranks WHERE rank_id = %s"
+    cursor.execute(request, (args[1],))
     row = cursor.fetchone()
     rank = row[0]
     try:
@@ -170,8 +170,8 @@ def edit_rank(bot, update):
     mes = update.message
     if (mes.from_user.id != 231900398) and (mes.from_user.id not in get_admin_ids(bot, chat_id=-1001330929174)):
         return
-    request = "SELECT * FROM ranks WHERE rank_id = '{0}'".format(mes.text.split("_")[2])
-    cursor.execute(request)
+    request = "SELECT * FROM ranks WHERE rank_id = %s"
+    cursor.execute(request, (mes.text.split("_")[2],))
     row = cursor.fetchone()
     if row is None:
         response = 'Звание не обнаружено'
@@ -198,18 +198,18 @@ def del_rank(bot, update):
     mes = update.message
     if (mes.from_user.id != 231900398) and (mes.from_user.id not in get_admin_ids(bot, chat_id=-1001330929174)):
         return
-    request = "SELECT rank_id FROM ranks WHERE rank_id = '{0}'".format(mes.text.split("_")[2])
-    cursor.execute(request)
+    request = "SELECT rank_id FROM ranks WHERE rank_id = %s"
+    cursor.execute(request, (mes.text.split("_")[2],))
     row = cursor.fetchone()
     if row is None:
         response = 'Звание не обнаружено'
         bot.send_message(chat_id=update.message.chat_id, text=response)
         return
-    request = "UPDATE dspam_users SET rank = 3 WHERE rank = '{0}'".format(mes.text.split("_")[2])
-    cursor.execute(request)
+    request = "UPDATE dspam_users SET rank = 3 WHERE rank = %s"
+    cursor.execute(request, (mes.text.split("_")[2],))
     conn.commit()
-    request = "DELETE FROM ranks WHERE rank_id = '{0}'".format(mes.text.split("_")[2])
-    cursor.execute(request)
+    request = "DELETE FROM ranks WHERE rank_id = %s"
+    cursor.execute(request, (mes.text.split("_")[2],))
     conn.commit()
     response = 'Звание успешно удалено\nВсе пользователи, имевшие это звание, получили стандартное.'
     bot.send_message(chat_id=update.message.chat_id, text=response)
@@ -221,8 +221,8 @@ def r_set_name(bot, update):
     mes = update.message
     if (mes.from_user.id != 231900398) and (mes.from_user.id not in get_admin_ids(bot, chat_id=-1001330929174)):
         return
-    request = "SELECT rank_id FROM ranks WHERE rank_id = '{0}'".format(mes.text.split(" ")[1])
-    cursor.execute(request)
+    request = "SELECT rank_id FROM ranks WHERE rank_id = %s"
+    cursor.execute(request, (mes.text.split(" ")[1],))
     row = cursor.fetchone()
     if row is None:
         response = 'Звание не обнаружено'
@@ -230,8 +230,8 @@ def r_set_name(bot, update):
         return
     offset = mes.text.find(" ") + 1
     from_position = mes.text[offset:].find(" ")
-    request = "UPDATE ranks SET rank_name = '{0}' WHERE rank_id = '{1}'".format(mes.text[from_position + offset + 1:], mes.text.split(" ")[1])
-    cursor.execute(request)
+    request = "UPDATE ranks SET rank_name = %s WHERE rank_id = %s"
+    cursor.execute(request, (mes.text[from_position + offset + 1:], mes.text.split(" ")[1]))
     conn.commit()
     response = 'Успешно изменено'
     bot.send_message(chat_id=update.message.chat_id, text=response)
@@ -241,8 +241,8 @@ def r_set_description(bot, update):
     mes = update.message
     if (mes.from_user.id != 231900398) and (mes.from_user.id not in get_admin_ids(bot, chat_id=-1001330929174)):
         return
-    request = "SELECT rank_id FROM ranks WHERE rank_id = '{0}'".format(mes.text.split(" ")[1])
-    cursor.execute(request)
+    request = "SELECT rank_id FROM ranks WHERE rank_id = %s"
+    cursor.execute(request, (mes.text.split(" ")[1],))
     row = cursor.fetchone()
     if row is None:
         response = 'Звание не обнаружено'
@@ -250,8 +250,8 @@ def r_set_description(bot, update):
         return
     offset = mes.text.find(" ") + 1
     from_position = mes.text[offset:].find(" ")
-    request = "UPDATE ranks SET rank_data = '{0}' WHERE rank_id = '{1}'".format(mes.text[from_position + offset + 1:], mes.text.split(" ")[1])
-    cursor.execute(request)
+    request = "UPDATE ranks SET rank_data = %s WHERE rank_id = %s"
+    cursor.execute(request, (mes.text[from_position + offset + 1:], mes.text.split(" ")[1]))
     conn.commit()
     response = 'Успешно изменено'
     bot.send_message(chat_id=update.message.chat_id, text=response)
@@ -260,15 +260,15 @@ def r_set_unique(bot, update):
     mes = update.message
     if (mes.from_user.id != 231900398) and (mes.from_user.id not in get_admin_ids(bot, chat_id=-1001330929174)):
         return
-    request = "SELECT rank_id FROM ranks WHERE rank_id = '{0}'".format(mes.text.split("_")[3])
-    cursor.execute(request)
+    request = "SELECT rank_id FROM ranks WHERE rank_id = %s"
+    cursor.execute(request, (mes.text.split("_")[3],))
     row = cursor.fetchone()
     if row is None:
         response = 'Звание не обнаружено'
         bot.send_message(chat_id=update.message.chat_id, text=response)
         return
-    request = "UPDATE ranks SET rank_unique = '{0}' WHERE rank_id = '{1}'".format(mes.text.split("_")[4], mes.text.split("_")[3])
-    cursor.execute(request)
+    request = "UPDATE ranks SET rank_unique = %s WHERE rank_id = %s"
+    cursor.execute(request, (mes.text.split("_")[4], mes.text.split("_")[3]))
     conn.commit()
     response = 'Успешно изменено'
     bot.send_message(chat_id=update.message.chat_id, text=response)
@@ -277,21 +277,21 @@ def r_set_unique(bot, update):
 
 def reg(bot, update):
     mes = update.message
-    request = "SELECT * FROM users WHERE telegram_id = '{0}'".format(mes.from_user.id)
-    cursor.execute(request)
+    request = "SELECT * FROM users WHERE telegram_id = %s"
+    cursor.execute(request, (mes.from_user.id,))
     row = cursor.fetchone()
     if row is None: #Добавляем челика не из чв
         #response = 'Профиль отсутствует, пожалуйста, пришлите мне /hero'
         #bot.send_message(chat_id=update.message.chat_id, text=response)
         #return
-        request = "INSERT INTO users(user_castle, telegram_id, telegram_username, username, last_update, dspam_user) VALUES ('🔒', '{0}', '{1}', '{2}', '{3}', '1')".format(mes.from_user.id, mes.from_user.username, mes.from_user.username, time.strftime('%Y-%m-%d %H:%M:%S'))
-        cursor.execute(request)
+        request = "INSERT INTO users(user_castle, telegram_id, telegram_username, username, last_update, dspam_user) VALUES ('🔒', %s, %s, %s, %s, '1')"
+        cursor.execute(request, (mes.from_user.id, mes.from_user.username, mes.from_user.username, time.strftime('%Y-%m-%d %H:%M:%S'),))
         conn.commit()
         request = "SELECT user_id FROM users WHERE telegram_id = '{0}'".format(mes.from_user.id)
         cursor.execute(request)
         row = cursor.fetchone()
-        request = "INSERT INTO dspam_users(user_id, telegram_id, username) VALUES ('{0}', '{1}', '{2}')".format(int(row[0]), mes.from_user.id, mes.from_user.username)
-        cursor.execute(request)
+        request = "INSERT INTO dspam_users(user_id, telegram_id, username) VALUES (%s, %s, %s)"
+        cursor.execute(request, (int(row[0]), mes.from_user.id, mes.from_user.username))
         conn.commit()
         response = 'Регистрация успешна'
         bot.send_message(chat_id=update.message.chat_id, text=response)
@@ -300,11 +300,11 @@ def reg(bot, update):
         response = 'Вы уже зарегистрированы'
         bot.send_message(chat_id=update.message.chat_id, text=response)
         return
-    request = "UPDATE users SET dspam_user = '1' where telegram_id = '{0}'".format(mes.from_user.id)
-    cursor.execute(request)
+    request = "UPDATE users SET dspam_user = '1' where telegram_id = %s"
+    cursor.execute(request, (mes.from_user.id,))
     conn.commit()
-    request = "INSERT INTO dspam_users(user_id, telegram_id, username) VALUES ('{0}', '{1}', '{2}')".format(int(row[0]), mes.from_user.id, row[4])
-    cursor.execute(request)
+    request = "INSERT INTO dspam_users(user_id, telegram_id, username) VALUES (%s, %s, %s)"
+    cursor.execute(request, (int(row[0]), mes.from_user.id, row[4]))
     conn.commit()
     response = 'Регистрация успешна'
     bot.send_message(chat_id=update.message.chat_id, text=response)
@@ -316,16 +316,16 @@ def set_call_sign(bot, update, args):
         response = 'Неверный синтаксис'
         bot.send_message(chat_id=update.message.chat_id, text=response)
         return
-    request = "SELECT * FROM dspam_users WHERE telegram_id = '{0}'".format(mes.from_user.id)
-    cursor.execute(request)
+    request = "SELECT * FROM dspam_users WHERE telegram_id = %s"
+    cursor.execute(request, (mes.from_user.id,))
     row = cursor.fetchone()
     if row is None:
         response = 'Профиль не найден'
         bot.send_message(chat_id=update.message.chat_id, text=response)
         return
 
-    request = "INSERT INTO requests(request_type, user_id, data) VALUES ('1', '{0}', '{1}')".format(int(row[0]), mes.text[15:])
-    cursor.execute(request)
+    request = "INSERT INTO requests(request_type, user_id, data) VALUES ('1', %s, %s)"
+    cursor.execute(request, (int(row[0]), mes.text[15:]))
     conn.commit()
     response = 'Запрос на изменение позывного опубликован'
     bot.send_message(chat_id=update.message.chat_id, text=response)
@@ -346,23 +346,23 @@ def force_call_sign(bot, update, args):
         response = 'Неверный синтаксис'
         bot.send_message(chat_id=update.message.chat_id, text=response)
         return
-    request = "SELECT * FROM dspam_users WHERE user_id = '{0}'".format(args[0])
-    cursor.execute(request)
+    request = "SELECT * FROM dspam_users WHERE user_id = %s"
+    cursor.execute(request, (args[0],))
     row = cursor.fetchone()
     if row is None:
         response = 'Профиль не найден'
         bot.send_message(chat_id=update.message.chat_id, text=response)
         return
     from_position = mes.text[17:].find(" ") + 17 + 1
-    request = "UPDATE dspam_users SET call_sign = '{0}' WHERE user_id = '{1}'".format(mes.text[from_position:].upper(), row[0])
-    cursor.execute(request)
+    request = "UPDATE dspam_users SET call_sign = %s WHERE user_id = %s"
+    cursor.execute(request, (mes.text[from_position:].upper(), row[0]))
     conn.commit()
 
     response = 'Позывной успешно изменён!'
     bot.send_message(chat_id=update.message.chat_id, text=response)
     response_to_id = row[1]
-    request = "SELECT call_sign, username FROM dspam_users WHERE telegram_id = '{0}'".format(mes.from_user.id)
-    cursor.execute(request)
+    request = "SELECT call_sign, username FROM dspam_users WHERE telegram_id = %s"
+    cursor.execute(request, (mes.from_user.id,))
     row = cursor.fetchone()
     sign = row[0]
     if row[0] == "Тебя никто не знает (установи позывной)":
@@ -410,24 +410,24 @@ def confirm(bot, update):
     if mes.from_user.id != 231900398 and mes.from_user.id not in get_admin_ids(bot, chat_id = -1001330929174):
         return
     request_id = int(mes.text.split('_')[1])
-    request = "SELECT * FROM requests WHERE request_id = '{0}'".format(request_id)
-    cursor.execute(request)
+    request = "SELECT * FROM requests WHERE request_id = %s"
+    cursor.execute(request, (request_id,))
     row = cursor.fetchone()
     if row is None:
         response = 'Запрос не найден'
         bot.send_message(chat_id=update.message.chat_id, text=response)
         return
     if row[1] == 1:
-        request = "UPDATE dspam_users SET call_sign = '{0}' WHERE user_id = '{1}'".format(row[3].upper(), row[2])
-        cursor.execute(request)
+        request = "UPDATE dspam_users SET call_sign = %s WHERE user_id = %s"
+        cursor.execute(request, (row[3].upper(), row[2]))
         conn.commit()
-        request = "DELETE FROM requests WHERE request_id = '{0}'".format(request_id)
-        cursor.execute(request)
+        request = "DELETE FROM requests WHERE request_id = %s"
+        cursor.execute(request, (request_id,))
         conn.commit()
         response = 'Запрос успешно принят. Хорошего дня!\nПросмотреть остальные запросы: /requests'
         bot.send_message(chat_id = update.message.chat_id, text=response)
-        request = "SELECT telegram_id FROM users WHERE user_id = '{0}'".format(row[2])
-        cursor.execute(request)
+        request = "SELECT telegram_id FROM users WHERE user_id = %s"
+        cursor.execute(request, (row[2],))
         response_to_id = cursor.fetchone()
         try:
             bot.send_message(chat_id = response_to_id[0], text = "Ваш запрос на изменение позывного на <b>{0}</b> одобрен.\nСмотрите изменения в /profile".format(row[3]), parse_mode='HTML')
@@ -439,22 +439,22 @@ def reject(bot, update):
     if mes.from_user.id != 231900398 and mes.from_user.id not in get_admin_ids(bot, chat_id = -1001330929174):
         return
     request_id = int(mes.text.split('_')[1])
-    request = "SELECT * FROM requests WHERE request_id = '{0}'".format(request_id)
-    cursor.execute(request)
+    request = "SELECT * FROM requests WHERE request_id = %s"
+    cursor.execute(request, (request_id,))
     row = cursor.fetchone()
     if row is None:
         response = 'Запрос не найден'
         bot.send_message(chat_id=update.message.chat_id, text=response)
         return
     if row[1] == 1:
-        request = "DELETE FROM requests WHERE request_id = '{0}'".format(request_id)
-        cursor.execute(request)
+        request = "DELETE FROM requests WHERE request_id = %s"
+        cursor.execute(request, (request_id,))
         conn.commit()
         response = 'Запрос отклонён. Хорошего дня!\nПросмотреть остальные запросы: /requests'
         bot.send_message(chat_id=update.message.chat_id, text=response)
 
-        request = "SELECT telegram_id FROM users WHERE user_id = '{0}'".format(row[2])
-        cursor.execute(request)
+        request = "SELECT telegram_id FROM users WHERE user_id = %s"
+        cursor.execute(request, (row[2],))
         response_to_id = cursor.fetchone()
         try:
             bot.send_message(chat_id=response_to_id[0], text="Ваш запрос на изменение позывного на <b>{0}</b> отклонён.\nУзнайте, почему у @Cactiw!".format(row[3]), parse_mode='HTML')
@@ -473,8 +473,8 @@ def dspam_list(bot, update):
     row = cursor.fetchone()
     response = "Список зарегистрированных пользователей ДСПАМ:\n"
     while row:
-        request = "SELECT telegram_username, username FROM users WHERE user_id = '{0}'".format(row[0])
-        cursor_2.execute(request)
+        request = "SELECT telegram_username, username FROM users WHERE user_id = %s"
+        cursor_2.execute(request, (row[0],))
         names = cursor_2.fetchone()
         response_new = ""
         response_new += "\n<b>" + names[1] + "</b>"
@@ -482,8 +482,8 @@ def dspam_list(bot, update):
         if names[0]:
             response_new += " @" + names[0]
         response_new += "\nПодробнее: /pr_" + str(row[0]) + "\n"
-        request = "SELECT rank_name, rank_unique FROM ranks WHERE rank_id = '{0}'".format(row[4])
-        cursor_2.execute(request)
+        request = "SELECT rank_name, rank_unique FROM ranks WHERE rank_id = %s"
+        cursor_2.execute(request, (row[4],))
         rank = cursor_2.fetchone()
         response_new += "<b>"
         if rank[1]:

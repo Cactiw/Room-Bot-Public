@@ -38,14 +38,14 @@ def menuCommand(bot, update):
 
 def add_pin(bot, update):
     mes = update.message
-    request = "SELECT pin_id FROM pins WHERE chat_id = '{0}'".format(mes.chat_id)
-    cursor.execute(request)
+    request = "SELECT pin_id FROM pins WHERE chat_id = %s"
+    cursor.execute(request, (mes.chat_id,))
     row = cursor.fetchone()
     if row is not None:
         bot.send_message(chat_id=update.message.chat_id, text='Беседа уже подключена к рассылке')
         return
-    request = "INSERT INTO pins(chat_id, chat_name) VALUES('{0}', '{1}')".format(mes.chat_id, mes.chat.title)
-    cursor.execute(request)
+    request = "INSERT INTO pins(chat_id, chat_name) VALUES(%s, %s)"
+    cursor.execute(request, (mes.chat_id, mes.chat.title))
     conn.commit()
     bot.send_message(chat_id=update.message.chat_id, text='Беседа успешо подключена к рассылке')
 
@@ -82,8 +82,8 @@ def pin_setup(bot, update):
 def pinset(bot, update):
     mes = update.message
     mes1 = mes.text.split("_")
-    request = "UPDATE pins SET enabled = '{0}' WHERE pin_id = '{1}'".format(mes1[2], mes1[1])
-    cursor.execute(request)
+    request = "UPDATE pins SET enabled = %s WHERE pin_id = %s"
+    cursor.execute(request, (mes1[2], mes1[1]))
     conn.commit()
     bot.send_message(chat_id=update.message.chat_id, text='Выполнено')
 
@@ -92,15 +92,15 @@ def pinpin(bot, update):
     mes = update.message
     mes1 = mes.text.split("_")
     #print(mes1[0], mes1[1], mes1[2])
-    request = "UPDATE pins SET pin = '{0}' WHERE pin_id = '{1}'".format(mes1[2], mes1[1])
-    cursor.execute(request)
+    request = "UPDATE pins SET pin = %s WHERE pin_id = %s"
+    cursor.execute(request, (mes1[2], mes1[1]))
     conn.commit()
     bot.send_message(chat_id=update.message.chat_id, text='Выполнено')
 
 def pinmute(bot, update):
     mes = update.message
     mes1 = mes.text.split("_")
-    request = "UPDATE pins SET disable_notification = '{0}' WHERE pin_id = '{1}'".format(mes1[2], mes1[1])
-    cursor.execute(request)
+    request = "UPDATE pins SET disable_notification = %s WHERE pin_id = %s"
+    cursor.execute(request, (mes1[2], mes1[1]))
     conn.commit()
     bot.send_message(chat_id=update.message.chat_id, text='Выполнено')

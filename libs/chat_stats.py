@@ -45,17 +45,16 @@ class ChatStats:
 
         request = "select chat_name, message_count, text_messages_count, stickers_messages_count, " \
                   "audio_messages_count, photo_messages_count, video_messages_count, document_messages_count, " \
-                  "voice__messages_count from stats where chat_id = '{0}'".format(self.chat_id)
-        cursor.execute(request)
+                  "voice__messages_count from stats where chat_id = %s"
+        cursor.execute(request, (self.chat_id,))
         row = cursor.fetchone()
         if row is None:
             request = "insert into stats(chat_id, chat_name, message_count, text_messages_count, stickers_messages_count, " \
                   "audio_messages_count, photo_messages_count, video_messages_count, document_messages_count, " \
-                  "voice__messages_count) values('{0}', '{1}', '{2}', '{3}', '{4}', '{5}', '{6}', '{7}', '{8}', " \
-                      "'{9}')".format(self.chat_id, self.chat_name, self.message_count, self.text_messages_count,
+                  "voice__messages_count) values(%s, %s, %s,%s, %s, %s,%s, %s, %s, %s)"
+            cursor.execute(request, (self.chat_id, self.chat_name, self.message_count, self.text_messages_count,
                                       self.stickers_messages_count, self.audio_messages_count, self.photo_messages_count,
-                                      self.video_messages_count, self.document_messages_count, self.voice_messages_count)
-            cursor.execute(request)
+                                      self.video_messages_count, self.document_messages_count, self.voice_messages_count))
             conn.commit()
             return CREATE_ROW_RETURN_CODE
 
@@ -70,14 +69,14 @@ class ChatStats:
         self.voice_messages_count = row[8]
         return
     def update_to_database(self):
-        request = "update stats set message_count = '{0}', text_messages_count = '{1}', stickers_messages_count = '{2}', " \
-                  "audio_messages_count = '{3}', photo_messages_count = '{4}'," \
-                  "video_messages_count = '{5}', document_messages_count = '{7}', voice__messages_count = '{8}'" \
-                  "  where chat_id = '{6}'".format(self.message_count, self.text_messages_count,
+        request = "update stats set message_count = %s, text_messages_count = %s, stickers_messages_count = %s, " \
+                  "audio_messages_count = %s, photo_messages_count = %s," \
+                  "video_messages_count = %s, document_messages_count = %s, voice__messages_count = %s" \
+                  "  where chat_id = %s".format()
+        cursor.execute(request, (self.message_count, self.text_messages_count,
                                                    self.stickers_messages_count, self.audio_messages_count,
-                                                   self.photo_messages_count, self.video_messages_count, self.chat_id,
-                                                   self.document_messages_count, self.voice_messages_count)
-        cursor.execute(request)
+                                                   self.photo_messages_count, self.video_messages_count,
+                                                   self.document_messages_count, self.voice_messages_count, self.chat_id))
         conn.commit()
 
 class FilterAnyMessage(BaseFilter):
