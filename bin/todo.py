@@ -9,8 +9,8 @@ def todo(bot, update):
         return
     priority = 5
     data = update.message.reply_to_message.text
-    request = "insert into todo(priority, data, date_created) values ('{0}', '{1}', '{2}') returning id".format(priority, data, time.strftime('%Y-%m-%d %H:%M:%S'))
-    cursor.execute(request)
+    request = "insert into todo(priority, data, date_created) values (%s, %s, %s) returning id"
+    cursor.execute(request, (priority, data, time))
     conn.commit()
     try:
         row = cursor.fetchone()
@@ -39,13 +39,13 @@ def todo_list(bot, update):
 
 def complete_todo(bot, update):
     id = update.message.text.split("_")[2].partition("@")[0]
-    request = "select id from todo where id = '{0}'".format(id)
-    cursor.execute(request)
+    request = "select id from todo where id = %s"
+    cursor.execute(request, (id,))
     row = cursor.fetchone()
     if row is None:
         bot.send_message(chat_id=update.message.chat_id, text="Не найдено. Проверьте синтаксис")
         return
-    request = "update todo set completed = 1, date_completed = '{0}' where id = '{1}'".format(time.strftime('%Y-%m-%d %H:%M:%S'), id)
-    cursor.execute(request)
+    request = "update todo set completed = 1, date_completed = %s where id = %s"
+    cursor.execute(request, (time, id))
     conn.commit()
     bot.send_message(chat_id=update.message.chat_id, text="Успешно выполнено. Поздравляем!", parse_mode='HTML')

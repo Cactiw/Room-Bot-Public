@@ -167,14 +167,14 @@ def infoCommand(bot, update):
 
 def add_admin(bot, update):
     mes = update.message
-    request = "SELECT * FROM admins WHERE user_id = '{0}'".format(mes.reply_to_message.from_user.id)
-    cursor.execute(request)
+    request = "SELECT * FROM admins WHERE user_id = %s"
+    cursor.execute(request, (mes.reply_to_message.from_user.id,))
     row = cursor.fetchone()
     if row:
         bot.send_message(chat_id=update.message.chat_id, text='Ошибка. Админ уже существует')
     else:
-        request = "INSERT INTO admins(user_id, user_name) VALUES ('{0}', '{1}')".format(mes.reply_to_message.from_user.id, mes.reply_to_message.from_user.username)
-        cursor.execute(request)
+        request = "INSERT INTO admins(user_id, user_name) VALUES (%s, %s)"
+        cursor.execute(request, (mes.reply_to_message.from_user.id, mes.reply_to_message.from_user.username))
         conn.commit()
 
         response = 'Админ добавлен'
@@ -182,19 +182,19 @@ def add_admin(bot, update):
 
 def profile(bot, update):#Вывод профиля
     mes = update.message
-    request = "SELECT * FROM users WHERE telegram_id = %s" % mes.from_user.id
-    cursor.execute(request)
+    request = "SELECT * FROM users WHERE telegram_id = %s"
+    cursor.execute(request, (mes.from_user.id,))
     row = cursor.fetchone()
     if row != None:
         response = row[1] + "<b>" + row[4] + '</b>\nБоец замка ' + row[1] + '\n'
         if int(row[12]):
-            request = "SELECT * FROM dspam_users WHERE user_id = '{0}'".format(row[0])
-            cursor.execute(request)
+            request = "SELECT * FROM dspam_users WHERE user_id = %s"
+            cursor.execute(request, (row[0],))
             dspam_row = cursor.fetchone()
             if row is not None:
                 response += "\nПозывной: <b>" + str(dspam_row[3]) + "</b>\n"
-                request = "SELECT rank_name, rank_unique FROM ranks WHERE rank_id = '{0}'".format(dspam_row[4])
-                cursor_2.execute(request)
+                request = "SELECT rank_name, rank_unique FROM ranks WHERE rank_id = %s"
+                cursor_2.execute(request, (dspam_row[4],))
                 rank = cursor_2.fetchone()
                 response += "Звание: <b>"
                 if rank[1]:
@@ -213,8 +213,8 @@ def profile(bot, update):#Вывод профиля
         response = response + 'Последнее обновление профиля: ' + str(row[10]) + '\n'
         bot.send_message(chat_id=update.message.chat_id, text=response, parse_mode='HTML')
     else:
-        request = "SELECT * FROM dspam_users WHERE telegram_id = %s" % mes.from_user.id
-        cursor.execute(request)
+        request = "SELECT * FROM dspam_users WHERE telegram_id = %s"
+        cursor.execute(request, (mes.from_user.id,))
         dspam_row = cursor.fetchone()
         if row is not None:
             response = "Позывной: <b>" + str(dspam_row[3]) + "</b>\n"
@@ -233,8 +233,8 @@ def profile(bot, update):#Вывод профиля
 def setdr(bot, update):#Задание дня рождения
     mes = update.message #/setdr mm-dd
 
-    request = "SELECT * FROM users WHERE telegram_id = '{0}'".format(mes.from_user.id)
-    cursor.execute(request)
+    request = "SELECT * FROM users WHERE telegram_id = %s"
+    cursor.execute(request, (mes.from_user.id,))
     row = cursor.fetchone()
     if row == None:
         response = "Пользователь не найден, обновите /hero"
@@ -243,8 +243,8 @@ def setdr(bot, update):#Задание дня рождения
 
     a = mes.text[7:]
     a = '2000-' + a
-    request = "UPDATE users SET birthday = '{0}' WHERE telegram_id = '{1}'".format(a, mes.from_user.id)
-    cursor.execute(request)
+    request = "UPDATE users SET birthday = %s WHERE telegram_id = %s"
+    cursor.execute(request, (a, mes.from_user.id))
     conn.commit()
     bot.send_message(chat_id=update.message.chat_id, text='День рождения обновлён')
 
@@ -303,8 +303,8 @@ def dr(bot, update):    #   TODO починить дни рождения
                 bot.send_message(chat_id=update.message.chat_id, text=response, parse_mode = 'HTML')
                 return
             else:
-                request = "SELECT birthday FROM users WHERE username = '{0}'".format(users_by_dr[i].username)
-                cursor.execute(request)
+                request = "SELECT birthday FROM users WHERE username = %s"
+                cursor.execute(request, (users_by_dr[i].username,))
                 row = cursor.fetchone()
                 date = str(row[0])[5:].split("-")
                 response = "Сегодня день рождения никто не празднует, однако ближайший день рождения у <b>{0}</b>, готовим поздравления к <b>{1}</b>\nЭто через <b>{2}</b>".format(users_by_dr[i].username, date[1] + '/' + date[0], users_by_dr[i].delta)
@@ -418,11 +418,11 @@ def battles_stats(bot, update):
 
 def battle_history(bot, update):
     mes = update.message
-    request = "SELECT user_id FROM users WHERE telegram_id = %s" % mes.from_user.id
-    cursor.execute(request)
+    request = "SELECT user_id FROM users WHERE telegram_id = %s"
+    cursor.execute(request, (mes.from_user.id,))
     row = cursor.fetchone()
-    request = "SELECT battle_id, date_in, report_attack, report_defense, report_lvl, report_exp, report_gold, report_stock, critical_strike, guardian_angel FROM reports WHERE user_id = %s ORDER BY battle_id" % row
-    cursor.execute(request)
+    request = "SELECT battle_id, date_in, report_attack, report_defense, report_lvl, report_exp, report_gold, report_stock, critical_strike, guardian_angel FROM reports WHERE user_id = %s ORDER BY battle_id"
+    cursor.execute(request, (row[0],))
     row = cursor.fetchone()
     #print(row)
     response = '' 'История битв по внесённым репортам:'
@@ -502,20 +502,20 @@ def textMessage(bot, update):
             if mes.reply_to_message:
                 if mes.from_user.id != mes.reply_to_message.from_user.id:
 
-                    request = "SELECT user_id, call_sign, reputation FROM dspam_users WHERE telegram_id = '{0}'".format(mes.reply_to_message.from_user.id)
-                    cursor.execute(request)
+                    request = "SELECT user_id, call_sign, reputation FROM dspam_users WHERE telegram_id = %s"
+                    cursor.execute(request, (mes.reply_to_message.from_user.id,))
                     row = cursor.fetchone()
                     if mes.text.find ('+') == 0:
                         reputation_change = 1
                     else:
                         reputation_change = -1
                     reputation = row[2] + reputation_change
-                    request = "UPDATE dspam_users SET reputation = '{0}' WHERE user_id = '{1}'".format(reputation, row[0])
-                    cursor.execute(request)
+                    request = "UPDATE dspam_users SET reputation = %s WHERE user_id = %s"
+                    cursor.execute(request, (reputation, row[0]))
                     conn.commit()
 
-                    request = "SELECT call_sign, reputation FROM dspam_users WHERE telegram_id = '{0}'".format(mes.from_user.id)
-                    cursor.execute(request)
+                    request = "SELECT call_sign, reputation FROM dspam_users WHERE telegram_id = %s".format()
+                    cursor.execute(request, (mes.from_user.id,))
                     user_from = cursor.fetchone()
                     response = ""
                     if user_from:
@@ -531,8 +531,8 @@ def textMessage(bot, update):
 
         if mes.text.lower().find ("доброе утро") > -1 or mes.text.lower().find ("утречка") > -1 or mes.text.lower().find ("доброго утра") > -1:
             response = ""
-            request = "SELECT call_sign, reputation FROM dspam_users WHERE telegram_id = '{0}'".format(mes.from_user.id)
-            cursor.execute(request)
+            request = "SELECT call_sign, reputation FROM dspam_users WHERE telegram_id = %s"
+            cursor.execute(request, (mes.from_user.id,))
             row = cursor.fetchone()
             if row is not None:
                 if mes.from_user.id in get_admin_ids(bot, chat_id=-1001330929174):
@@ -558,15 +558,15 @@ def textMessage(bot, update):
                 response += "Ваша репутация:" + str(row[1])
                 bot.send_message(chat_id=update.message.chat_id, text=response, parse_mode='HTML', reply_to_message_id=mes.message_id)
 
-        request = "SELECT user_id, call_sign FROM dspam_users WHERE call_sign = '{0}'".format(trigger_mes.upper())
-        cursor.execute(request)
+        request = "SELECT user_id, call_sign FROM dspam_users WHERE call_sign = %s"
+        cursor.execute(request, (trigger_mes.upper(),))
         row = cursor.fetchone()
         if row:
-            request = "SELECT call_sign FROM dspam_users WHERE telegram_id = '{0}'".format(mes.from_user.id)
-            cursor.execute(request)
+            request = "SELECT call_sign FROM dspam_users WHERE telegram_id = %s"
+            cursor.execute(request, (mes.from_user.id,))
             username = cursor.fetchone()[0]
-            request = "SELECT telegram_username FROM users WHERE user_id = '{0}'".format(row[0])
-            cursor.execute(request)
+            request = "SELECT telegram_username FROM users WHERE user_id = %s"
+            cursor.execute(request, (row[0],))
             telegram_username = cursor.fetchone()[0]
 
             request = "SELECT telegram_id FROM dspam_users ORDER BY reputation DESC LIMIT 5"
@@ -604,8 +604,8 @@ def textMessage(bot, update):
     #Поиск и вывод триггеров в сообщении
 
     if mes.text.lower() in triggers_in:
-        request = "SELECT trigger_out, type FROM triggers WHERE (chat_id = '{0}' OR chat_id = 0) AND trigger_in = '{1}'".format(mes.chat_id, trigger_mes.lower())
-        cursor.execute(request)
+        request = "SELECT trigger_out, type FROM triggers WHERE (chat_id = %s OR chat_id = 0) AND trigger_in = %s"
+        cursor.execute(request, (mes.chat_id, trigger_mes.lower()))
         row = cursor.fetchone()
         if row:
             new = Trigger
@@ -616,8 +616,8 @@ def textMessage(bot, update):
     # Вывод списка триггеров
     if update.message.text.lower() == 'список триггеров':
         mes = update.message
-        request = "SELECT * FROM triggers WHERE chat_id = '{0}'".format(mes.chat_id)
-        cursor.execute(request)
+        request = "SELECT * FROM triggers WHERE chat_id = %s"
+        cursor.execute(request, (mes.chat_id,))
         row = cursor.fetchone()
         types = {0 : "text", 1 : "video", 2 : "audio", 3 : "photo", 4 : "document", 5 : "sticker", 6 : "voice"}
         response = "<em>Локальные триггеры:</em>\n"
@@ -731,8 +731,8 @@ def textMessage(bot, update):
         if mes.text.find('Уровень:') != -1 and mes.text.find('Класс: /class') != -1:
             is_hero = True
         if is_hero:
-            request = "SELECT * FROM users WHERE telegram_id = %s" % mes.from_user.id
-            cursor.execute(request)
+            request = "SELECT * FROM users WHERE telegram_id = %s"
+            cursor.execute(request, (mes.from_user.id,))
             row = cursor.fetchone()
             if row != None:
                 print(row)
@@ -748,8 +748,8 @@ def textMessage(bot, update):
                 #print(mes.text[mes.text.find('⚔️Атака:'):])
                 attack = int(mes.text[mes.text.find('⚔Атака:'):].split()[1])
                 defense = int(mes.text[mes.text.find('⚔Атака:'):].split()[3])
-                request = "INSERT INTO users(telegram_id, telegram_username, user_castle, username, guild, user_lvl, user_attack, user_defense, last_update) VALUES ('{0}', '{1}', '{2}', '{3}', '{4}', '{5}', '{6}', '{7}', '{8}')".format(mes.from_user.id, mes.from_user.username, mes.text[0], username, guild, lvl, attack, defense, time.strftime('%Y-%m-%d %H:%M:%S'))
-                cursor.execute(request)
+                request = "INSERT INTO users(telegram_id, telegram_username, user_castle, username, guild, user_lvl, user_attack, user_defense, last_update) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)"
+                cursor.execute(request, (mes.from_user.id, mes.from_user.username, mes.text[0], username, guild, lvl, attack, defense, time.strftime('%Y-%m-%d %H:%M:%S')))
                 conn.commit()
                 bot.send_message(chat_id=update.message.chat_id, text='Профиль успешно добавлен')
             else:
@@ -763,8 +763,8 @@ def textMessage(bot, update):
                 attack = int(mes.text[mes.text.find('⚔Атака:'):].split()[1])
                 defense = int(mes.text[mes.text.find('⚔Атака:'):].split()[3])
                 print(mes.from_user.id, mes.text[0], username, lvl, attack, defense)
-                request = "UPDATE users SET telegram_id='{0}', telegram_username = '{1}',user_castle='{2}', username='{3}', guild = '{4}', user_lvl='{5}', user_attack='{6}', user_defense='{7}', last_update='{8}' WHERE telegram_id = '{9}'".format(mes.from_user.id, mes.from_user.username,mes.text[0], username, guild, lvl, attack, defense, time.strftime('%Y-%m-%d %H:%M:%S'), mes.from_user.id)
-                cursor.execute(request)
+                request = "UPDATE users SET telegram_id=%s, telegram_username = %s,user_castle=%s, username=%s, guild = %s, user_lvl=%s, user_attack=%s, user_defense=%s, last_update=%s WHERE telegram_id = '{9}'".format()
+                cursor.execute(request, (mes.from_user.id, mes.from_user.username,mes.text[0], username, guild, lvl, attack, defense, time.strftime('%Y-%m-%d %H:%M:%S'), mes.from_user.id))
                 conn.commit()
 
                 bot.send_message(chat_id=-1001197381190, text='Профиль успешно обновлён для пользователя @' + mes.from_user.username)
@@ -782,8 +782,8 @@ def textMessage(bot, update):
         if mes.text.find('Твои результаты в бою:') != -1:
             is_report = True
         if is_report:
-            request = "SELECT * FROM users WHERE telegram_id = %s" % mes.from_user.id
-            cursor.execute(request)
+            request = "SELECT * FROM users WHERE telegram_id = %s"
+            cursor.execute(request, (mes.from_user.id,))
             row = cursor.fetchone()
             if row == None:
                 try:
@@ -830,8 +830,8 @@ def textMessage(bot, update):
                         stock = int(mes.text[mes.text.find("📦Stock"):].split()[1])
                     critical = 0
                     guardian = 0
-                    request = "SELECT * FROM reports WHERE user_id = '{0}' AND battle_id = '{1}'".format(row[0], battle_id)
-                    cursor.execute(request)
+                    request = "SELECT * FROM reports WHERE user_id = %s AND battle_id = %s".format()
+                    cursor.execute(request, (row[0], battle_id))
                     response = cursor.fetchone()
                     if response != None:
                         bot.send_message(chat_id=update.message.chat_id, text='Репорт за эту битву уже учтён!')
@@ -884,9 +884,8 @@ def textMessage(bot, update):
 
                         request = "INSERT INTO reports(user_id, battle_id, date_in, report_attack, report_defense," \
                                   " report_lvl, report_exp, report_gold, report_stock, critical_strike, guardian_angel," \
-                                  " additional_attack, additional_defense) VALUES ('{0}', '{1}', '{2}', '{3}', '{4}'," \
-                                  " '{5}', '{6}', '{7}', '{8}', '{9}', '{10}', '{11}', '{12}')".format(row[0], battle_id, time.strftime('%Y-%m-%d %H:%M:%S'), attack, defense, lvl, exp, gold, stock, critical, guardian, additional_attack, additional_defense)
-                        cursor.execute(request)
+                                  " additional_attack, additional_defense) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
+                        cursor.execute(request, (row[0], battle_id, time.strftime('%Y-%m-%d %H:%M:%S'), attack, defense, lvl, exp, gold, stock, critical, guardian, additional_attack, additional_defense))
                         conn.commit()
 
                         #bot.send_message(chat_id=-1001197381190, text='Репорт успешно учтён для пользователя @' + mes.from_user.username)
@@ -948,8 +947,6 @@ def textMessage(bot, update):
                         return
 
 
-
-
 class user_stats:
     def __init__(self, username, exp, gold, stock):
         self.username = username
@@ -992,8 +989,8 @@ def stats_send(bot, update):
         rows = cursor.fetchall()
         users = [None] * num_users
         for i in range (0, num_users):
-            request = "SELECT report_exp, report_gold, report_stock FROM reports WHERE battle_id > '{0}' AND user_id = '{1}'".format((battle_id - 3), i + 1)
-            cursor.execute(request)
+            request = "SELECT report_exp, report_gold, report_stock FROM reports WHERE battle_id > %s AND user_id = %s"
+            cursor.execute(request, ((battle_id - 3), i + 1))
             response = cursor.fetchone()
             users[i] = user_stats(rows[i][0], 0, 0, 0)
             while response:
@@ -1031,13 +1028,12 @@ def reports_sent_restore():
     logging.info("restoring reports with battle_id = {0}".format(battle_id))
 
     request = "select user_id, report_attack, report_defense, report_lvl, report_exp, report_gold, report_stock " \
-              "from reports where battle_id = '{0}'".format(battle_id)
-    cursor.execute(request)
+              "from reports where battle_id = %s"
+    cursor.execute(request, (battle_id,))
     row = cursor.fetchone()
     while row is not None:
-        request = "select telegram_id, user_castle, telegram_username, guild from users " \
-                  "where user_id = '{0}'".format(row[0])
-        cursor_2.execute(request)
+        request = "select telegram_id, user_castle, telegram_username, guild from users where user_id = %s"
+        cursor_2.execute(request, (row[0],))
         row2 = cursor_2.fetchone()
 
         if row2 is None:

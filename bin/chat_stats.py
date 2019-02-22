@@ -38,8 +38,8 @@ def current_chat_stats_send(bot, update):
 
     request = "SELECT chat_name, message_count, text_messages_count, stickers_messages_count, " \
               "audio_messages_count, photo_messages_count, video_messages_count, document_messages_count, " \
-              "voice__messages_count from stats where chat_id = '{0}'".format(update.message.chat_id)
-    cursor.execute(request)
+              "voice__messages_count from stats where chat_id = %s"
+    cursor.execute(request, (update.message.chat_id,))
     row = cursor.fetchone()
     if row is None:
         bot.send_message(chat_id=update.message.chat_id, text="Ошибка", parse_mode='HTML')

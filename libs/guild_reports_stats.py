@@ -24,9 +24,9 @@ class GuildReports:
         self.attack = 0
         self.defense = 0
         self.reports = []
-        request = "select telegram_id, telegram_username, user_attack, user_defense from users where guild = '{0}'".format(guild_tag)
+        request = "select telegram_id, telegram_username, user_attack, user_defense from users where guild = %s"
         cursor = conn.cursor()
-        cursor.execute(request)
+        cursor.execute(request, (guild_tag,))
         row = cursor.fetchone()
         self.users = []
         self.num_players = 0
