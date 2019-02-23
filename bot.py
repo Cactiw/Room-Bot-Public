@@ -46,6 +46,7 @@ from bin.mute import *
 from bin.class_func import set_class, knight_critical, sentinel_critical
 from bin.help import help, dspam_help
 from bin.calculate import calculate_pogs
+from bin.stickers import create_sticker_set, send_sticker_emoji
 
 #--------------------------------------------------------------     Выставляем логгирование
 console = logging.StreamHandler()
@@ -1277,7 +1278,8 @@ dispatcher.add_handler(CommandHandler("todo_list_full", todo_list, filters=Filte
 dispatcher.add_handler(MessageHandler(Filters.command & filter_complete_todo, complete_todo))
 
 
-
+dispatcher.add_handler(CommandHandler('create_sticker_set', create_sticker_set, filters=filter_super_admin))
+dispatcher.add_handler(CommandHandler('send_sticker_emoji', send_sticker_emoji))
 
 
 
