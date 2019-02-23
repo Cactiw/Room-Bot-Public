@@ -99,6 +99,7 @@ def notify_guild_to_battle(bot, update):
         if i >= 4:
             response += "\n БИТВА!"
             bot.send_message(chat_id = mes.chat_id, text = response)
+            response = ""
             i = 0
         response += "@{0} ".format(username)
         i += 1
