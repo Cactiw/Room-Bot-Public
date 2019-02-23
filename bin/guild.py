@@ -40,9 +40,10 @@ def notify_guild_attack(bot, update):
     print(get_time_remaining_to_battle())
     mes = update.message
     remaining_time = get_time_remaining_to_battle()
+    if mes.forward_date - datetime.datetime.now() > datetime.timedelta(minutes=2):
+        return 0
     if remaining_time > datetime.timedelta(minutes=15):
-        pass
-        #return 0
+        return 0
     ready_to_battle = mes.text.count("[⚔]") + mes.text.count("[🛡]")
     sleeping = mes.text.count("[🛌]")
     print("sleeping =", sleeping)
@@ -76,7 +77,6 @@ def notify_guild_attack(bot, update):
 
             row = cursor.fetchone()
         ping_by_chat_id.update({mes.chat_id : ping_dict})
-        print(ping_by_chat_id)
         response += "Пингануть тех, кто спит: /notify_guild_sleeping\n" \
                     "Пингануть всех, кто не готов: /notify_guild_not_ready"
     bot.send_message(chat_id = mes.chat_id, text = response, parse_mode = 'HTML')
