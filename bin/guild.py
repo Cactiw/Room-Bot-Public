@@ -42,7 +42,7 @@ def notify_guild_attack(bot, update):
     remaining_time = get_time_remaining_to_battle()
     if mes.forward_date - datetime.datetime.now() > datetime.timedelta(minutes=2):
         return 0
-    if remaining_time > datetime.timedelta(minutes=15):
+    if remaining_time > datetime.timedelta(minutes=30):
         return 0
     ready_to_battle = mes.text.count("[⚔]") + mes.text.count("[🛡]")
     sleeping = mes.text.count("[🛌]")
