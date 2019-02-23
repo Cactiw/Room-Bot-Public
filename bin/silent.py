@@ -40,7 +40,7 @@ def battle_stats_send(bot, update = None):
     guardian_angels = 0
     i = 1
     while row:
-        request = "SELECT user_castle, username FROM users WHERE user_id = '{0}' and (guild = 'KYS' or guild = 'СКИ')"
+        request = "SELECT user_castle, username FROM users WHERE user_id = %s and (guild = 'KYS' or guild = 'СКИ')"
         cursor_2.execute(request, (row[0],))
         user = cursor_2.fetchone()
         if user is None:
