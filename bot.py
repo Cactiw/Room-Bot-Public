@@ -32,6 +32,7 @@ from libs.filters.silent import *
 from libs.filters.pin import *
 from libs.filters.mute_filters import *
 from libs.filters.class_filters import filter_set_class
+from libs.filters.guild_filters import filter_guild_list
 
 from bin.pin import *
 from bin.silent import *
@@ -1244,6 +1245,10 @@ dispatcher.add_handler(CommandHandler("g_attacking_list", g_attacking_list, filt
 dispatcher.add_handler(CommandHandler("g_add_defense", g_add_defense, filters=(Filters.user(user_id=231900398)  | Filters.user(user_id = 116028074))))
 dispatcher.add_handler(CommandHandler("g_del_defense", g_del_defense, filters=(Filters.user(user_id=231900398)  | Filters.user(user_id = 116028074))))
 dispatcher.add_handler(CommandHandler("g_defending_list", g_defending_list, filters=(Filters.user(user_id=231900398)  | Filters.user(user_id = 116028074))))
+
+dispatcher.add_handler(MessageHandler(filter_guild_list, notify_guild_attack))
+dispatcher.add_handler(CommandHandler('notify_guild_sleeping', notify_guild_to_battle))
+dispatcher.add_handler(CommandHandler('notify_guild_not_ready', notify_guild_to_battle))
 
 dispatcher.add_handler(CommandHandler('calculate_pogs', calculate_pogs, pass_args=True))
 dispatcher.add_handler(CommandHandler('pogs', calculate_pogs, pass_args=True))

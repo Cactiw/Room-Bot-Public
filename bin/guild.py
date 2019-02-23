@@ -1,5 +1,9 @@
-from work_materials.globals import *
-from libs.guild import *
+from work_materials.globals import cursor, guilds_name_to_tag
+from libs.guild import User_for_attack, User
+from bin.service_functions import get_time_remaining_to_battle
+import datetime
+
+ping_by_chat_id = {}
 
 
 def g_info(bot, update):
@@ -32,7 +36,74 @@ def g_info(bot, update):
     bot.send_message(chat_id=update.message.chat_id, text=response, parse_mode='HTML')
 
 
+def notify_guild_attack(bot, update):
+    print(get_time_remaining_to_battle())
+    mes = update.message
+    remaining_time = get_time_remaining_to_battle()
+    if remaining_time > datetime.timedelta(minutes=15):
+        pass
+        #return 0
+    ready_to_battle = mes.text.count("[⚔]") + mes.text.count("[🛡]")
+    sleeping = mes.text.count("[🛌]")
+    print("sleeping =", sleeping)
+    response = "<b>{0}</b>\nГотово к битве: <b>{1}</b>\nНе готово к битве, но занято <b>{2}</b>\n" \
+               "Спит: <b>{3}</b>\n\nВремя до битвы: {4}\n".format(mes.text.splitlines()[0], ready_to_battle,
+                                                                mes.text.count("\n") - ready_to_battle - sleeping,
+                                                                sleeping, ":".join(str(remaining_time).partition(".")[0].split(":")[0:3]))
+    tag = guilds_name_to_tag.get(mes.text.splitlines()[0][1:])
+    if tag is not None:
+        do_not_ready = []
+        sleeping = []
+        for string in mes.text.splitlines()[1:]:
+            if not ("[⚔]" in string or "[🛡]" in string):
+                nickname = string.partition("]")[2][1:]
+                do_not_ready.append(nickname)
+                if "[🛌]" in string:
+                    sleeping.append(nickname)
 
+        request = "select username, telegram_username from users where guild = %s"
+        cursor.execute(request, (tag,))
+        row = cursor.fetchone()
+        in_dict_do_not_ready = []
+        in_dict_sleeping = []
+        ping_dict = {"do not ready" : in_dict_do_not_ready, "sleeping" : in_dict_sleeping}
+        while row:
+            db_nickname = row[0].partition("]")[2]
+            if db_nickname in do_not_ready:
+                in_dict_do_not_ready.append(row[1])
+                if db_nickname in sleeping:
+                    in_dict_sleeping.append(row[1])
+
+            row = cursor.fetchone()
+        ping_by_chat_id.update({mes.chat_id : ping_dict})
+        print(ping_by_chat_id)
+        response += "Пингануть тех, кто спит: /notify_guild_sleeping\n" \
+                    "Пингануть всех, кто не готов: /notify_guild_not_ready"
+    bot.send_message(chat_id = mes.chat_id, text = response, parse_mode = 'HTML')
+
+
+def notify_guild_to_battle(bot, update):
+    mes = update.message
+    chat_dict = ping_by_chat_id.get(mes.chat_id)
+    if chat_dict is None:
+        return
+    print(chat_dict, chat_dict.get("sleeping"))
+    if mes.text.partition("@")[0].split("_")[2] == "sleeping":
+        target_list = chat_dict.get("sleeping")
+    else:
+        target_list = chat_dict.get("do not ready")
+    print(target_list)
+    i = 0
+    response = ""
+    for username in target_list:
+        if i >= 4:
+            response += "\n БИТВА!"
+            bot.send_message(chat_id = mes.chat_id, text = response)
+            i = 0
+        response += "@{0} ".format(username)
+        i += 1
+    response += "\n БИТВА!"
+    bot.send_message(chat_id=mes.chat_id, text=response)
 
 
 def g_attack(bot, update):

@@ -59,6 +59,7 @@ g_defending_users = []
 reports_count = {}
 
 guilds_chat_ids = { "KYS" : -1001377426029, "СКИ" : -1001315600160}
+guilds_name_to_tag = {"Kiss Your Sis" : "KYS" , "СкиньКусокИнтима" : "СКИ"}
 
 status = 0
 globalstatus = 0
