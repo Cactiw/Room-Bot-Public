@@ -10,7 +10,7 @@ def todo(bot, update):
     priority = 5
     data = update.message.reply_to_message.text
     request = "insert into todo(priority, data, date_created) values (%s, %s, %s) returning id"
-    cursor.execute(request, (priority, data, time))
+    cursor.execute(request, (priority, data, time.strftime('%Y-%m-%d %H:%M:%S')))
     conn.commit()
     try:
         row = cursor.fetchone()
@@ -46,6 +46,6 @@ def complete_todo(bot, update):
         bot.send_message(chat_id=update.message.chat_id, text="Не найдено. Проверьте синтаксис")
         return
     request = "update todo set completed = 1, date_completed = %s where id = %s"
-    cursor.execute(request, (time, id))
+    cursor.execute(request, (time.strftime('%Y-%m-%d %H:%M:%S'), id))
     conn.commit()
     bot.send_message(chat_id=update.message.chat_id, text="Успешно выполнено. Поздравляем!", parse_mode='HTML')
