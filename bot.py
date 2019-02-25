@@ -765,7 +765,7 @@ def textMessage(bot, update):
                 attack = int(mes.text[mes.text.find('⚔Атака:'):].split()[1])
                 defense = int(mes.text[mes.text.find('⚔Атака:'):].split()[3])
                 print(mes.from_user.id, mes.text[0], username, lvl, attack, defense)
-                request = "UPDATE users SET telegram_id=%s, telegram_username = %s,user_castle = %s, username = %s, guild = %s, user_lvl = %s, user_attack = %s, user_defense = %s, last_update = %s WHERE telegram_id = %s"
+                request = "UPDATE users SET telegram_id = %s, telegram_username = %s,user_castle = %s, username = %s, guild = %s, user_lvl = %s, user_attack = %s, user_defense = %s, last_update = %s WHERE telegram_id = %s"
                 cursor.execute(request, (mes.from_user.id, mes.from_user.username,mes.text[0], username, guild, lvl, attack, defense, time.strftime('%Y-%m-%d %H:%M:%S'), mes.from_user.id))
                 conn.commit()
 
