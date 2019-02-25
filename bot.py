@@ -97,7 +97,7 @@ def mute(bot, update, args):
         return
     current = time.time()
     print(current)
-    ban_for = (int(args[0]) * 60)
+    ban_for = (float(args[0]) * 60)
     current += ban_for
     print(current)
     try:
