@@ -1,4 +1,4 @@
-from work_materials.globals import cursor, guilds_name_to_tag
+from work_materials.globals import cursor, guilds_name_to_tag, admin_ids, get_admin_ids
 from libs.guild import User_for_attack, User
 from bin.service_functions import get_time_remaining_to_battle
 import datetime
@@ -44,6 +44,9 @@ def notify_guild_attack(bot, update):
         return 0
     if remaining_time > datetime.timedelta(minutes=30):
         return 0
+    if mes.from_user.id not in get_admin_ids(bot, chat_id=mes.chat_id) and mes.from_user.id not in admin_ids:
+        bot.send_message(chat_id=mes.chat_id, text="Доступ только у админов", parse_mode='HTML')
+        return
     ready_to_battle = mes.text.count("[⚔]") + mes.text.count("[🛡]")
     sleeping = mes.text.count("[🛌]")
     print("sleeping =", sleeping)
@@ -86,6 +89,9 @@ def notify_guild_to_battle(bot, update):
     mes = update.message
     chat_dict = ping_by_chat_id.get(mes.chat_id)
     if chat_dict is None:
+        return
+    if mes.from_user.id not in get_admin_ids(bot, chat_id=mes.chat_id) and mes.from_user.id not in admin_ids:
+        bot.send_message(chat_id=mes.chat_id, text="Доступ только у админов", parse_mode='HTML')
         return
     print(chat_dict, chat_dict.get("sleeping"))
     if mes.text.partition("@")[0].split("_")[2] == "sleeping":
