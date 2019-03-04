@@ -1098,8 +1098,10 @@ print ('Количество сплитов у ОСА', split_OSA, '\nКолич
 
 # Хендлеры
 start_command_handler = CommandHandler('start', startCommand)
-
-attack_command_handler = CommandHandler('⚔', attackCommand, filters=(Filters.user(user_id = 498377101) |Filters.user(user_id = 231900398)))
+try:
+    attack_command_handler = CommandHandler('⚔', attackCommand, filters=(Filters.user(user_id = 498377101) |Filters.user(user_id = 231900398)))
+except ValueError:
+    pass
 add_pin_command_handler = CommandHandler('add_pin', add_pin, filters=Filters.user(user_id = 231900398))
 pin_setup_command_handler = CommandHandler('pin_setup', pin_setup, filters=Filters.user(user_id = 231900398))
 pinset_command_handler = MessageHandler(Filters.command & filter_pinset & Filters.user(user_id = 231900398), pinset)
@@ -1171,8 +1173,10 @@ text_message_handler = MessageHandler(Filters.text | Filters.command, textMessag
 stats_send_handler = CommandHandler('stats_send', stats_send)
 # Добавляем хендлеры в диспетчер
 dispatcher.add_handler(start_command_handler)
-
-dispatcher.add_handler(attack_command_handler)
+try:
+    dispatcher.add_handler(attack_command_handler)
+except NameError:
+    pass
 dispatcher.add_handler(add_pin_command_handler)
 dispatcher.add_handler(pin_setup_command_handler)
 dispatcher.add_handler(pinset_command_handler)
