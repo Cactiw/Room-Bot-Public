@@ -1167,7 +1167,7 @@ battle_history_handler = CommandHandler('battle_history', battle_history)
 add_battle_handler = CommandHandler('add_battle', add_battle,filters=Filters.user(user_id = 231900398))
 battles_stats_handler = CommandHandler('battles_stats', battles_stats)
 
-text_message_handler = MessageHandler(Filters.text, textMessage)
+text_message_handler = MessageHandler(Filters.text | Filters.command, textMessage)
 stats_send_handler = CommandHandler('stats_send', stats_send)
 # Добавляем хендлеры в диспетчер
 dispatcher.add_handler(start_command_handler)
@@ -1182,7 +1182,7 @@ dispatcher.add_handler(pinmute_command_handler)
 dispatcher.add_handler(CommandHandler('mute', mute, pass_args=True))
 dispatcher.add_handler(CommandHandler('mute_admin', mute_admin, pass_args=True))#, filters=filter_super_admin))
 dispatcher.add_handler(CommandHandler('unmute_all_admins', unmute_all_admins))#, filters=filter_super_admin))
-dispatcher.add_handler(MessageHandler(filter_delete_admin, delete_admin))
+dispatcher.add_handler(MessageHandler((Filters.command | Filters.text) & filter_delete_admin, delete_admin))
 
 dispatcher.add_handler(silent_setup_command_handler)
 dispatcher.add_handler(add_silent_command_handler)
