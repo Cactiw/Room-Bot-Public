@@ -910,19 +910,7 @@ def textMessage(bot, update):
                                     response = "Репорт от <b>{0}</b> принят.\nВсего сдало репортов <b>{1}</b> человек, это <b>{2:.2f}</b>% " \
                                                "от общего числа\n".format(current_report.nickname, guild_reports.num_reports, percent)
                                     if guild_reports.num_reports == 1:
-                                              response = '{0} \n \n 🏅 это самый первый репорт после битвы '.format( response)
-                                              SELECT = "SELECT date_in FROM reportsWHERE user_id={0} AND battle_id= {1}'".format(mes.from_user.id, battle_id)
-                                              cursor.execute(SELECT)
-                                              row = cursor.fetchone()
-                                              first_report = "🏅 " + str(row[0])
-                                              register = "UPDATE reports SET(date_in={2}) WHERE user_id={0} AND battle_id= {1}  ;".format(mes.from_user.id, battle_id, first_report)
-                                              cursor.execute(register)
-                                              row1 = cursor.fetchone()
-                                              cnx.commit()
-                                    
-                                    
-                                    
-                                    
+                                              response += '{0} \n \n 🏅 это самый первый репорт после битвы '.format( response)
                                     if percent == 100:
                                         response += "Все сдали репорты! Какие вы лапочки!"
 
