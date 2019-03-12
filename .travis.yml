@@ -1,0 +1,5 @@
+language: python
+python:
+  - "3.6"
+install:
+  - pip install -r python-telegram-bot psycopg2-binary pytz tzlocal pySocks
