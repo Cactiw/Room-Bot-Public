@@ -3,3 +3,5 @@ python:
   - "3.6"
 install:
   - pip3 install python-telegram-bot psycopg2-binary pytz tzlocal pySocks
+script:
+  - bot.py
