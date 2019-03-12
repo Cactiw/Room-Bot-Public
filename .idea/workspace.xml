@@ -1,0 +1,1235 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="50aa9201-e8f5-40d7-a14b-629092aaab1f" name="Default Changelist" comment="Немного почистил код">
+      <change beforePath="$PROJECT_DIR$/bot.py" beforeDir="false" afterPath="$PROJECT_DIR$/bot.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/config.py" beforeDir="false" afterPath="$PROJECT_DIR$/config.py" afterDir="false" />
+    </list>
+    <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="CoverageDataManager">
+    <SUITE FILE_PATH="coverage/Room_Bot_Public$bot.coverage" NAME="bot Coverage Results" MODIFIED="1551734690822" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+  </component>
+  <component name="DatabaseView">
+    <option name="SHOW_INTERMEDIATE" value="true" />
+    <option name="GROUP_DATA_SOURCES" value="true" />
+    <option name="GROUP_SCHEMA" value="true" />
+    <option name="GROUP_CONTENTS" value="false" />
+    <option name="SORT_POSITIONED" value="false" />
+    <option name="SHOW_EMPTY_GROUPS" value="false" />
+    <option name="AUTO_SCROLL_FROM_SOURCE" value="false" />
+    <option name="HIDDEN_KINDS">
+      <set />
+    </option>
+    <expand>
+      <path>
+        <item name="Database" type="3277223f:DatabaseStructure$DbRootGroup" />
+        <item name="room_bot@localhost" type="feb32156:DbDataSourceImpl" />
+      </path>
+      <path>
+        <item name="Database" type="3277223f:DatabaseStructure$DbRootGroup" />
+        <item name="room_bot@localhost" type="feb32156:DbDataSourceImpl" />
+        <item name="databases" type="d4e8921:DatabaseStructure$FamilyGroup" />
+      </path>
+      <path>
+        <item name="Database" type="3277223f:DatabaseStructure$DbRootGroup" />
+        <item name="room_bot@localhost" type="feb32156:DbDataSourceImpl" />
+        <item name="databases" type="d4e8921:DatabaseStructure$FamilyGroup" />
+        <item name="room_bot: database" type="162271b6:PgImplModel$Database" />
+      </path>
+      <path>
+        <item name="Database" type="3277223f:DatabaseStructure$DbRootGroup" />
+        <item name="room_bot@localhost" type="feb32156:DbDataSourceImpl" />
+        <item name="databases" type="d4e8921:DatabaseStructure$FamilyGroup" />
+        <item name="room_bot: database" type="162271b6:PgImplModel$Database" />
+        <item name="schemas" type="d4e8921:DatabaseStructure$FamilyGroup" />
+      </path>
+      <path>
+        <item name="Database" type="3277223f:DatabaseStructure$DbRootGroup" />
+        <item name="room_bot@localhost" type="feb32156:DbDataSourceImpl" />
+        <item name="databases" type="d4e8921:DatabaseStructure$FamilyGroup" />
+        <item name="room_bot: database" type="162271b6:PgImplModel$Database" />
+        <item name="schemas" type="d4e8921:DatabaseStructure$FamilyGroup" />
+        <item name="public: schema" type="983ebcf7:PgImplModel$Schema" />
+      </path>
+      <path>
+        <item name="Database" type="3277223f:DatabaseStructure$DbRootGroup" />
+        <item name="room_bot@localhost" type="feb32156:DbDataSourceImpl" />
+        <item name="databases" type="d4e8921:DatabaseStructure$FamilyGroup" />
+        <item name="room_bot: database" type="162271b6:PgImplModel$Database" />
+        <item name="schemas" type="d4e8921:DatabaseStructure$FamilyGroup" />
+        <item name="public: schema" type="983ebcf7:PgImplModel$Schema" />
+        <item name="tables" type="d4e8921:DatabaseStructure$FamilyGroup" />
+      </path>
+      <path>
+        <item name="Database" type="3277223f:DatabaseStructure$DbRootGroup" />
+        <item name="room_bot@localhost" type="feb32156:DbDataSourceImpl" />
+        <item name="databases" type="d4e8921:DatabaseStructure$FamilyGroup" />
+        <item name="room_bot: database" type="162271b6:PgImplModel$Database" />
+        <item name="schemas" type="d4e8921:DatabaseStructure$FamilyGroup" />
+        <item name="public: schema" type="983ebcf7:PgImplModel$Schema" />
+        <item name="tables" type="d4e8921:DatabaseStructure$FamilyGroup" />
+        <item name="users: table" type="69fad909:PgImplModel$LocalTable" />
+      </path>
+    </expand>
+    <select />
+  </component>
+  <component name="FileEditorManager">
+    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/bot.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="405">
+              <caret line="912" column="126" lean-forward="true" selection-start-line="912" selection-start-column="126" selection-end-line="912" selection-end-column="126" />
+              <folding>
+                <element signature="e#12#97#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/config.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="150">
+              <caret line="10" lean-forward="true" selection-start-line="10" selection-end-line="10" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/.gitignore">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="750">
+              <caret line="50" column="12" lean-forward="true" selection-start-line="50" selection-start-column="12" selection-end-line="50" selection-end-column="12" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/libs/filters/mute_filters.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="105">
+              <caret line="9" column="41" selection-start-line="9" selection-start-column="41" selection-end-line="9" selection-end-column="41" />
+              <folding>
+                <element signature="e#0#35#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/bin/mute.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="570">
+              <caret line="42" column="22" selection-start-line="42" selection-start-column="22" selection-end-line="42" selection-end-column="22" />
+              <folding>
+                <element signature="e#0#34#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/bin/class_func.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="585">
+              <caret line="42" column="131" selection-start-line="42" selection-start-column="131" selection-end-line="42" selection-end-column="131" />
+              <folding>
+                <element signature="e#0#32#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/bin/guild.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="1365">
+              <caret line="94" column="14" selection-start-line="94" selection-start-column="14" selection-end-line="94" selection-end-column="14" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/bin/stickers.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="240">
+              <caret line="16" selection-start-line="16" selection-end-line="16" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+    </leaf>
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Python Script" />
+      </list>
+    </option>
+  </component>
+  <component name="FindInProjectRecents">
+    <findStrings>
+      <find>status</find>
+      <find>localize</find>
+      <find>Report</find>
+      <find>cursor_2</find>
+      <find>row</find>
+      <find>logging.info</find>
+      <find>silent</find>
+      <find>order by rand</find>
+      <find>job</find>
+      <find>job_sil</find>
+      <find>silent_chats</find>
+      <find>info_c</find>
+      <find>locali</find>
+      <find>returning</find>
+      <find>lambda</find>
+      <find>info</find>
+      <find>репортов</find>
+      <find>run_once</find>
+      <find>help</find>
+      <find>ti</find>
+      <find>time_from</find>
+      <find>AgADAgADL6oxGytreEqITHSEXXu-osZAOQ8ABEi3xZNl7Z4o3RQCAAEC</find>
+      <find>AgADAgADJqoxG1lFiEqZnJ6g7MgAASC-</find>
+      <find>cursor.execute</find>
+      <find>execute</find>
+      <find>execute(</find>
+      <find>remaini</find>
+      <find>infoc</find>
+      <find>mute</find>
+      <find>pinset</find>
+    </findStrings>
+    <replaceStrings>
+      <replace>message</replace>
+      <replace>row = None</replace>
+      <replace>logging.debug</replace>
+    </replaceStrings>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="IdeDocumentHistory">
+    <option name="CHANGED_PATHS">
+      <list>
+        <option value="$PROJECT_DIR$/bin/chat_stats_send.py" />
+        <option value="$PROJECT_DIR$/libs/filters/todo.py" />
+        <option value="$PROJECT_DIR$/libs/filters/playlist.py" />
+        <option value="$PROJECT_DIR$/libs/updater_async.py" />
+        <option value="$PROJECT_DIR$/libs/filters/dspam_filters.py" />
+        <option value="$PROJECT_DIR$/libs/filters/silent.py" />
+        <option value="$PROJECT_DIR$/libs/filters/pin.py" />
+        <option value="$PROJECT_DIR$/libs/report.py" />
+        <option value="$PROJECT_DIR$/libs/guild.py" />
+        <option value="$PROJECT_DIR$/libs/mute.py" />
+        <option value="$PROJECT_DIR$/libs/filters/mute_filters.py" />
+        <option value="$PROJECT_DIR$/libs/filters/service_filters.py" />
+        <option value="$PROJECT_DIR$/bin/mute.py" />
+        <option value="$PROJECT_DIR$/libs/bot_async_messaging.py" />
+        <option value="$PROJECT_DIR$/bin/class.py" />
+        <option value="$PROJECT_DIR$/libs/filters/class_filters.py" />
+        <option value="$PROJECT_DIR$/bin/help.py" />
+        <option value="$PROJECT_DIR$/bin/class_func.py" />
+        <option value="$PROJECT_DIR$/bin/calculate.py" />
+        <option value="$PROJECT_DIR$/work_materials/constants.py" />
+        <option value="$PROJECT_DIR$/bin/chat_stats.py" />
+        <option value="$PROJECT_DIR$/bin/dspam.py" />
+        <option value="$PROJECT_DIR$/bin/pin.py" />
+        <option value="$PROJECT_DIR$/bin/playlist.py" />
+        <option value="$PROJECT_DIR$/bin/trigger.py" />
+        <option value="$PROJECT_DIR$/libs/guild_reports_stats.py" />
+        <option value="$PROJECT_DIR$/libs/trigger.py" />
+        <option value="$PROJECT_DIR$/libs/chat_stats.py" />
+        <option value="$PROJECT_DIR$/bin/service_functions.py" />
+        <option value="$PROJECT_DIR$/work_materials/globals.py" />
+        <option value="$PROJECT_DIR$/libs/filters/guild_filters.py" />
+        <option value="$PROJECT_DIR$/bin/silent.py" />
+        <option value="$PROJECT_DIR$/bin/stickers.py" />
+        <option value="$PROJECT_DIR$/bin/todo.py" />
+        <option value="$PROJECT_DIR$/bin/guild.py" />
+        <option value="$PROJECT_DIR$/config.py" />
+        <option value="$PROJECT_DIR$/bot.py" />
+      </list>
+    </option>
+  </component>
+  <component name="ProjectFrameBounds" extendedState="6">
+    <option name="x" value="67" />
+    <option name="y" value="114" />
+    <option name="width" value="1843" />
+    <option name="height" value="789" />
+  </component>
+  <component name="ProjectView">
+    <navigator proportions="" version="1">
+      <foldersAlwaysOnTop value="true" />
+    </navigator>
+    <panes>
+      <pane id="Scope" />
+      <pane id="ProjectPane">
+        <subPane>
+          <expand>
+            <path>
+              <item name="Room-Bot-Public" type="b2602c69:ProjectViewProjectNode" />
+              <item name="Room-Bot-Public" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="Room-Bot-Public" type="b2602c69:ProjectViewProjectNode" />
+              <item name="Room-Bot-Public" type="462c0819:PsiDirectoryNode" />
+              <item name="bin" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="Room-Bot-Public" type="b2602c69:ProjectViewProjectNode" />
+              <item name="Room-Bot-Public" type="462c0819:PsiDirectoryNode" />
+              <item name="libs" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="Room-Bot-Public" type="b2602c69:ProjectViewProjectNode" />
+              <item name="Room-Bot-Public" type="462c0819:PsiDirectoryNode" />
+              <item name="libs" type="462c0819:PsiDirectoryNode" />
+              <item name="filters" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="Room-Bot-Public" type="b2602c69:ProjectViewProjectNode" />
+              <item name="Room-Bot-Public" type="462c0819:PsiDirectoryNode" />
+              <item name="work_materials" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="Room-Bot-Public" type="b2602c69:ProjectViewProjectNode" />
+              <item name="External Libraries" type="cb654da1:ExternalLibrariesNode" />
+            </path>
+          </expand>
+          <select />
+        </subPane>
+      </pane>
+    </panes>
+  </component>
+  <component name="PropertiesComponent">
+    <property name="DatabaseDriversLRU" value="mysql&#10;postgresql" />
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/bot.py" />
+    <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
+    <property name="nodejs_npm_path_reset_for_default_project" value="true" />
+    <property name="restartRequiresConfirmation" value="false" />
+    <property name="settings.editor.selected.configurable" value="SQL Dialects" />
+  </component>
+  <component name="RunDashboard">
+    <option name="ruleStates">
+      <list>
+        <RuleState>
+          <option name="name" value="ConfigurationTypeDashboardGroupingRule" />
+        </RuleState>
+        <RuleState>
+          <option name="name" value="StatusDashboardGroupingRule" />
+        </RuleState>
+      </list>
+    </option>
+  </component>
+  <component name="RunManager">
+    <configuration name="bot" type="PythonConfigurationType" factoryName="Python" nameIsGenerated="true">
+      <module name="Room-Bot-Public" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="/usr/bin/python3.6" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="false" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/bot.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+  </component>
+  <component name="SvnConfiguration">
+    <configuration />
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="50aa9201-e8f5-40d7-a14b-629092aaab1f" name="Default Changelist" comment="" />
+      <created>1543994552631</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1543994552631</updated>
+      <workItem from="1543994553941" duration="316000" />
+      <workItem from="1544001118089" duration="605000" />
+      <workItem from="1544458158428" duration="643000" />
+      <workItem from="1545499130642" duration="9741000" />
+      <workItem from="1545570283645" duration="1992000" />
+      <workItem from="1545749884327" duration="599000" />
+      <workItem from="1545941040994" duration="3946000" />
+      <workItem from="1545995444995" duration="16839000" />
+      <workItem from="1546163421582" duration="11555000" />
+      <workItem from="1546251425135" duration="36000" />
+      <workItem from="1546251597709" duration="8660000" />
+      <workItem from="1546344294188" duration="919000" />
+      <workItem from="1546767855378" duration="6359000" />
+      <workItem from="1547466847568" duration="599000" />
+      <workItem from="1547542204387" duration="11000" />
+      <workItem from="1547663628385" duration="1586000" />
+      <workItem from="1547750184649" duration="1691000" />
+      <workItem from="1548014957210" duration="342000" />
+      <workItem from="1548066040719" duration="8318000" />
+      <workItem from="1548088991939" duration="1230000" />
+      <workItem from="1548236126150" duration="5000" />
+      <workItem from="1548236179400" duration="11000" />
+      <workItem from="1548267852866" duration="650000" />
+      <workItem from="1548321076878" duration="283000" />
+      <workItem from="1548430339719" duration="2888000" />
+      <workItem from="1548669658153" duration="1811000" />
+      <workItem from="1548680830073" duration="12768000" />
+      <workItem from="1548752456148" duration="612000" />
+      <workItem from="1548780445713" duration="6420000" />
+      <workItem from="1548838137225" duration="921000" />
+      <workItem from="1548849230505" duration="7000" />
+      <workItem from="1548933262035" duration="918000" />
+      <workItem from="1548934600126" duration="41000" />
+      <workItem from="1548934650140" duration="8233000" />
+      <workItem from="1549014527111" duration="18000" />
+      <workItem from="1549046033478" duration="2035000" />
+      <workItem from="1549120651512" duration="101000" />
+      <workItem from="1549132193862" duration="726000" />
+      <workItem from="1549135344521" duration="5000" />
+      <workItem from="1549577044754" duration="24000" />
+      <workItem from="1549611033543" duration="1990000" />
+      <workItem from="1549624696837" duration="889000" />
+      <workItem from="1549649706137" duration="185000" />
+      <workItem from="1550306340935" duration="1484000" />
+      <workItem from="1550311113979" duration="6000" />
+      <workItem from="1550312272133" duration="7000" />
+      <workItem from="1550670403132" duration="754000" />
+      <workItem from="1550740486835" duration="405000" />
+      <workItem from="1550823110851" duration="1482000" />
+      <workItem from="1550826234393" duration="41000" />
+      <workItem from="1550835425252" duration="1682000" />
+      <workItem from="1550842165095" duration="4964000" />
+      <workItem from="1550910856251" duration="4370000" />
+      <workItem from="1550932755685" duration="5871000" />
+      <workItem from="1551077008372" duration="93000" />
+      <workItem from="1551077129880" duration="103000" />
+      <workItem from="1551113203956" duration="309000" />
+      <workItem from="1551113599623" duration="127000" />
+      <workItem from="1551369470344" duration="54000" />
+      <workItem from="1551608889389" duration="11106000" />
+      <workItem from="1551721515873" duration="141000" />
+      <workItem from="1551734354912" duration="1436000" />
+      <workItem from="1552382965493" duration="1955000" />
+      <workItem from="1552400000325" duration="156000" />
+      <workItem from="1552410755967" duration="2536000" />
+    </task>
+    <task id="LOCAL-00013" summary="Доработал дату в команде /info">
+      <created>1546196192545</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1546196192545</updated>
+    </task>
+    <task id="LOCAL-00014" summary="Визуальные улучшения в команде /info">
+      <created>1546196571986</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL-00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1546196571986</updated>
+    </task>
+    <task id="LOCAL-00015" summary="Сделал логгирование ошибок в файл error.log">
+      <created>1546196684990</created>
+      <option name="number" value="00015" />
+      <option name="presentableId" value="LOCAL-00015" />
+      <option name="project" value="LOCAL" />
+      <updated>1546196684990</updated>
+    </task>
+    <task id="LOCAL-00016" summary="Исправил ошибку с датой в /info)">
+      <created>1546197241429</created>
+      <option name="number" value="00016" />
+      <option name="presentableId" value="LOCAL-00016" />
+      <option name="project" value="LOCAL" />
+      <updated>1546197241429</updated>
+    </task>
+    <task id="LOCAL-00017" summary="Поправил ту же ошибку в учёте репортов">
+      <created>1546199636845</created>
+      <option name="number" value="00017" />
+      <option name="presentableId" value="LOCAL-00017" />
+      <option name="project" value="LOCAL" />
+      <updated>1546199636845</updated>
+    </task>
+    <task id="LOCAL-00018" summary="Добавил отправку уведомления о старте бота">
+      <created>1546207167360</created>
+      <option name="number" value="00018" />
+      <option name="presentableId" value="LOCAL-00018" />
+      <option name="project" value="LOCAL" />
+      <updated>1546207167360</updated>
+    </task>
+    <task id="LOCAL-00019" summary="Окончательно починил время (надеюсь)">
+      <created>1546208613691</created>
+      <option name="number" value="00019" />
+      <option name="presentableId" value="LOCAL-00019" />
+      <option name="project" value="LOCAL" />
+      <updated>1546208613691</updated>
+    </task>
+    <task id="LOCAL-00020" summary="Сделал автоматический посчёт репортов ги на старте бота">
+      <created>1546255596693</created>
+      <option name="number" value="00020" />
+      <option name="presentableId" value="LOCAL-00020" />
+      <option name="project" value="LOCAL" />
+      <updated>1546255596693</updated>
+    </task>
+    <task id="LOCAL-00021" summary="Фиксы">
+      <created>1546257892556</created>
+      <option name="number" value="00021" />
+      <option name="presentableId" value="LOCAL-00021" />
+      <option name="project" value="LOCAL" />
+      <updated>1546257892556</updated>
+    </task>
+    <task id="LOCAL-00022" summary="Дописал код начала тишины нормально.&#10;&#10;Очередные фиксы">
+      <created>1546260050264</created>
+      <option name="number" value="00022" />
+      <option name="presentableId" value="LOCAL-00022" />
+      <option name="project" value="LOCAL" />
+      <updated>1546260050264</updated>
+    </task>
+    <task id="LOCAL-00023" summary="Соединение с бд conn теперь выполняется с параметром autocommit, что позволяет автоматически откатывать транзакцию при ошибке.&#10;&#10;Фикс плейлистов, тоже связанный с бд">
+      <created>1546345019600</created>
+      <option name="number" value="00023" />
+      <option name="presentableId" value="LOCAL-00023" />
+      <option name="project" value="LOCAL" />
+      <updated>1546345019600</updated>
+    </task>
+    <task id="LOCAL-00024" summary="Починил тишину, добавил отлавливание ошибки BadRequest, визуальные улучшения в выводе списка триггеров">
+      <created>1546771193820</created>
+      <option name="number" value="00024" />
+      <option name="presentableId" value="LOCAL-00024" />
+      <option name="project" value="LOCAL" />
+      <updated>1546771193820</updated>
+    </task>
+    <task id="LOCAL-00025" summary="Добавил мут для админов">
+      <created>1546773309014</created>
+      <option name="number" value="00025" />
+      <option name="presentableId" value="LOCAL-00025" />
+      <option name="project" value="LOCAL" />
+      <updated>1546773309014</updated>
+    </task>
+    <task id="LOCAL-00026" summary="Фиксы считываний репортов">
+      <created>1546778015740</created>
+      <option name="number" value="00026" />
+      <option name="presentableId" value="LOCAL-00026" />
+      <option name="project" value="LOCAL" />
+      <updated>1546778015740</updated>
+    </task>
+    <task id="LOCAL-00027" summary="Добавил учёт критов от деферов, мелкие фиксы">
+      <created>1548430914762</created>
+      <option name="number" value="00027" />
+      <option name="presentableId" value="LOCAL-00027" />
+      <option name="project" value="LOCAL" />
+      <updated>1548430914762</updated>
+    </task>
+    <task id="LOCAL-00028" summary="Мелкие фиксы приёма репортов">
+      <created>1548670650920</created>
+      <option name="number" value="00028" />
+      <option name="presentableId" value="LOCAL-00028" />
+      <option name="project" value="LOCAL" />
+      <updated>1548670650920</updated>
+    </task>
+    <task id="LOCAL-00029" summary="Обновил асинхронного бота по аналогии с приказом">
+      <created>1548670976255</created>
+      <option name="number" value="00029" />
+      <option name="presentableId" value="LOCAL-00029" />
+      <option name="project" value="LOCAL" />
+      <updated>1548670976255</updated>
+    </task>
+    <task id="LOCAL-00030" summary="Добавил счётчик игроков в /g_info">
+      <created>1548681061628</created>
+      <option name="number" value="00030" />
+      <option name="presentableId" value="LOCAL-00030" />
+      <option name="project" value="LOCAL" />
+      <updated>1548681061628</updated>
+    </task>
+    <task id="LOCAL-00031" summary="Добавил уведомление о аиминге для лучников, пока в тестовом режиме">
+      <created>1548687874282</created>
+      <option name="number" value="00031" />
+      <option name="presentableId" value="LOCAL-00031" />
+      <option name="project" value="LOCAL" />
+      <updated>1548687874282</updated>
+    </task>
+    <task id="LOCAL-00032" summary="Добавил артов к уведомлению лукам, убрал лишние принты xD">
+      <created>1548690125641</created>
+      <option name="number" value="00032" />
+      <option name="presentableId" value="LOCAL-00032" />
+      <option name="project" value="LOCAL" />
+      <updated>1548690125641</updated>
+    </task>
+    <task id="LOCAL-00033" summary="Фиксы времени аиминга у луков">
+      <created>1548695764853</created>
+      <option name="number" value="00033" />
+      <option name="presentableId" value="LOCAL-00033" />
+      <option name="project" value="LOCAL" />
+      <updated>1548695764853</updated>
+    </task>
+    <task id="LOCAL-00034" summary="Добавил арты в уведомления лукам">
+      <created>1548782206591</created>
+      <option name="number" value="00034" />
+      <option name="presentableId" value="LOCAL-00034" />
+      <option name="project" value="LOCAL" />
+      <updated>1548782206591</updated>
+    </task>
+    <task id="LOCAL-00035" summary="Добавил команду /help">
+      <created>1548787438239</created>
+      <option name="number" value="00035" />
+      <option name="presentableId" value="LOCAL-00035" />
+      <option name="project" value="LOCAL" />
+      <updated>1548787438239</updated>
+    </task>
+    <task id="LOCAL-00036" summary="Очередные фиксы репортов, добавил реакцию бота на криты у рыцарей и деферов">
+      <created>1549047097126</created>
+      <option name="number" value="00036" />
+      <option name="presentableId" value="LOCAL-00036" />
+      <option name="project" value="LOCAL" />
+      <updated>1549047097127</updated>
+    </task>
+    <task id="LOCAL-00037" summary="Добавил хендлинг ошибок при отправке уведомлений лучникам, пару артов">
+      <created>1549047808892</created>
+      <option name="number" value="00037" />
+      <option name="presentableId" value="LOCAL-00037" />
+      <option name="project" value="LOCAL" />
+      <updated>1549047808892</updated>
+    </task>
+    <task id="LOCAL-00038" summary="Перенёс стату по битве в другой чат">
+      <created>1549132319144</created>
+      <option name="number" value="00038" />
+      <option name="presentableId" value="LOCAL-00038" />
+      <option name="project" value="LOCAL" />
+      <updated>1549132319144</updated>
+    </task>
+    <task id="LOCAL-00039" summary="Обновил айди чата для отправки статистики">
+      <created>1549649879438</created>
+      <option name="number" value="00039" />
+      <option name="presentableId" value="LOCAL-00039" />
+      <option name="project" value="LOCAL" />
+      <updated>1549649879438</updated>
+    </task>
+    <task id="LOCAL-00040" summary="Добавил вычисление погов по /calculate_pogs">
+      <created>1550307288728</created>
+      <option name="number" value="00040" />
+      <option name="presentableId" value="LOCAL-00040" />
+      <option name="project" value="LOCAL" />
+      <updated>1550307288728</updated>
+    </task>
+    <task id="LOCAL-00041" summary="Починил отправку уведомлений лукам">
+      <created>1550307368990</created>
+      <option name="number" value="00041" />
+      <option name="presentableId" value="LOCAL-00041" />
+      <option name="project" value="LOCAL" />
+      <updated>1550307368990</updated>
+    </task>
+    <task id="LOCAL-00042" summary="Сократид команду /calculate_pogs (продублировал)">
+      <created>1550307718931</created>
+      <option name="number" value="00042" />
+      <option name="presentableId" value="LOCAL-00042" />
+      <option name="project" value="LOCAL" />
+      <updated>1550307718932</updated>
+    </task>
+    <task id="LOCAL-00043" summary="Отключил сообщение о репорте в первый час после битвы в чате ги">
+      <created>1550670555792</created>
+      <option name="number" value="00043" />
+      <option name="presentableId" value="LOCAL-00043" />
+      <option name="project" value="LOCAL" />
+      <updated>1550670555792</updated>
+    </task>
+    <task id="LOCAL-00044" summary="Пофиксил невывод сообщения о репорте">
+      <created>1550740759927</created>
+      <option name="number" value="00044" />
+      <option name="presentableId" value="LOCAL-00044" />
+      <option name="project" value="LOCAL" />
+      <updated>1550740759927</updated>
+    </task>
+    <task id="LOCAL-00045" summary="SQL-запросы теперь безопасны и оптимизированы">
+      <created>1550837050336</created>
+      <option name="number" value="00045" />
+      <option name="presentableId" value="LOCAL-00045" />
+      <option name="project" value="LOCAL" />
+      <updated>1550837050336</updated>
+    </task>
+    <task id="LOCAL-00046" summary="Добавил пинги на битву">
+      <created>1550913330172</created>
+      <option name="number" value="00046" />
+      <option name="presentableId" value="LOCAL-00046" />
+      <option name="project" value="LOCAL" />
+      <updated>1550913330172</updated>
+    </task>
+    <task id="LOCAL-00047" summary="Багфикс">
+      <created>1550913390032</created>
+      <option name="number" value="00047" />
+      <option name="presentableId" value="LOCAL-00047" />
+      <option name="project" value="LOCAL" />
+      <updated>1550913390032</updated>
+    </task>
+    <task id="LOCAL-00048" summary="Добавил ограничения по времени в уведомления к битве">
+      <created>1550913928092</created>
+      <option name="number" value="00048" />
+      <option name="presentableId" value="LOCAL-00048" />
+      <option name="project" value="LOCAL" />
+      <updated>1550913928092</updated>
+    </task>
+    <task id="LOCAL-00049" summary="Фикс запроса в бд">
+      <created>1550932789444</created>
+      <option name="number" value="00049" />
+      <option name="presentableId" value="LOCAL-00049" />
+      <option name="project" value="LOCAL" />
+      <updated>1550932789444</updated>
+    </task>
+    <task id="LOCAL-00050" summary="Увеличил время пинга ги к битве">
+      <created>1550932830019</created>
+      <option name="number" value="00050" />
+      <option name="presentableId" value="LOCAL-00050" />
+      <option name="project" value="LOCAL" />
+      <updated>1550932830020</updated>
+    </task>
+    <task id="LOCAL-00051" summary="Добавил некоторую работу со стикерами">
+      <created>1550936367768</created>
+      <option name="number" value="00051" />
+      <option name="presentableId" value="LOCAL-00051" />
+      <option name="project" value="LOCAL" />
+      <updated>1550936367768</updated>
+    </task>
+    <task id="LOCAL-00052" summary="Багфикс">
+      <created>1550936407568</created>
+      <option name="number" value="00052" />
+      <option name="presentableId" value="LOCAL-00052" />
+      <option name="project" value="LOCAL" />
+      <updated>1550936407568</updated>
+    </task>
+    <task id="LOCAL-00053" summary="Багфикс приёма профилей">
+      <created>1550937132782</created>
+      <option name="number" value="00053" />
+      <option name="presentableId" value="LOCAL-00053" />
+      <option name="project" value="LOCAL" />
+      <updated>1550937132782</updated>
+    </task>
+    <task id="LOCAL-00054" summary="Багфикс с todo">
+      <created>1551077062328</created>
+      <option name="number" value="00054" />
+      <option name="presentableId" value="LOCAL-00054" />
+      <option name="project" value="LOCAL" />
+      <updated>1551077062329</updated>
+    </task>
+    <task id="LOCAL-00055" summary="Добавил возможность выдачи мута на нецелое количество минут">
+      <created>1551077180935</created>
+      <option name="number" value="00055" />
+      <option name="presentableId" value="LOCAL-00055" />
+      <option name="project" value="LOCAL" />
+      <updated>1551077180936</updated>
+    </task>
+    <task id="LOCAL-00056" summary="Багфикс в sql-запросе">
+      <created>1551077226437</created>
+      <option name="number" value="00056" />
+      <option name="presentableId" value="LOCAL-00056" />
+      <option name="project" value="LOCAL" />
+      <updated>1551077226437</updated>
+    </task>
+    <task id="LOCAL-00057" summary="Добавил ограничение на пинги в чатах ги">
+      <created>1551609192153</created>
+      <option name="number" value="00057" />
+      <option name="presentableId" value="LOCAL-00057" />
+      <option name="project" value="LOCAL" />
+      <updated>1551609192153</updated>
+    </task>
+    <task id="LOCAL-00058" summary="Добавил фильтры для триггеров командами и удаления команд в муте">
+      <created>1551734515193</created>
+      <option name="number" value="00058" />
+      <option name="presentableId" value="LOCAL-00058" />
+      <option name="project" value="LOCAL" />
+      <updated>1551734515195</updated>
+    </task>
+    <task id="LOCAL-00059" summary="Теперь мут удаляет все сообщения">
+      <created>1551734559103</created>
+      <option name="number" value="00059" />
+      <option name="presentableId" value="LOCAL-00059" />
+      <option name="project" value="LOCAL" />
+      <updated>1551734559103</updated>
+    </task>
+    <task id="LOCAL-00060" summary="Добавил временную заглушку на пины">
+      <created>1551734705308</created>
+      <option name="number" value="00060" />
+      <option name="presentableId" value="LOCAL-00060" />
+      <option name="project" value="LOCAL" />
+      <updated>1551734705308</updated>
+    </task>
+    <task id="LOCAL-00061" summary="Немного почистил код">
+      <created>1552411438379</created>
+      <option name="number" value="00061" />
+      <option name="presentableId" value="LOCAL-00061" />
+      <option name="project" value="LOCAL" />
+      <updated>1552411438380</updated>
+    </task>
+    <option name="localTasksCounter" value="62" />
+    <servers />
+  </component>
+  <component name="TimeTrackingManager">
+    <option name="totallyTimeSpent" value="156610000" />
+  </component>
+  <component name="ToolWindowManager">
+    <frame x="67" y="25" width="1853" height="1055" extended-state="6" />
+    <editor active="true" />
+    <layout>
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.21527393" />
+      <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
+      <window_info id="Favorites" order="2" side_tool="true" />
+      <window_info anchor="bottom" id="Message" order="0" />
+      <window_info anchor="bottom" id="Find" order="1" weight="0.32937366" />
+      <window_info anchor="bottom" id="Run" order="2" weight="0.32937366" />
+      <window_info anchor="bottom" id="Debug" order="3" weight="0.39956802" />
+      <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
+      <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
+      <window_info anchor="bottom" id="TODO" order="6" />
+      <window_info anchor="bottom" id="Docker" order="7" show_stripe_button="false" />
+      <window_info anchor="bottom" id="Database Changes" order="8" show_stripe_button="false" />
+      <window_info anchor="bottom" id="Event Log" order="9" side_tool="true" />
+      <window_info anchor="bottom" id="Version Control" order="10" weight="0.32937366" />
+      <window_info anchor="bottom" id="Terminal" order="11" />
+      <window_info anchor="bottom" id="Python Console" order="12" />
+      <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
+      <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
+      <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
+      <window_info anchor="right" id="Database" order="3" weight="0.32982844" />
+      <window_info anchor="right" id="SciView" order="4" weight="0.32982844" />
+    </layout>
+    <layout-to-restore>
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.20088544" />
+      <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
+      <window_info id="Favorites" order="2" side_tool="true" />
+      <window_info anchor="bottom" id="Message" order="0" />
+      <window_info anchor="bottom" id="Find" order="1" weight="0.32937366" />
+      <window_info anchor="bottom" id="Run" order="2" visible="true" weight="0.32937366" />
+      <window_info anchor="bottom" id="Debug" order="3" weight="0.39956802" />
+      <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
+      <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
+      <window_info anchor="bottom" id="TODO" order="6" />
+      <window_info anchor="bottom" id="Docker" order="7" show_stripe_button="false" />
+      <window_info anchor="bottom" id="Version Control" order="8" />
+      <window_info anchor="bottom" id="Database Changes" order="9" />
+      <window_info anchor="bottom" id="Event Log" order="10" side_tool="true" />
+      <window_info anchor="bottom" id="Terminal" order="11" />
+      <window_info anchor="bottom" id="Python Console" order="12" />
+      <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
+      <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
+      <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
+      <window_info anchor="right" id="SciView" order="3" weight="0.32982844" />
+      <window_info anchor="right" id="Database" order="4" weight="0.32982844" />
+    </layout-to-restore>
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="1" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="Очередные фиксы репортов, добавил реакцию бота на криты у рыцарей и деферов" />
+    <MESSAGE value="Добавил хендлинг ошибок при отправке уведомлений лучникам, пару артов" />
+    <MESSAGE value="Перенёс стату по битве в другой чат" />
+    <MESSAGE value="Обновил айди чата для отправки статистики" />
+    <MESSAGE value="Добавил вычисление погов по /calculate_pogs" />
+    <MESSAGE value="Починил отправку уведомлений лукам" />
+    <MESSAGE value="Сократид команду /calculate_pogs (продублировал)" />
+    <MESSAGE value="Отключил сообщение о репорте в первый час после битвы в чате ги" />
+    <MESSAGE value="Пофиксил невывод сообщения о репорте" />
+    <MESSAGE value="SQL-запросы теперь безопасны и оптимизированы" />
+    <MESSAGE value="Добавил пинги на битву" />
+    <MESSAGE value="Добавил ограничения по времени в уведомления к битве" />
+    <MESSAGE value="Фикс запроса в бд" />
+    <MESSAGE value="Увеличил время пинга ги к битве" />
+    <MESSAGE value="Добавил некоторую работу со стикерами" />
+    <MESSAGE value="Багфикс" />
+    <MESSAGE value="Багфикс приёма профилей" />
+    <MESSAGE value="Багфикс с todo" />
+    <MESSAGE value="Добавил возможность выдачи мута на нецелое количество минут" />
+    <MESSAGE value="Багфикс в sql-запросе" />
+    <MESSAGE value="Добавил ограничение на пинги в чатах ги" />
+    <MESSAGE value="Добавил фильтры для триггеров командами и удаления команд в муте" />
+    <MESSAGE value="Теперь мут удаляет все сообщения" />
+    <MESSAGE value="Добавил временную заглушку на пины" />
+    <MESSAGE value="Немного почистил код" />
+    <option name="LAST_COMMIT_MESSAGE" value="Немного почистил код" />
+  </component>
+  <component name="XDebuggerManager">
+    <watches-manager>
+      <configuration name="PythonConfigurationType">
+        <watch expression="mes.text.splitlines()" language="Python" />
+        <watch expression="mes.text.count(&quot;\n&quot;)" />
+        <watch expression="chat_dict" />
+        <watch expression="chat_dict.get(&quot;sleeping&quot;)" />
+        <watch expression="chat_dict.get(&quot;do not ready&quot;)" />
+        <watch expression="mes.text.partition(&quot;@&quot;)[0].partition(&quot;_&quot;)" language="Python" />
+      </configuration>
+    </watches-manager>
+  </component>
+  <component name="debuggerHistoryManager">
+    <expressions id="watch">
+      <expression>
+        <expression-string>mes.text.partition(&quot;@&quot;)[0].partition(&quot;_&quot;)</expression-string>
+        <language-id>Python</language-id>
+        <evaluation-mode>EXPRESSION</evaluation-mode>
+      </expression>
+      <expression>
+        <expression-string>mes.text.splitlines()</expression-string>
+        <language-id>Python</language-id>
+        <evaluation-mode>EXPRESSION</evaluation-mode>
+      </expression>
+    </expressions>
+  </component>
+  <component name="editorHistoryManager">
+    <entry file="file://$APPLICATION_CONFIG_DIR$/consoles/db/c46bac10-c696-40f5-b9c3-32fb2de04944/console.sql">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$USER_HOME$/.local/lib/python3.6/site-packages/telegram/utils/request.py" />
+    <entry file="file://$PROJECT_DIR$/libs/filters/todo.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state>
+          <caret selection-end-line="1" selection-end-column="36" />
+          <folding>
+            <element signature="e#0#35#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/libs/report.py" />
+    <entry file="file://$APPLICATION_CONFIG_DIR$/consoles/db/369d28f6-4f2d-490a-a9fe-20efa2d13121/console.sql">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/libs/filters/playlist.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="315">
+          <caret line="22" column="37" selection-start-line="22" selection-start-column="37" selection-end-line="22" selection-end-column="37" />
+          <folding>
+            <element signature="e#0#35#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/libs/mute.py" />
+    <entry file="file://$PROJECT_DIR$/libs/filters/silent.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="60">
+          <caret line="4" selection-start-line="4" selection-end-line="8" selection-end-column="43" />
+          <folding>
+            <element signature="e#0#35#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/libs/filters/service_filters.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="90">
+          <caret line="7" column="39" selection-start-line="7" selection-start-column="39" selection-end-line="7" selection-end-column="39" />
+          <folding>
+            <element signature="e#0#35#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/error.log">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="420">
+          <caret line="28" lean-forward="true" selection-start-line="28" selection-end-line="28" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/libs/filters/dspam_filters.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state>
+          <caret selection-end-line="9" selection-end-column="23" />
+          <folding>
+            <element signature="e#0#35#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/libs/filters/class_filters.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="105">
+          <caret line="8" selection-start-line="8" selection-end-line="8" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/bin/calculate.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="30">
+          <caret line="2" column="9" selection-start-line="2" selection-start-column="9" selection-end-line="2" selection-end-column="9" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/bin/chat_stats.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="585">
+          <caret line="40" column="67" selection-start-line="40" selection-start-column="67" selection-end-line="40" selection-end-column="67" />
+          <folding>
+            <element signature="e#0#14#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/bin/help.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="105">
+          <caret line="7" column="64" selection-start-line="7" selection-start-column="64" selection-end-line="7" selection-end-column="64" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/bin/pin.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-702">
+          <caret line="9" column="18" selection-start-line="9" selection-start-column="11" selection-end-line="9" selection-end-column="18" />
+          <folding>
+            <element signature="e#0#36#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/bin/playlist.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="558">
+          <caret line="158" column="19" lean-forward="true" selection-start-line="158" selection-start-column="19" selection-end-line="158" selection-end-column="19" />
+          <folding>
+            <element signature="e#0#36#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/bin/trigger.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="752">
+          <caret line="66" lean-forward="true" selection-start-line="66" selection-end-line="66" />
+          <folding>
+            <element signature="e#0#36#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/libs/bot_async_messaging.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="837">
+          <caret line="87" column="22" selection-start-line="87" selection-start-column="22" selection-end-line="87" selection-end-column="22" />
+          <folding>
+            <element signature="e#0#24#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$APPLICATION_HOME_DIR$/helpers/typeshed/stdlib/2and3/time.pyi">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/libs/guild.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="330">
+          <caret line="22" selection-start-line="22" selection-end-line="22" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/libs/guild_reports_stats.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="390">
+          <caret line="27" column="30" selection-start-line="27" selection-start-column="30" selection-end-line="27" selection-end-column="30" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/libs/trigger.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="555">
+          <caret line="38" column="208" selection-start-line="38" selection-start-column="208" selection-end-line="38" selection-end-column="208" />
+          <folding>
+            <element signature="e#0#36#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/libs/chat_stats.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1140">
+          <caret line="77" column="104" selection-start-line="77" selection-start-column="104" selection-end-line="77" selection-end-column="104" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/.local/lib/python3.6/site-packages/telegram/ext/commandhandler.py" />
+    <entry file="file://$PROJECT_DIR$/libs/filters/pin.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="105">
+          <caret line="8" column="31" selection-start-line="4" selection-end-line="8" selection-end-column="31" />
+          <folding>
+            <element signature="e#0#35#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/work_materials/constants.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1215">
+          <caret line="81" column="64" selection-start-line="81" selection-start-column="64" selection-end-line="81" selection-end-column="64" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/bin/silent.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-154">
+          <caret line="42" column="78" selection-start-line="42" selection-start-column="78" selection-end-line="42" selection-end-column="78" />
+          <folding>
+            <element signature="e#0#36#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/libs/filters/guild_filters.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="135">
+          <caret line="9" column="24" selection-start-line="9" selection-start-column="24" selection-end-line="9" selection-end-column="24" />
+          <folding>
+            <element signature="e#0#35#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/bin/service_functions.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="210">
+          <caret line="14" column="29" selection-start-line="14" selection-start-column="29" selection-end-line="14" selection-end-column="29" />
+          <folding>
+            <element signature="e#0#44#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/libs/updater_async.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="375">
+          <caret line="25" selection-start-line="25" selection-end-line="25" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/bin/dspam.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="866">
+          <caret line="485" column="42" selection-start-line="485" selection-start-column="42" selection-end-line="485" selection-end-column="42" />
+          <folding>
+            <element signature="e#0#36#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/work_materials/globals.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="690">
+          <caret line="85" column="4" selection-start-line="85" selection-start-column="4" selection-end-line="85" selection-end-column="4" />
+          <folding>
+            <element signature="e#0#85#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/bin/todo.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="720">
+          <caret line="48" column="63" selection-start-line="48" selection-start-column="63" selection-end-line="48" selection-end-column="63" />
+          <folding>
+            <element signature="e#0#11#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file:///usr/local/lib/python3.6/dist-packages/telegram/ext/commandhandler.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="287">
+          <caret line="140" column="16" selection-start-line="140" selection-start-column="16" selection-end-line="140" selection-end-column="16" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/mwt.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="570">
+          <caret line="38" lean-forward="true" selection-start-line="38" selection-end-line="38" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/libs/filters/mute_filters.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="105">
+          <caret line="9" column="41" selection-start-line="9" selection-start-column="41" selection-end-line="9" selection-end-column="41" />
+          <folding>
+            <element signature="e#0#35#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/bin/mute.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="570">
+          <caret line="42" column="22" selection-start-line="42" selection-start-column="22" selection-end-line="42" selection-end-column="22" />
+          <folding>
+            <element signature="e#0#34#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/bin/class_func.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="585">
+          <caret line="42" column="131" selection-start-line="42" selection-start-column="131" selection-end-line="42" selection-end-column="131" />
+          <folding>
+            <element signature="e#0#32#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/bin/guild.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1365">
+          <caret line="94" column="14" selection-start-line="94" selection-start-column="14" selection-end-line="94" selection-end-column="14" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/bin/stickers.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="240">
+          <caret line="16" selection-start-line="16" selection-end-line="16" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/config_old.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="135">
+          <caret line="9" lean-forward="true" selection-end-line="9" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/.gitignore">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="750">
+          <caret line="50" column="12" lean-forward="true" selection-start-line="50" selection-start-column="12" selection-end-line="50" selection-end-column="12" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/config.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="150">
+          <caret line="10" lean-forward="true" selection-start-line="10" selection-end-line="10" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/bot.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="405">
+          <caret line="912" column="126" lean-forward="true" selection-start-line="912" selection-start-column="126" selection-end-line="912" selection-end-column="126" />
+          <folding>
+            <element signature="e#12#97#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+  </component>
+</project>
