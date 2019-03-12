@@ -1,10 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="50aa9201-e8f5-40d7-a14b-629092aaab1f" name="Default Changelist" comment="Немного почистил код">
-      <change beforePath="$PROJECT_DIR$/bot.py" beforeDir="false" afterPath="$PROJECT_DIR$/bot.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/config.py" beforeDir="false" afterPath="$PROJECT_DIR$/config.py" afterDir="false" />
-    </list>
+    <list default="true" id="50aa9201-e8f5-40d7-a14b-629092aaab1f" name="Default Changelist" comment="Немного почистил код" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -80,7 +77,7 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/bot.py">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="405">
@@ -92,7 +89,7 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/config.py">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="150">
@@ -427,14 +424,7 @@
       <workItem from="1551734354912" duration="1436000" />
       <workItem from="1552382965493" duration="1955000" />
       <workItem from="1552400000325" duration="156000" />
-      <workItem from="1552410755967" duration="2536000" />
-    </task>
-    <task id="LOCAL-00013" summary="Доработал дату в команде /info">
-      <created>1546196192545</created>
-      <option name="number" value="00013" />
-      <option name="presentableId" value="LOCAL-00013" />
-      <option name="project" value="LOCAL" />
-      <updated>1546196192545</updated>
+      <workItem from="1552410755967" duration="3085000" />
     </task>
     <task id="LOCAL-00014" summary="Визуальные улучшения в команде /info">
       <created>1546196571986</created>
@@ -772,11 +762,18 @@
       <option name="project" value="LOCAL" />
       <updated>1552411438380</updated>
     </task>
-    <option name="localTasksCounter" value="62" />
+    <task id="LOCAL-00062" summary="Довёл до ума медальку">
+      <created>1552413394708</created>
+      <option name="number" value="00062" />
+      <option name="presentableId" value="LOCAL-00062" />
+      <option name="project" value="LOCAL" />
+      <updated>1552413394708</updated>
+    </task>
+    <option name="localTasksCounter" value="63" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="156610000" />
+    <option name="totallyTimeSpent" value="157159000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="67" y="25" width="1853" height="1055" extended-state="6" />
@@ -832,7 +829,6 @@
     <option name="version" value="1" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Очередные фиксы репортов, добавил реакцию бота на криты у рыцарей и деферов" />
     <MESSAGE value="Добавил хендлинг ошибок при отправке уведомлений лучникам, пару артов" />
     <MESSAGE value="Перенёс стату по битве в другой чат" />
     <MESSAGE value="Обновил айди чата для отправки статистики" />
@@ -857,7 +853,8 @@
     <MESSAGE value="Теперь мут удаляет все сообщения" />
     <MESSAGE value="Добавил временную заглушку на пины" />
     <MESSAGE value="Немного почистил код" />
-    <option name="LAST_COMMIT_MESSAGE" value="Немного почистил код" />
+    <MESSAGE value="Довёл до ума медальку" />
+    <option name="LAST_COMMIT_MESSAGE" value="Довёл до ума медальку" />
   </component>
   <component name="XDebuggerManager">
     <watches-manager>
@@ -1214,13 +1211,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/config.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="150">
-          <caret line="10" lean-forward="true" selection-start-line="10" selection-end-line="10" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/bot.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="405">
@@ -1228,6 +1218,16 @@
           <folding>
             <element signature="e#12#97#0" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/config_temp.py">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/config.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="150">
+          <caret line="10" lean-forward="true" selection-start-line="10" selection-end-line="10" />
         </state>
       </provider>
     </entry>
