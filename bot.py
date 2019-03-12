@@ -64,8 +64,6 @@ all_chats_stats.update_from_database()
 stats.update({0 : all_chats_stats})
 
 
-######### a.read().split() - выдаёт массив строк, из файла . которые были разделены пробелом или(может быть) \n
-
 def empty(bot, update): #Пустая функия для объявления очереди
     return 0
 
@@ -263,7 +261,6 @@ def dr(bot, update):    #   TODO починить дни рождения
     request = "SELECT birthday, username FROM users"
     cursor.execute(request)
     row = cursor.fetchone()
-    #print(row)
     current = time.strftime('%Y-%m-%d')
     current_list = current.split("-")
     current_date = datetime.date(int(2000), int(current_list[1]), int(current_list[2]))
@@ -281,7 +278,6 @@ def dr(bot, update):    #   TODO починить дни рождения
 
         users[i] = Dr_user(row[1], delta)
 
-        #print(users[i])
         print(users[i].username, users[i].delta)
 
         row = cursor.fetchone()
@@ -329,8 +325,6 @@ def add_battle(bot, update):
     OSA = Battles_OSA.readlines()
     MTR = Battles_MTR.readlines()
     mes = update.message.text[12:len(update.message.text)]
-    #castles = ['🍁', '☘', '🖤', '🐢', '🦇', '🌹', '🍆']
-    #print(mes)
     alliance = 0
     split = 0
     for i in range (0, len(mes)):
@@ -387,7 +381,6 @@ def battles_stats(bot, update):
     Stats_battles_MTR = [None] * 7
     Stats_split_MTR = [None] * 7
     for i in range (0, 7):
-        #print(OSA[i].split())
         Stats_battles_OSA[i] = Battles(castles[i], OSA[i].split()[0])
         Stats_split_OSA[i] = Battles(castles[i], OSA[i].split()[1])
         Stats_battles_MTR[i] = Battles(castles[i], MTR[i].split()[0])
@@ -396,8 +389,6 @@ def battles_stats(bot, update):
     Stats_split_OSA.sort(reverse = True)
     Stats_battles_MTR.sort(reverse = True)
     Stats_split_MTR.sort(reverse = True)
-    #for i in range (0, 7):
-        #print(Stats_battles_OSA[i].castle, Stats_battles_OSA[i].number, Stats_battles_MTR[i].castle, Stats_battles_MTR[i].number)
     response = 'Статистика Битв. Альянс ОСА, заблаговременные пины:\n'
     for i in range (0, 7):
         response = response + Stats_battles_OSA[i].castle + ' ' + str(Stats_battles_OSA[i].number) + '(' + str(int(Stats_battles_OSA[i].number) / number_battles * 100) + '%)\n'
@@ -426,10 +417,8 @@ def battle_history(bot, update):
     request = "SELECT battle_id, date_in, report_attack, report_defense, report_lvl, report_exp, report_gold, report_stock, critical_strike, guardian_angel FROM reports WHERE user_id = %s ORDER BY battle_id"
     cursor.execute(request, (row[0],))
     row = cursor.fetchone()
-    #print(row)
     response = '' 'История битв по внесённым репортам:'
     while row:
-        #print(row)
         response_new ='\n\n🏅:' + str(row[4]) + ' ⚔:' + str(row[2]) + ' 🛡:' + str(row[3]) + ' 🔥:' + str(row[5]) + ' 💰:' + str(row[6]) + ' 📦:' + str(row[7])
         if row[8]:
             response_new += '<b>\n⚡️Critical strike</b>'
@@ -493,7 +482,6 @@ def textMessage(bot, update):
 
         else:
             bot.send_message(chat_id=update.message.chat_id, text='Система функционирует нормально, ошибок не зафиксировано' + '\n' + time.ctime()) #   TODO сделать нормальный статус
-    #print (Triggers_count)
 
     trigger_mes = mes.text.translate({ord(c): None for c in '\''})
     #Обработка специальных триггеров
@@ -739,15 +727,12 @@ def textMessage(bot, update):
             if row != None:
                 print(row)
             if row == None: #Добавляем нового игрока
-                #print(mes.text[1:].split('\n'))
                 guild = None
                 if mes.text[1] == '[':
                     guild = mes.text[1:].split(']')[0][1:]
                     print("yes, guild = ", guild)
                 username = mes.text[1:].split('\n')[0]
                 lvl = int(mes.text[mes.text.find('🏅Уровень:'):].split()[1])
-                #print(mes.text.find('⚔Атака'))
-                #print(mes.text[mes.text.find('⚔️Атака:'):])
                 attack = int(mes.text[mes.text.find('⚔Атака:'):].split()[1])
                 defense = int(mes.text[mes.text.find('⚔Атака:'):].split()[3])
                 request = "INSERT INTO users(telegram_id, telegram_username, user_castle, username, guild, user_lvl, user_attack, user_defense, last_update) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)"
@@ -760,8 +745,6 @@ def textMessage(bot, update):
                 guild = None
                 if mes.text[1] == '[':
                     guild = mes.text[1:].split(']')[0][1:]
-                #print(mes.text.find('⚔Атака'))
-                #print(mes.text[mes.text.find('⚔️Атака:'):])
                 attack = int(mes.text[mes.text.find('⚔Атака:'):].split()[1])
                 defense = int(mes.text[mes.text.find('⚔Атака:'):].split()[3])
                 print(mes.from_user.id, mes.text[0], username, lvl, attack, defense)
