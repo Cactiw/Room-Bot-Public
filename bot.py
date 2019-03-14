@@ -909,8 +909,7 @@ def textMessage(bot, update):
                                     percent = (guild_reports.num_reports / guild_reports.num_players) * 100
                                     response = "Репорт от <b>{0}</b> принят.\nВсего сдало репортов <b>{1}</b> человек, это <b>{2:.2f}</b>% " \
                                                "от общего числа\n".format(current_report.nickname, guild_reports.num_reports, percent)
-                                    if guild_reports.num_reports == 1:
-                                              response += '{0} \n \n 🏅 это самый первый репорт после битвы '.format( response)
+                             
                                     if percent == 100:
                                         response += "Все сдали репорты! Какие вы лапочки!"
 
@@ -922,6 +921,9 @@ def textMessage(bot, update):
                                                     response += "<b>{0}</b>,    ".format(user.username)
                                                  
                                         else:
+                                            if guild_reports.num_reports == 1:
+                                              response += '{0} \n \n 🏅 это самый первый репорт после битвы! '.format(response)
+                                              bot.send_message(chat_id = admin_ids[0], text = response, parse_mode = 'HTML')
                                             return # В первый час бот не сообщает о репорте в чат
                                     try:
                                         bot.sync_send_message(chat_id = chat_id, text = response, parse_mode = 'HTML')
