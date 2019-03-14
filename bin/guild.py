@@ -252,16 +252,16 @@ def g_all_attack(bot, update):
 
 def g_add_attack(bot, update):
     mes = update.message
-    id = mes.reply_to_message.from_user.id
+    user_id = mes.reply_to_message.from_user.id
     request = "SELECT user_attack, username FROM users WHERE telegram_id = %s"
     cursor.execute(request, (mes.reply_to_message.from_user.id,))
     row = cursor.fetchone()
     if row is None:
         bot.send_message(chat_id=update.message.chat_id, text="Пользователь не найден в базе данных")
         return
-    current = User(id, row[1], row[0], 0)
+    current = User(user_id, row[1], row[0], 0)
     for i in g_attacking_users:
-        if i.id == id:
+        if i.id == user_id:
             bot.send_message(chat_id=update.message.chat_id, text="Игрок уже атакует")
             return
     globals.g_added_attack += row[0]
@@ -276,9 +276,9 @@ def g_add_attack(bot, update):
 
 def g_del_attack(bot, update):
     mes = update.message
-    id = mes.reply_to_message.from_user.id
+    user_id = mes.reply_to_message.from_user.id
     for i in g_attacking_users:
-        if i.id == id:
+        if i.id == user_id:
             globals.g_added_attack -= i.attack
             g_attacking_users.remove(i)
             bot.send_message(chat_id=update.message.chat_id, text="Игрок успешно удалён")
@@ -297,7 +297,7 @@ def g_attacking_list(bot, update):
 
 def g_add_defense(bot, update):
     mes = update.message
-    id = mes.reply_to_message.from_user.id
+    user_id = mes.reply_to_message.from_user.id
     request = "SELECT user_defense, username FROM users WHERE telegram_id = %s"
     cursor.execute(request, (mes.reply_to_message.from_user.id,))
     row = cursor.fetchone()
@@ -306,7 +306,7 @@ def g_add_defense(bot, update):
         return
     current = User(mes.reply_to_message.from_user.id, row[1], 0, row[0])
     for i in g_defending_users:
-        if i.id == id:
+        if i.id == user_id:
             bot.send_message(chat_id=update.message.chat_id, text="Игрок уже защищает")
             return
     globals.g_added_defense += row[0]
@@ -322,9 +322,9 @@ def g_add_defense(bot, update):
 
 def g_del_defense(bot, update):
     mes = update.message
-    id = mes.reply_to_message.from_user.id
+    user_id = mes.reply_to_message.from_user.id
     for i in g_defending_users:
-        if i.id == id:
+        if i.id == user_id:
             globals.g_added_defense -= i.defense
             g_defending_users.remove(i)
             bot.send_message(chat_id=update.message.chat_id, text="Игрок успешно удалён")

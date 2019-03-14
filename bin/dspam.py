@@ -332,9 +332,9 @@ def set_call_sign(bot, update, args):
     response = "Входящий запрос от <b>" + row[2] + "</b>.\nПодробнее: /requests"
     #update.message.from_user.id not in get_admin_ids(bot, update.message.chat_id)
     bot.send_message(chat_id=231900398, text=response, parse_mode='HTML')
-    for id in get_admin_ids(bot, -1001330929174):
+    for user_id in get_admin_ids(bot, -1001330929174):
         try:
-            bot.send_message(chat_id = id, text = response, parse_mode = 'HTML')
+            bot.send_message(chat_id = user_id, text = response, parse_mode = 'HTML')
         except TelegramError:
             pass
 

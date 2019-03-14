@@ -44,7 +44,7 @@ from bin.dspam import *
 from bin.guild import *
 from bin.mute import *
 from bin.class_func import set_class, knight_critical, sentinel_critical
-from bin.help import help, dspam_help
+from bin.help import bot_help, dspam_help
 from bin.calculate import calculate_pogs
 from bin.stickers import create_sticker_set, send_sticker_emoji
 
@@ -1066,7 +1066,7 @@ dispatcher.add_handler(CommandHandler("chat_stats", chat_stats_send, filters=Fil
 dispatcher.add_handler(CommandHandler("current_chat_stats", current_chat_stats_send, filters=Filters.user(user_id=231900398)))
 
 
-dispatcher.add_handler(CommandHandler('help', help))
+dispatcher.add_handler(CommandHandler('help', bot_help))
 dispatcher.add_handler(CommandHandler('dspam_help', dspam_help))
 
 dispatcher.add_handler(text_message_handler)

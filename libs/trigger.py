@@ -2,8 +2,8 @@ from work_materials.globals import *
 import time, datetime
 
 class Trigger:
-    def __init__(self, type, text):
-        self.type = type
+    def __init__(self, trigger_type, text):
+        self.type = trigger_type
         self.text = text
 
         #Типы триггеров - 0 - текст, 1 - видео, 2 - аудио, 3 - фото, 4 - документ, 5 - стикер, 6 - войс
@@ -42,8 +42,8 @@ class Trigger:
         cache_full()
 
 
-    def send_trigger (self, type, trigger_out, bot, update):
-        current = Trigger(type, trigger_out)
+    def send_trigger (self, trigger_type, trigger_out, bot, update):
+        current = Trigger(trigger_type, trigger_out)
         #current.process(response)
         if current.type == 0:
             bot.send_message(chat_id=update.message.chat_id, text=trigger_out, parse_mode = 'HTML')

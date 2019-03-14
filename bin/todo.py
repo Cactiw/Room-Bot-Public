@@ -38,14 +38,14 @@ def todo_list(bot, update):
     bot.send_message(chat_id=update.message.chat_id, text=response, parse_mode='HTML')
 
 def complete_todo(bot, update):
-    id = update.message.text.split("_")[2].partition("@")[0]
+    user_id = update.message.text.split("_")[2].partition("@")[0]
     request = "select id from todo where id = %s"
-    cursor.execute(request, (id,))
+    cursor.execute(request, (user_id,))
     row = cursor.fetchone()
     if row is None:
         bot.send_message(chat_id=update.message.chat_id, text="Не найдено. Проверьте синтаксис")
         return
     request = "update todo set completed = 1, date_completed = %s where id = %s"
-    cursor.execute(request, (time.strftime('%Y-%m-%d %H:%M:%S'), id))
+    cursor.execute(request, (time.strftime('%Y-%m-%d %H:%M:%S'), user_id))
     conn.commit()
     bot.send_message(chat_id=update.message.chat_id, text="Успешно выполнено. Поздравляем!", parse_mode='HTML')
