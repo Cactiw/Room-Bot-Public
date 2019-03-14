@@ -248,7 +248,7 @@ def sil_run(bot, update):
     request = "SELECT * FROM silent WHERE silent_id = '{0}'"
     cursor.execute(request, (mes1[2],))
     row = cursor.fetchone()
-    if row == None:
+    if row is None:
         bot.send_message(chat_id=update.message.chat_id, text='Ошибка. Такого чата не найдено')
         return
     request = "UPDATE silent SET enabled = %s WHERE silent_id = %s"

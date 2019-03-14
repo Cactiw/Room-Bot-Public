@@ -228,7 +228,7 @@ def setdr(bot, update):#Задание дня рождения
     request = "SELECT * FROM users WHERE telegram_id = %s"
     cursor.execute(request, (mes.from_user.id,))
     row = cursor.fetchone()
-    if row == None:
+    if row is None:
         response = "Пользователь не найден, обновите /hero"
         bot.send_message(chat_id=update.message.chat_id, text=response, parse_mode='HTML')
         return
@@ -262,7 +262,7 @@ def dr(bot, update):    #   TODO починить дни рождения
     i = 0
     while row:
         a = row[0]
-        if a == None:
+        if a is None:
             delta = none_date - current_date
             print(delta)
         else:
@@ -536,7 +536,7 @@ def textMessage(bot, update):
             row = cursor.fetchone()
             if row != None:
                 print(row)
-            if row == None: #Добавляем нового игрока
+            if row is None: #Добавляем нового игрока
                 guild = None
                 if mes.text[1] == '[':
                     guild = mes.text[1:].split(']')[0][1:]
@@ -580,7 +580,7 @@ def textMessage(bot, update):
             request = "SELECT * FROM users WHERE telegram_id = %s"
             cursor.execute(request, (mes.from_user.id,))
             row = cursor.fetchone()
-            if row == None:
+            if row is None:
                 try:
                     bot.send_message(chat_id=update.message.from_user.id, text='Профиль не найден в базе данных. Пожалуйста, обновите /hero')
                 except TelegramError:

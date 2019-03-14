@@ -7,7 +7,7 @@ def add_trigger(bot, update):
     request = "SELECT * FROM admins WHERE user_id = %s"
     cursor.execute(request, (mes.from_user.id,))
     row = cursor.fetchone()
-    if row == None and update.message.from_user.id not in get_admin_ids(bot, update.message.chat_id):
+    if row is None and update.message.from_user.id not in get_admin_ids(bot, update.message.chat_id):
         bot.send_message(chat_id=update.message.chat_id, text='Ошибка. Доступ только у админов')
     else:
         request = "SELECT trigger_out FROM triggers WHERE trigger_in = %s AND (chat_id = %s OR chat_id = 0)"
@@ -17,7 +17,7 @@ def add_trigger(bot, update):
         if row != None:
             bot.send_message(chat_id=update.message.chat_id, text='Триггер уже существует')
         else:
-            if update.message.reply_to_message == None:
+            if update.message.reply_to_message is None:
                 bot.send_message(chat_id=update.message.chat_id, text='Сообщение должно быть ответом на триггер')
             else:
                 new = Trigger
@@ -34,7 +34,7 @@ def add_global_trigger(bot, update):
     if row != None:
         bot.send_message(chat_id=update.message.chat_id, text='Триггер уже существует')
     else:
-        if update.message.reply_to_message == None:
+        if update.message.reply_to_message is None:
             bot.send_message(chat_id=update.message.chat_id, text='Сообщение должно быть ответом на триггер')
         else:
             new = Trigger
@@ -46,13 +46,13 @@ def remove_trigger(bot, update):
     request = "SELECT * FROM admins WHERE user_id = %s"
     cursor.execute(request, (mes.from_user.id,))
     row = cursor.fetchone()
-    if row == None and update.message.from_user.id not in get_admin_ids(bot, update.message.chat_id):
+    if row is None and update.message.from_user.id not in get_admin_ids(bot, update.message.chat_id):
         bot.send_message(chat_id=update.message.chat_id, text='Ошибка. Доступ только у админов')
     else:
         request = "SELECT chat_id, type FROM triggers WHERE trigger_in = %s AND (chat_id = %s OR chat_id = 0)"
         cursor.execute(request, (mes.text[16:], mes.chat_id))
         row = cursor.fetchone()
-        if row == None:
+        if row is None:
             response = 'Ошибка. Триггер не найден'
             bot.send_message(chat_id=update.message.chat_id, text=response)
         else:
