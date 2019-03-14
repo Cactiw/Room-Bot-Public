@@ -12,7 +12,7 @@ def battle_stats_send(bot, update = None):
     if update is not None:
         chat_id = update.message.chat_id
     else:
-        chat_id = SUPER_ADMIN_ID
+        chat_id = STATS_SEND_CHAT_ID
     d = datetime.datetime(2018, 5, 27, 7, 0, 0, 0)  # 8 для летнего времени
     c = datetime.datetime(2018, 5, 26, 23, 0, 0, 0)
     c = d - c
@@ -83,6 +83,7 @@ def battle_stats_send(bot, update = None):
             additional_defense += row[10]
         first_report = first_reports_guilds.get(user[2])
         if first_report is not None:
+            print(user[1], first_report.nickname)
             if user[1] == first_report.nickname:
                 response_new += "<b>🏅 Первый репорт в гильдии!</b>"
         response_new += "\n\n"
