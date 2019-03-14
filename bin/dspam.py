@@ -1,6 +1,126 @@
 from work_materials.globals import *
 import time
 
+
+def dspam_text_message(bot, update, trigger_mes):
+    mes = update.message
+    if mes.text.find('+') == 0 or mes.text.find('-') == 0:  # Репутация
+        if mes.reply_to_message:
+            if mes.from_user.id != mes.reply_to_message.from_user.id:
+
+                request = "SELECT user_id, call_sign, reputation FROM dspam_users WHERE telegram_id = %s"
+                cursor.execute(request, (mes.reply_to_message.from_user.id,))
+                row = cursor.fetchone()
+                if mes.text.find('+') == 0:
+                    reputation_change = 1
+                else:
+                    reputation_change = -1
+                reputation = row[2] + reputation_change
+                request = "UPDATE dspam_users SET reputation = %s WHERE user_id = %s"
+                cursor.execute(request, (reputation, row[0]))
+                conn.commit()
+
+                request = "SELECT call_sign, reputation FROM dspam_users WHERE telegram_id = %s"
+                cursor.execute(request, (mes.from_user.id,))
+                user_from = cursor.fetchone()
+                response = ""
+                if user_from:
+                    response += "<b>" + user_from[0] + "</b> изменил репутацию <b>" + row[1] + "</b> на <b>" + str(
+                        reputation_change) + "</b>\n"
+                    response += "Текущая репутация:<b>" + str(reputation) + "</b>"
+                else:
+                    response += "Репутация <b>" + row[1] + "</b> была изменена на <b>" + str(
+                        reputation_change) + "</b> пользователем, которого я не знаю.\n"
+                    response += "Пришли мне /hero из @chatwarsbot (предпочтительней), и/или нажми /reg\n"
+                    response += "Текущая репутация: <b>" + str(reputation) + "</b>"
+
+                bot.send_message(chat_id=update.message.chat_id, text=response, parse_mode='HTML')
+                return 0
+
+    if mes.text.lower().find("доброе утро") > -1 or mes.text.lower().find("утречка") > -1 or mes.text.lower().find(
+            "доброго утра") > -1:
+        response = ""
+        request = "SELECT call_sign, reputation FROM dspam_users WHERE telegram_id = %s"
+        cursor.execute(request, (mes.from_user.id,))
+        row = cursor.fetchone()
+        if row is not None:
+            if mes.from_user.id in get_admin_ids(bot, chat_id=-1001330929174):
+                response += "Как хороший и заботящиийся о своём чатике админ, <b>" + row[
+                    0] + "</b> пожелал всем в этом уютном чате доброго утра"
+                bot.send_message(chat_id=update.message.chat_id, text=response, parse_mode='HTML',
+                                 reply_to_message_id=mes.message_id)
+                return 0
+            request = "SELECT telegram_id FROM dspam_users ORDER BY reputation DESC LIMIT 5"
+            cursor.execute(request)
+            top_id = cursor.fetchone()
+            if top_id[0] == mes.from_user.id:
+                response += "Человек, пользующийся практически неограниченным уважением считает своим долгом пожелать всему чату доброго утра.\nДоброе!"
+                bot.send_message(chat_id=update.message.chat_id, text=response, parse_mode='HTML',
+                                 reply_to_message_id=mes.message_id)
+                return 0
+            else:
+                top_id = cursor.fetchone()
+                while top_id:
+                    if top_id[0] == mes.from_user.id:
+                        response += "\"Доброе утро!\" - медленно и с чувством произнёс <b>" + row[
+                            0] + "</b>. Его тут уважают, и он это знал"
+                        bot.send_message(chat_id=update.message.chat_id, text=response, parse_mode='HTML',
+                                         reply_to_message_id=mes.message_id)
+                        return 0
+                    top_id = cursor.fetchone()
+            response += "Доброе утро, <b>" + row[0] + "</b>! Самое время совершать подвиги!\n"
+            response += "Ваша репутация:" + str(row[1])
+            bot.send_message(chat_id=update.message.chat_id, text=response, parse_mode='HTML',
+                             reply_to_message_id=mes.message_id)
+
+    request = "SELECT user_id, call_sign FROM dspam_users WHERE call_sign = %s"
+    cursor.execute(request, (trigger_mes.upper(),))
+    row = cursor.fetchone()
+    if row:
+        request = "SELECT call_sign FROM dspam_users WHERE telegram_id = %s"
+        cursor.execute(request, (mes.from_user.id,))
+        username = cursor.fetchone()[0]
+        request = "SELECT telegram_username FROM users WHERE user_id = %s"
+        cursor.execute(request, (row[0],))
+        telegram_username = cursor.fetchone()[0]
+
+        request = "SELECT telegram_id FROM dspam_users ORDER BY reputation DESC LIMIT 5"
+        cursor.execute(request)
+        top_id = cursor.fetchone()
+        flag = 0
+        response = ""
+        if username == row[1]:
+            response = "<b>" + username + "</b> пинганул сам себя. Несмотря на обыденность такого действия, было в нём что-то такое..."
+            bot.send_message(chat_id=update.message.chat_id, text=response, parse_mode='HTML')
+            return 0
+        if top_id[0] == mes.from_user.id:
+            response += "Будучи самым уважаемым человеком на районе, <b>" + username + "</b> тихо и спокойно позвал <b>" + \
+                        row[1] + "</b>.\nОн был абсолютно уверен, что его услышат\n"
+            flag = 1
+        else:
+            top_id = cursor.fetchone()
+            while top_id:
+                if top_id[0] == mes.from_user.id:
+                    response += "<b>" + username + "</b> оглушительно проорал <b>" + row[
+                        1] + "</b>.\nВпрочем, его репутация была достаточно велика, чтобы он мог творить всё, что угодно\n"
+                    flag = 1
+                top_id = cursor.fetchone()
+
+        if flag == 0:
+            if mes.from_user.id in get_admin_ids(bot, chat_id=-1001330929174):
+                response += "<b>" + username + "</b> весьма недвусмысленно позвал <b>" + row[
+                    1] + "</b>, намекая на то ли на свою админку, то ли на способ её получения...\n"
+            else:
+                response += "<b>" + username + "</b> пинганул <b>" + row[1] + "</b>\n"
+        if telegram_username:
+            response += "@" + telegram_username
+        else:
+            response += "Но я не знаю его юзерку (и что с этим делать пока тоже)\nОбратись к @Cactiw"
+        bot.send_message(chat_id=update.message.chat_id, text=response, parse_mode='HTML')
+        return 0
+    return 1
+
+
 def pr(bot, update):
     mes = update.message
     #if (mes.from_user.id != 231900398) and (mes.from_user.id not in get_admin_ids(bot, chat_id = -1001330929174)):

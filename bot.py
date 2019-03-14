@@ -33,6 +33,7 @@ from libs.filters.pin import *
 from libs.filters.mute_filters import *
 from libs.filters.class_filters import filter_set_class
 from libs.filters.guild_filters import filter_guild_list
+from libs.filters.chat_wars_filters import filter_hero, filter_report
 
 from bin.pin import *
 from bin.silent import *
@@ -47,6 +48,7 @@ from bin.class_func import set_class, knight_critical, sentinel_critical
 from bin.help import bot_help, dspam_help
 from bin.calculate import calculate_pogs
 from bin.stickers import create_sticker_set, send_sticker_emoji
+from bin.chat_wars import add_hero, add_report
 
 #--------------------------------------------------------------     Выставляем логгирование
 console = logging.StreamHandler()
@@ -78,11 +80,11 @@ def startCommand(bot, update):
 
 def mute(bot, update, args):
     mes = update.message
-    if (mes.from_user.id != 231900398) and (mes.from_user.id not in get_admin_ids(bot, chat_id=mes.chat_id)):
+    if (mes.from_user.id != SUPER_ADMIN_ID) and (mes.from_user.id not in get_admin_ids(bot, chat_id=mes.chat_id)):
         return
     if mes.reply_to_message is None:
         return
-    if mes.reply_to_message.from_user.id == 231900398:
+    if mes.reply_to_message.from_user.id == SUPER_ADMIN_ID:
         bot.send_message(chat_id=update.message.chat_id, text='Банить своего создателя я не буду!')
         return
     if not args:
@@ -358,16 +360,42 @@ def sql(bot, update, user_data):
     bot.send_message(chat_id=mes.chat_id, text=response)
 
 
+def send_trigger_list(bot, update):
+    mes = update.message
+    request = "SELECT * FROM triggers WHERE chat_id = %s"
+    cursor.execute(request, (mes.chat_id,))
+    row = cursor.fetchone()
+    types = {0: "text", 1: "video", 2: "audio", 3: "photo", 4: "document", 5: "sticker", 6: "voice"}
+    response = "<em>Локальные триггеры:</em>\n"
+    while row:
+        response_new = "<b>" + row[1] + '</b>\ntype = ' + str(types.get(row[2])) + ', created by ' + row[
+            5] + ' on ' + str(row[6]) + '\n\n'
+        if len(response + response_new) >= 4096:  # Превышение лимита длины сообщения
+            bot.send_message(chat_id=update.message.chat_id, text=response, parse_mode='HTML')
+            response = ""
+        response += response_new
+        row = cursor.fetchone()
+    response = response + '\n\n<em>Глобальные триггеры:</em>\n'
+    request = "SELECT * FROM triggers WHERE chat_id = 0"
+    cursor.execute(request)
+    row = cursor.fetchone()
+    while row:
+        response_new = "<b>" + row[1] + '</b>\ntype = ' + str(row[2]) + ' created by ' + row[5] + ' on ' + str(
+            row[6]) + '\n\n'
+        if len(response + response_new) >= 4096:
+            bot.send_message(chat_id=update.message.chat_id, text=response, parse_mode='HTML')
+            response = ""
+        response += response_new
+        row = cursor.fetchone()
+    bot.send_message(chat_id=update.message.chat_id, text=response, parse_mode='HTML')
+
+
 def textMessage(bot, update):
     #Обработка триггеров и всего остального
     global status
     global globalstatus
     if (status):
         globalstatus = 1
-    global Triggers_in
-    global Triggers_out
-    global Smart_triggers_out
-    global Triggers_count
     mes = update.message
 
     if (update.message.text.lower()) == 'статус':
@@ -378,114 +406,14 @@ def textMessage(bot, update):
             bot.send_message(chat_id=update.message.chat_id, text='Система функционирует нормально, ошибок не зафиксировано' + '\n' + time.ctime()) #   TODO сделать нормальный статус
 
     trigger_mes = mes.text.translate({ord(c): None for c in '\''})
-    #Обработка специальных триггеров
 
-    if mes.chat_id == -1001330929174: # ДСПАМ  -1001197381190
+    # Обработка специальных триггеров
 
-        if mes.text.find ('+') == 0 or mes.text.find ('-') == 0:  # Репутация
-            if mes.reply_to_message:
-                if mes.from_user.id != mes.reply_to_message.from_user.id:
-
-                    request = "SELECT user_id, call_sign, reputation FROM dspam_users WHERE telegram_id = %s"
-                    cursor.execute(request, (mes.reply_to_message.from_user.id,))
-                    row = cursor.fetchone()
-                    if mes.text.find ('+') == 0:
-                        reputation_change = 1
-                    else:
-                        reputation_change = -1
-                    reputation = row[2] + reputation_change
-                    request = "UPDATE dspam_users SET reputation = %s WHERE user_id = %s"
-                    cursor.execute(request, (reputation, row[0]))
-                    conn.commit()
-
-                    request = "SELECT call_sign, reputation FROM dspam_users WHERE telegram_id = %s"
-                    cursor.execute(request, (mes.from_user.id,))
-                    user_from = cursor.fetchone()
-                    response = ""
-                    if user_from:
-                        response += "<b>" + user_from[0] + "</b> изменил репутацию <b>" + row[1] + "</b> на <b>" + str(reputation_change) + "</b>\n"
-                        response += "Текущая репутация:<b>" + str(reputation) + "</b>"
-                    else:
-                        response += "Репутация <b>" + row[1] + "</b> была изменена на <b>" + str(reputation_change) + "</b> пользователем, которого я не знаю.\n"
-                        response += "Пришли мне /hero из @chatwarsbot (предпочтительней), и/или нажми /reg\n"
-                        response += "Текущая репутация: <b>" + str(reputation) + "</b>"
-
-                    bot.send_message(chat_id=update.message.chat_id, text=response, parse_mode='HTML')
-                    return
-
-        if mes.text.lower().find ("доброе утро") > -1 or mes.text.lower().find ("утречка") > -1 or mes.text.lower().find ("доброго утра") > -1:
-            response = ""
-            request = "SELECT call_sign, reputation FROM dspam_users WHERE telegram_id = %s"
-            cursor.execute(request, (mes.from_user.id,))
-            row = cursor.fetchone()
-            if row is not None:
-                if mes.from_user.id in get_admin_ids(bot, chat_id=-1001330929174):
-                    response += "Как хороший и заботящиийся о своём чатике админ, <b>" + row[0] + "</b> пожелал всем в этом уютном чате доброго утра"
-                    bot.send_message(chat_id=update.message.chat_id, text=response, parse_mode='HTML', reply_to_message_id = mes.message_id)
-                    return
-                request = "SELECT telegram_id FROM dspam_users ORDER BY reputation DESC LIMIT 5"
-                cursor.execute(request)
-                top_id = cursor.fetchone()
-                if top_id[0] == mes.from_user.id:
-                    response += "Человек, пользующийся практически неограниченным уважением считает своим долгом пожелать всему чату доброго утра.\nДоброе!"
-                    bot.send_message(chat_id=update.message.chat_id, text=response, parse_mode='HTML', reply_to_message_id = mes.message_id)
-                    return 
-                else:
-                    top_id = cursor.fetchone()
-                    while top_id:
-                        if top_id[0] == mes.from_user.id:
-                            response += "\"Доброе утро!\" - медленно и с чувством произнёс <b>" + row[0] + "</b>. Его тут уважают, и он это знал"
-                            bot.send_message(chat_id=update.message.chat_id, text=response, parse_mode='HTML', reply_to_message_id=mes.message_id)
-                            return
-                        top_id = cursor.fetchone()
-                response += "Доброе утро, <b>" + row[0] + "</b>! Самое время совершать подвиги!\n"
-                response += "Ваша репутация:" + str(row[1])
-                bot.send_message(chat_id=update.message.chat_id, text=response, parse_mode='HTML', reply_to_message_id=mes.message_id)
-
-        request = "SELECT user_id, call_sign FROM dspam_users WHERE call_sign = %s"
-        cursor.execute(request, (trigger_mes.upper(),))
-        row = cursor.fetchone()
-        if row:
-            request = "SELECT call_sign FROM dspam_users WHERE telegram_id = %s"
-            cursor.execute(request, (mes.from_user.id,))
-            username = cursor.fetchone()[0]
-            request = "SELECT telegram_username FROM users WHERE user_id = %s"
-            cursor.execute(request, (row[0],))
-            telegram_username = cursor.fetchone()[0]
-
-            request = "SELECT telegram_id FROM dspam_users ORDER BY reputation DESC LIMIT 5"
-            cursor.execute(request)
-            top_id = cursor.fetchone()
-            flag = 0
-            response = ""
-            if username == row[1]:
-                response = "<b>" + username + "</b> пинганул сам себя. Несмотря на обыденность такого действия, было в нём что-то такое..."
-                bot.send_message(chat_id=update.message.chat_id, text=response, parse_mode='HTML')
-                return
-            if top_id[0] == mes.from_user.id:
-                response += "Будучи самым уважаемым человеком на районе, <b>" + username + "</b> тихо и спокойно позвал <b>" + row[1] + "</b>.\nОн был абсолютно уверен, что его услышат\n"
-                flag = 1
-            else:
-                top_id = cursor.fetchone()
-                while top_id:
-                    if top_id[0] == mes.from_user.id:
-                        response += "<b>" + username + "</b> оглушительно проорал <b>" + row[1] + "</b>.\nВпрочем, его репутация была достаточно велика, чтобы он мог творить всё, что угодно\n"
-                        flag = 1
-                    top_id = cursor.fetchone()
-
-            if flag == 0:
-                if mes.from_user.id in get_admin_ids(bot, chat_id = -1001330929174):
-                    response += "<b>" + username + "</b> весьма недвусмысленно позвал <b>" + row[1] + "</b>, намекая на то ли на свою админку, то ли на способ её получения...\n"
-                else:
-                    response += "<b>" + username + "</b> пинганул <b>" + row[1] + "</b>\n"
-            if telegram_username:
-                response += "@" + telegram_username
-            else:
-                response += "Но я не знаю его юзерку (и что с этим делать пока тоже)\nОбратись к @Cactiw"
-            bot.send_message(chat_id=update.message.chat_id, text=response, parse_mode='HTML')
+    if mes.chat_id == DSPAM_CHAT_ID:
+        if dspam_text_message(bot, update, trigger_mes) == 0:
             return
 
-    #Поиск и вывод триггеров в сообщении
+    # Поиск и вывод триггеров в сообщении
 
     if mes.text.lower() in triggers_in:
         request = "SELECT trigger_out, type FROM triggers WHERE (chat_id = %s OR chat_id = 0) AND trigger_in = %s"
@@ -499,251 +427,8 @@ def textMessage(bot, update):
 
     # Вывод списка триггеров
     if update.message.text.lower() == 'список триггеров':
-        mes = update.message
-        request = "SELECT * FROM triggers WHERE chat_id = %s"
-        cursor.execute(request, (mes.chat_id,))
-        row = cursor.fetchone()
-        types = {0 : "text", 1 : "video", 2 : "audio", 3 : "photo", 4 : "document", 5 : "sticker", 6 : "voice"}
-        response = "<em>Локальные триггеры:</em>\n"
-        while row:
-            response_new = "<b>" + row[1] + '</b>\ntype = ' + str(types.get(row[2])) + ', created by ' + row[5] + ' on ' + str(row[6]) + '\n\n'
-            if len(response + response_new) >= 4096:    #   Превышение лимита длины сообщения
-                bot.send_message(chat_id=update.message.chat_id, text=response, parse_mode='HTML')
-                response = ""
-            response += response_new
-            row = cursor.fetchone()
-        response = response + '\n\n<em>Глобальные триггеры:</em>\n'
-        request = "SELECT * FROM triggers WHERE chat_id = 0"
-        cursor.execute(request)
-        row = cursor.fetchone()
-        while row:
-            response_new = "<b>" + row[1] + '</b>\ntype = ' + str(row[2]) + ' created by ' + row[5] + ' on ' + str(row[6]) + '\n\n'
-            if len(response + response_new) >= 4096:
-                bot.send_message(chat_id=update.message.chat_id, text=response, parse_mode='HTML')
-                response = ""
-            response += response_new
-            row = cursor.fetchone()
-        bot.send_message(chat_id=update.message.chat_id, text=response, parse_mode='HTML')
-
-    # Приём профилей
-    if (update.message.forward_from) and update.message.forward_from.id == 265204902: #and (update.message.chat_id == -1001330929174 or update.message.chat_id == 231900398  or update.message.chat_id == -1001209754716):
-        mes = update.message
-        is_hero = False
-        if mes.text.find('Уровень:') != -1 and mes.text.find('Класс: /class') != -1:
-            is_hero = True
-        if is_hero:
-            request = "SELECT * FROM users WHERE telegram_id = %s"
-            cursor.execute(request, (mes.from_user.id,))
-            row = cursor.fetchone()
-            if row != None:
-                print(row)
-            if row is None: #Добавляем нового игрока
-                guild = None
-                if mes.text[1] == '[':
-                    guild = mes.text[1:].split(']')[0][1:]
-                    print("yes, guild = ", guild)
-                username = mes.text[1:].split('\n')[0]
-                lvl = int(mes.text[mes.text.find('🏅Уровень:'):].split()[1])
-                attack = int(mes.text[mes.text.find('⚔Атака:'):].split()[1])
-                defense = int(mes.text[mes.text.find('⚔Атака:'):].split()[3])
-                request = "INSERT INTO users(telegram_id, telegram_username, user_castle, username, guild, user_lvl, user_attack, user_defense, last_update) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)"
-                cursor.execute(request, (mes.from_user.id, mes.from_user.username, mes.text[0], username, guild, lvl, attack, defense, time.strftime('%Y-%m-%d %H:%M:%S')))
-                conn.commit()
-                bot.send_message(chat_id=update.message.chat_id, text='Профиль успешно добавлен')
-            else:
-                username = mes.text[1:].split('\n')[0]
-                lvl = int(mes.text[mes.text.find('🏅Уровень:'):].split()[1])
-                guild = None
-                if mes.text[1] == '[':
-                    guild = mes.text[1:].split(']')[0][1:]
-                attack = int(mes.text[mes.text.find('⚔Атака:'):].split()[1])
-                defense = int(mes.text[mes.text.find('⚔Атака:'):].split()[3])
-                print(mes.from_user.id, mes.text[0], username, lvl, attack, defense)
-                request = "UPDATE users SET telegram_id = %s, telegram_username = %s,user_castle = %s, username = %s, guild = %s, user_lvl = %s, user_attack = %s, user_defense = %s, last_update = %s WHERE telegram_id = %s"
-                cursor.execute(request, (mes.from_user.id, mes.from_user.username,mes.text[0], username, guild, lvl, attack, defense, time.strftime('%Y-%m-%d %H:%M:%S'), mes.from_user.id))
-                conn.commit()
-
-                bot.send_message(chat_id=-1001197381190, text='Профиль успешно обновлён для пользователя @' + mes.from_user.username)
-                try:
-                    bot.send_message(chat_id=update.message.from_user.id, text='Профиль успешно обновлён')
-                except TelegramError:
-                    pass
-
-
-
-    #Приём репортов
-    if (update.message.forward_from) and update.message.forward_from.id == 265204902:# and (update.message.chat_id == -1001330929174 or update.message.chat_id == 231900398 or update.message.chat_id == -1001209754716): #Только для беседы ДСПАМ и чата отряда
-        mes = update.message
-        is_report = False
-        if mes.text.find('Твои результаты в бою:') != -1:
-            is_report = True
-        if is_report:
-            request = "SELECT * FROM users WHERE telegram_id = %s"
-            cursor.execute(request, (mes.from_user.id,))
-            row = cursor.fetchone()
-            if row is None:
-                try:
-                    bot.send_message(chat_id=update.message.from_user.id, text='Профиль не найден в базе данных. Пожалуйста, обновите /hero')
-                except TelegramError:
-                    return
-            else:
-                d = datetime.datetime(2018, 5, 27, 9, 0, 0, 0)
-                c = datetime.timedelta(hours=8)
-                try:
-                    forward_message_date = local_tz.localize(update.message.forward_date).astimezone(
-                        tz=pytz.timezone('Europe/Moscow')).replace(tzinfo=None)
-                except ValueError:
-                    print("value error")
-                    try:
-                        forward_message_date = update.message.forward_date.astimezone(
-                            tz=pytz.timezone('Europe/Moscow')).replace(
-                            tzinfo=None)
-                    except ValueError:
-                        forward_message_date = update.message.forward_date
-                print(forward_message_date)
-                a = forward_message_date - d
-                battle_id = 0
-                while a > c:
-                    a = a - c
-                    battle_id = battle_id + 1
-                #print(a)
-                print(battle_id)
-                if mes.text[1:mes.text.find('⚔') - 1] == row[4]:
-                    attack = int(mes.text[mes.text.find('⚔') + 2:].split()[0].split('(')[0])
-                    defense = int(mes.text[mes.text.find('🛡') + 2:].split()[0].split('(')[0])
-                    lvl = int(mes.text[mes.text.find("Lvl") + 4:].split()[0])
-                    if mes.text.find("🔥Exp:") == -1:
-                        exp = 0
-                    else:
-                        exp = int(mes.text[mes.text.find("🔥Exp:"):].split()[1])
-                    if mes.text.find("💰Gold") == -1:
-                        gold = 0
-                    else:
-                        gold = int(mes.text[mes.text.find("💰Gold"):].split()[1])
-                    if mes.text.find("📦Stock") == -1:
-                        stock = 0
-                    else:
-                        stock = int(mes.text[mes.text.find("📦Stock"):].split()[1])
-                    critical = 0
-                    guardian = 0
-                    request = "SELECT * FROM reports WHERE user_id = %s AND battle_id = %s"
-                    cursor.execute(request, (row[0], battle_id))
-                    response = cursor.fetchone()
-                    if response != None:
-                        bot.send_message(chat_id=update.message.chat_id, text='Репорт за эту битву уже учтён!')
-                        return
-                    else:
-                        #print(mes.text)
-                        #print (mes.text.find('⚡Critical strike'))
-                        additional_attack = 0
-                        additional_defense = 0
-                        guild_tag = str(mes.text[2:mes.text.find(']')].upper())
-                        if mes.text.find('⚡Critical strike') != -1:
-                            critical = 1
-                            if guild_tag in list(guilds_chat_ids):
-                                knight_critical(bot, update)
-                            text = mes.text.partition('🛡')[0]
-                            try:
-                                additional_attack = int(text[text.find('+') + 1:text.find(')')])
-                            except ValueError:
-                                try:
-                                    additional_attack = int(text[text.find('-') : text.find(')')])
-                                except ValueError:
-                                    logging.error(traceback.format_exc())
-                                    additional_attack = 0
-                        elif mes.text.find('⚡Lucky Defender!') != -1:
-                            critical = 1
-                            if guild_tag in list(guilds_chat_ids):
-                                sentinel_critical(bot, update)
-                            text = mes.text.partition('🛡')[2]
-                            try:
-                                additional_defense = int(text[text('+') + 1:text.find(')')])
-                            except ValueError:
-                                try:
-                                    additional_defense = int(text[text.find('-') : text.find(')')])
-                                except ValueError:
-                                    logging.error(traceback.format_exc())
-                                    additional_defense = 0
-                        elif mes.text.find('🔱Guardian angel') != -1:
-                            guardian = 1
-                            if guild_tag in list(guilds_chat_ids):
-                                sentinel_critical(bot, update)
-                            text = mes.text.partition('🛡')[2]
-                            try:
-                                additional_defense = int(text[text.find('+') + 1:text.find(')')])
-                            except ValueError:
-                                try:
-                                    additional_defense = int(text[text.find('-') : text.find(')')])
-                                except ValueError:
-                                    logging.error(traceback.format_exc())
-                                    additional_defense = 0
-
-                        request = "INSERT INTO reports(user_id, battle_id, date_in, report_attack, report_defense," \
-                                  " report_lvl, report_exp, report_gold, report_stock, critical_strike, guardian_angel," \
-                                  " additional_attack, additional_defense) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
-                        cursor.execute(request, (row[0], battle_id, time.strftime('%Y-%m-%d %H:%M:%S'), attack, defense, lvl, exp, gold, stock, critical, guardian, additional_attack, additional_defense))
-                        conn.commit()
-
-                        #bot.send_message(chat_id=-1001197381190, text='Репорт успешно учтён для пользователя @' + mes.from_user.username)
-                        try:
-                            bot.send_message(chat_id=update.message.from_user.id, text='Репорт учтён. Спасибо!')
-                        except TelegramError:
-                            pass
-                        now = datetime.datetime.now(tz=pytz.timezone('Europe/Moscow')).replace(
-                            tzinfo=None) - datetime.datetime.combine(datetime.datetime.now().date(), datetime.time(hour=0))
-                        if now < datetime.timedelta(hours=1):
-                            remaining_time = datetime.timedelta(hours=1) - now
-                            time_from_battle = datetime.timedelta(hours=8) - remaining_time
-                            print("interval =", (datetime.timedelta(hours=1) - now))
-                        else:
-                            time_from_battle = now - datetime.timedelta(hours=1)
-                            while time_from_battle > datetime.timedelta(hours=8):
-                                time_from_battle -= datetime.timedelta(hours=8)
-
-                        time_from_receiving_report = datetime.datetime.now(tz=pytz.timezone('Europe/Moscow')).replace(
-                            tzinfo=None) - forward_message_date
-                        logging.info("time_from_receiving_report = {0}, time_from_battle = {1}".format(time_from_receiving_report, time_from_battle))
-
-                        if time_from_receiving_report < time_from_battle:
-                            #   Репорт с последней битвы
-                            if mes.text.find("]") > 0:
-                                guild_tag = str(mes.text[2:mes.text.find(']')].upper())
-                                print(guild_tag)
-                                guild_reports = reports_count.get(guild_tag)
-                                if guild_reports is None:
-                                    guild_reports = GuildReports(guild_tag)
-                                current_report = Report(mes.from_user.id, mes.text[0], mes.text[1:].partition('⚔')[0], lvl, exp, gold, stock, attack, defense)
-                                guild_reports.add_report(current_report)
-                                reports_count.update({guild_tag : guild_reports})
-                                chat_id = guilds_chat_ids.get(guild_tag)
-                                if chat_id is not None:
-                                    percent = (guild_reports.num_reports / guild_reports.num_players) * 100
-                                    response = "Репорт от <b>{0}</b> принят.\nВсего сдало репортов <b>{1}</b> человек, это <b>{2:.2f}</b>% " \
-                                               "от общего числа\n".format(current_report.nickname, guild_reports.num_reports, percent)
-                                    if guild_reports.num_reports == 1:
-                                              response += '{0} \n \n 🏅 это самый первый репорт после битвы '.format( response)
-                                    if percent == 100:
-                                        response += "Все сдали репорты! Какие вы лапочки!"
-
-                                    else:
-                                        if time_from_battle > datetime.timedelta(hours = 1):
-                                            response += "Всё ещё не сдали репорты:\n"
-                                            for user in guild_reports.users:
-                                                if not user.report_sent:
-                                                    response += "<b>{0}</b>,    ".format(user.username)
-                                                 
-                                        else:
-                                            return # В первый час бот не сообщает о репорте в чат
-                                    try:
-                                        bot.sync_send_message(chat_id = chat_id, text = response, parse_mode = 'HTML')
-                                    except TelegramError:
-                                        bot.send_message(chat_id = admin_ids[0], text = response, parse_mode = 'HTML')
-
-                else:
-                    try:
-                        bot.send_message(chat_id=update.message.from_user.id, text='Это не ваш репорт. В случае возникновения ошибок обновите профиль')
-                    except TelegramError:
-                        return
+        send_trigger_list(bot, update)
+        return
 
 
 class user_stats:
@@ -811,7 +496,7 @@ def stats_send(bot, update):
             response_stock = response_stock + '\n' + str(i + 1) + ': ' + '*' + str(users_by_stock[i].username) + '*' + ' ' + str(users_by_stock[i].stock) + '📦'
         response = response + response_gold + response_exp + response_stock
         #bot.send_message(chat_id = -1001330929174, text = response, parse_mode = 'Markdown')
-        #bot.send_message(chat_id = 231900398, text = response, parse_mode = 'Markdown')
+        #bot.send_message(chat_id = SUPER_ADMIN_ID, text = response, parse_mode = 'Markdown')
         print("YES")
 
 
@@ -876,30 +561,30 @@ def stats_count(bot, update):
 # Хендлеры
 start_command_handler = CommandHandler('start', startCommand)
 try:
-    attack_command_handler = CommandHandler('⚔', attackCommand, filters=(Filters.user(user_id = 498377101) |Filters.user(user_id = 231900398)))
+    attack_command_handler = CommandHandler('⚔', attackCommand, filters=(Filters.user(user_id = 498377101) |Filters.user(user_id = SUPER_ADMIN_ID)))
 except ValueError:
     pass
-add_pin_command_handler = CommandHandler('add_pin', add_pin, filters=Filters.user(user_id = 231900398))
-pin_setup_command_handler = CommandHandler('pin_setup', pin_setup, filters=Filters.user(user_id = 231900398))
-pinset_command_handler = MessageHandler(Filters.command & filter_pinset & Filters.user(user_id = 231900398), pinset)
-pinpin_command_handler = MessageHandler(Filters.command & filter_pinpin & Filters.user(user_id = 231900398), pinpin)
-pinmute_command_handler = MessageHandler(Filters.command & filter_pinmute & Filters.user(user_id = 231900398), pinmute)
+add_pin_command_handler = CommandHandler('add_pin', add_pin, filters=Filters.user(user_id = SUPER_ADMIN_ID))
+pin_setup_command_handler = CommandHandler('pin_setup', pin_setup, filters=Filters.user(user_id = SUPER_ADMIN_ID))
+pinset_command_handler = MessageHandler(Filters.command & filter_pinset & Filters.user(user_id = SUPER_ADMIN_ID), pinset)
+pinpin_command_handler = MessageHandler(Filters.command & filter_pinpin & Filters.user(user_id = SUPER_ADMIN_ID), pinpin)
+pinmute_command_handler = MessageHandler(Filters.command & filter_pinmute & Filters.user(user_id = SUPER_ADMIN_ID), pinmute)
 
-add_silent_command_handler = CommandHandler('add_silent', add_silent,filters = Filters.user(user_id = 231900398))
-silent_setup_command_handler = CommandHandler('silent_setup', silent_setup,filters = Filters.user(user_id = 231900398), pass_job_queue = True)
-silent_start_command_handler = CommandHandler('silent_start', silent_start, filters = Filters.user(user_id = 231900398), pass_job_queue = True)
-silent_stop_command_handler = CommandHandler('silent_stop', silent_stop, filters = Filters.user(user_id = 231900398), pass_job_queue = True)
+add_silent_command_handler = CommandHandler('add_silent', add_silent,filters = Filters.user(user_id = SUPER_ADMIN_ID))
+silent_setup_command_handler = CommandHandler('silent_setup', silent_setup,filters = Filters.user(user_id = SUPER_ADMIN_ID), pass_job_queue = True)
+silent_start_command_handler = CommandHandler('silent_start', silent_start, filters = Filters.user(user_id = SUPER_ADMIN_ID), pass_job_queue = True)
+silent_stop_command_handler = CommandHandler('silent_stop', silent_stop, filters = Filters.user(user_id = SUPER_ADMIN_ID), pass_job_queue = True)
 
 silent_delete_command_handler = MessageHandler(filter_silentdelete, silent_delete_message)
 sil_run_command_handler = MessageHandler(filter_sil_run, sil_run)
 
-menu_command_handler = CommandHandler('menu', menuCommand, filters=(Filters.user(user_id = 498377101) | Filters.user(user_id = 231900398)))
+menu_command_handler = CommandHandler('menu', menuCommand, filters=(Filters.user(user_id = 498377101) | Filters.user(user_id = SUPER_ADMIN_ID)))
 
 info_command_handler = CommandHandler('info', infoCommand)
 
-add_admin_command_handler = CommandHandler('add_admin', add_admin,filters=Filters.user(user_id = 231900398))
+add_admin_command_handler = CommandHandler('add_admin', add_admin,filters=Filters.user(user_id = SUPER_ADMIN_ID))
 add_trigger_handler = CommandHandler('add_trigger', add_trigger)
-add_global_trigger_handler = CommandHandler('add_global_trigger', add_global_trigger, filters=(Filters.user(user_id = 231900398) & Filters.chat(chat_id = 231900398)))
+add_global_trigger_handler = CommandHandler('add_global_trigger', add_global_trigger, filters=(Filters.user(user_id = SUPER_ADMIN_ID) & Filters.chat(chat_id = SUPER_ADMIN_ID)))
 remove_trigger_handler = CommandHandler('remove_trigger', remove_trigger)
 
 
@@ -936,9 +621,9 @@ reject_handler = MessageHandler(Filters.command & filter_reject, reject)
 setdr_handler = CommandHandler('setdr', setdr)
 dr_handler = CommandHandler('dr', dr)
 
-g_info_handler = CommandHandler('g_info', g_info,filters=Filters.user(user_id = 231900398))
-g_all_attack_handler = CommandHandler('g_all_attack', g_all_attack,filters=Filters.user(user_id = 231900398))
-g_attack_handler = CommandHandler('g_attack', g_attack,filters=Filters.user(user_id = 231900398))
+g_info_handler = CommandHandler('g_info', g_info,filters=Filters.user(user_id = SUPER_ADMIN_ID))
+g_all_attack_handler = CommandHandler('g_all_attack', g_all_attack,filters=Filters.user(user_id = SUPER_ADMIN_ID))
+g_attack_handler = CommandHandler('g_attack', g_attack,filters=Filters.user(user_id = SUPER_ADMIN_ID))
 g_help_handler = CommandHandler('g_help', g_help)
 
 
@@ -1019,12 +704,12 @@ dispatcher.add_handler(g_info_handler)
 dispatcher.add_handler(g_attack_handler)
 dispatcher.add_handler(g_all_attack_handler)
 dispatcher.add_handler(g_help_handler)
-dispatcher.add_handler(CommandHandler("g_add_attack", g_add_attack, filters=(Filters.user(user_id=231900398)  | Filters.user(user_id = 116028074))))  #116028074
-dispatcher.add_handler(CommandHandler("g_del_attack", g_del_attack, filters=(Filters.user(user_id=231900398)  | Filters.user(user_id = 116028074))))
-dispatcher.add_handler(CommandHandler("g_attacking_list", g_attacking_list, filters=(Filters.user(user_id=231900398)  | Filters.user(user_id = 116028074))))
-dispatcher.add_handler(CommandHandler("g_add_defense", g_add_defense, filters=(Filters.user(user_id=231900398)  | Filters.user(user_id = 116028074))))
-dispatcher.add_handler(CommandHandler("g_del_defense", g_del_defense, filters=(Filters.user(user_id=231900398)  | Filters.user(user_id = 116028074))))
-dispatcher.add_handler(CommandHandler("g_defending_list", g_defending_list, filters=(Filters.user(user_id=231900398)  | Filters.user(user_id = 116028074))))
+dispatcher.add_handler(CommandHandler("g_add_attack", g_add_attack, filters=(Filters.user(user_id=SUPER_ADMIN_ID) | Filters.user(user_id = JANE_ID))))
+dispatcher.add_handler(CommandHandler("g_del_attack", g_del_attack, filters=(Filters.user(user_id=SUPER_ADMIN_ID) | Filters.user(user_id = JANE_ID))))
+dispatcher.add_handler(CommandHandler("g_attacking_list", g_attacking_list, filters=(Filters.user(user_id=SUPER_ADMIN_ID) | Filters.user(user_id = JANE_ID))))
+dispatcher.add_handler(CommandHandler("g_add_defense", g_add_defense, filters=(Filters.user(user_id=SUPER_ADMIN_ID) | Filters.user(user_id = JANE_ID))))
+dispatcher.add_handler(CommandHandler("g_del_defense", g_del_defense, filters=(Filters.user(user_id=SUPER_ADMIN_ID) | Filters.user(user_id = JANE_ID))))
+dispatcher.add_handler(CommandHandler("g_defending_list", g_defending_list, filters=(Filters.user(user_id=SUPER_ADMIN_ID) | Filters.user(user_id = JANE_ID))))
 
 dispatcher.add_handler(MessageHandler(filter_guild_list, notify_guild_attack))
 dispatcher.add_handler(CommandHandler('notify_guild_sleeping', notify_guild_to_battle))
@@ -1035,7 +720,7 @@ dispatcher.add_handler(CommandHandler('pogs', calculate_pogs, pass_args=True))
 
 dispatcher.add_handler(battle_history_handler)
 
-dispatcher.add_handler(CommandHandler("sql", sql, pass_user_data = True, filters=Filters.user(user_id=231900398)))
+dispatcher.add_handler(CommandHandler("sql", sql, pass_user_data = True, filters=Filters.user(user_id=SUPER_ADMIN_ID)))
 
 
 dispatcher.add_handler(CommandHandler("add_playlist", add_playlist, pass_args=True))
@@ -1047,11 +732,11 @@ dispatcher.add_handler(MessageHandler(Filters.command & filter_view_playlist, vi
 dispatcher.add_handler(MessageHandler(Filters.command & filter_play_song, play_song))
 dispatcher.add_handler(MessageHandler(Filters.command & filter_remove_song, remove_song))
 
-dispatcher.add_handler(CommandHandler("stats", battle_stats_send, filters=Filters.user(user_id=231900398)))
+dispatcher.add_handler(CommandHandler("stats", battle_stats_send, filters=Filters.user(user_id=SUPER_ADMIN_ID)))
 
-dispatcher.add_handler(CommandHandler("todo", todo, filters=Filters.user(user_id=231900398)))
-dispatcher.add_handler(CommandHandler("todo_list", todo_list, filters=Filters.user(user_id=231900398)))
-dispatcher.add_handler(CommandHandler("todo_list_full", todo_list, filters=Filters.user(user_id=231900398)))
+dispatcher.add_handler(CommandHandler("todo", todo, filters=Filters.user(user_id=SUPER_ADMIN_ID)))
+dispatcher.add_handler(CommandHandler("todo_list", todo_list, filters=Filters.user(user_id=SUPER_ADMIN_ID)))
+dispatcher.add_handler(CommandHandler("todo_list_full", todo_list, filters=Filters.user(user_id=SUPER_ADMIN_ID)))
 dispatcher.add_handler(MessageHandler(Filters.command & filter_complete_todo, complete_todo))
 
 
@@ -1062,12 +747,15 @@ dispatcher.add_handler(CommandHandler('send_sticker_emoji', send_sticker_emoji))
 
 
 dispatcher.add_handler(MessageHandler(filter_any_message, stats_count), group=1)
-dispatcher.add_handler(CommandHandler("chat_stats", chat_stats_send, filters=Filters.user(user_id=231900398)))
-dispatcher.add_handler(CommandHandler("current_chat_stats", current_chat_stats_send, filters=Filters.user(user_id=231900398)))
+dispatcher.add_handler(CommandHandler("chat_stats", chat_stats_send, filters=Filters.user(user_id=SUPER_ADMIN_ID)))
+dispatcher.add_handler(CommandHandler("current_chat_stats", current_chat_stats_send, filters=Filters.user(user_id=SUPER_ADMIN_ID)))
 
 
 dispatcher.add_handler(CommandHandler('help', bot_help))
 dispatcher.add_handler(CommandHandler('dspam_help', dspam_help))
+
+dispatcher.add_handler(MessageHandler(Filters.text & filter_hero, add_hero))
+dispatcher.add_handler(MessageHandler(Filters.text & filter_report, add_report))
 
 dispatcher.add_handler(text_message_handler)
 
