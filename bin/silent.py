@@ -6,7 +6,7 @@ import work_materials.globals as globals
 
 from bin.class_func import rangers_notify_start
 
-
+job_silence = None
 
 def battle_stats_send(bot, update = None):
     if update is not None:
@@ -159,7 +159,6 @@ def silent_start_delete(bot, job_queue):
 
 
 def silent_setup(bot, update, job_queue):
-    global silent_running
     request = "SELECT * FROM silent"
     cursor.execute(request)
     row = cursor.fetchone()
@@ -179,8 +178,6 @@ def silent_setup(bot, update, job_queue):
     bot.send_message(chat_id=update.message.chat_id, text=response)
 
 def silent_start(bot, update, job_queue):
-    global job_silence
-    global silent_running
     print("Starting...")
     try:
         chat_id = update.message.chat_id
@@ -216,7 +213,7 @@ def silent_start(bot, update, job_queue):
     #______________________________________________________________________________________________
 
     job_silence = job.run_once(silent_clear_start, a)
-    silent_running = 1
+    globals.silent_running = 1
     print("OK")
     bot.send_message(chat_id=chat_id, text="Режим тишины активирован, осталось {0}".format(a))
     rangers_notify_start(bot, update, remaining_time)
