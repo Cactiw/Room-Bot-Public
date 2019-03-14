@@ -188,8 +188,6 @@ def g_all_attack(bot, update):
         request2 += " OR guild = %s"
 
     request2 += " ORDER BY user_attack DESC"
-    #print(request)
-    #print(request2)
     num_guilds = int(mes.text.split(' ')[num_attacking_guilds + 2])
     cursor.execute(request, tuple(args))
     row = cursor.fetchone()
@@ -202,45 +200,31 @@ def g_all_attack(bot, update):
     row = cursor.fetchone()
     total_attack = 0
     i = 0
-    #print(num_users)
     while row:
-        #print(row)
         total_attack += int(row[1])
-        #users[i].attack = int(row[1])
-        #users[i].username = row[0]
         users.append(User_for_attack(row[0], int(row[1]), -1))
-        #print("i = ", i, "username = ", users[i].username)
-        #print("username[0] = ", users[0].username)
         i += 1
         row = cursor.fetchone()
-
-    #print(i)
 
     ratio = mes.text.split(' ')[num_attacking_guilds + 3]
     ratios = ratio.split(':')
     sum_ratio = 0
     for i in range (0, num_guilds):
         sum_ratio += int(ratios[i])
-    #print(ratios)
     attacks = [int] * num_guilds
     for i in range (0, num_guilds):
         attacks[i] = int(ratios[i]) / sum_ratio * total_attack
-    #print("sum_attack = ", total_attack, attacks)
     #       Здесь кончается верный кусок кода
     for i in range (0, num_users):
-        #print("i = ", i, "username = ", users[i].username)
         min_remain = 100000000    #Перестанет работать, если вдруг суммарная атака достигнет этой величины
         min_number = 0
         flag = 0
         for j in range (0, num_guilds):
-            #print("attacks[", j, "] =", attacks[j])
             remain = attacks[j] - users[i].attack
-            #print("remain =", remain)
             if remain < min_remain and remain >= 0:
                 min_remain = remain
                 min_number = j
                 flag = 1
-                #print("YES")
         if flag: #  Есть свободное место под этого атакующего
             users[i].g_attacking = min_number
             attacks[min_number] = min_remain
@@ -248,7 +232,6 @@ def g_all_attack(bot, update):
             min_remain = -100000000
             for j in range(0, num_guilds):
                 remain = attacks[j] - users[i].attack
-                #print(remain, min_remain, min_number)
                 if remain > min_remain:
                     min_remain = remain
                     min_number = j
