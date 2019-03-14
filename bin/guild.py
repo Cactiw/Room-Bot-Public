@@ -179,24 +179,26 @@ def g_attack(bot, update):
 def g_all_attack(bot, update):
     mes = update.message
     num_attacking_guilds = int(mes.text.split(' ')[1])
-    request = "SELECT COUNT(1) FROM users WHERE guild = '{0}'".format(mes.text.split(' ')[2])
-    request2 = "SELECT username, user_attack FROM users WHERE guild = '{0}'".format(mes.text.split(' ')[2])
+    args = [mes.text.split(' ')[2]]
+    request = "SELECT COUNT(1) FROM users WHERE guild = %s"
+    request2 = "SELECT username, user_attack FROM users WHERE guild = %s"
     for i in range (1, num_attacking_guilds):
-        request += " OR guild = '{0}'".format(mes.text.split(' ')[i + 2])    # TODO: сделать нормально
-        request2 += " OR guild = '{0}'".format(mes.text.split(' ')[i + 2])
+        args.append(mes.text.split(' ')[i + 2])
+        request += " OR guild = %s"
+        request2 += " OR guild = %s"
 
     request2 += " ORDER BY user_attack DESC"
     #print(request)
     #print(request2)
     num_guilds = int(mes.text.split(' ')[num_attacking_guilds + 2])
-    cursor.execute(request)
+    cursor.execute(request, tuple(args))
     row = cursor.fetchone()
 
     num_users = int(row[0])
 
     users = []
 
-    cursor.execute(request2)
+    cursor.execute(request2, tuple(args))
     row = cursor.fetchone()
     total_attack = 0
     i = 0

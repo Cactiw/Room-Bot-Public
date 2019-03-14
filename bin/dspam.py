@@ -17,8 +17,8 @@ def pr(bot, update):
             dspam_row = cursor.fetchone()
             if row is not None:
                 response += "\nПозывной: <b>" + str(dspam_row[3]) + "</b>\n"
-                request = "SELECT rank_name, rank_unique FROM ranks WHERE rank_id = '{0}'".format(dspam_row[4])
-                cursor_2.execute(request)
+                request = "SELECT rank_name, rank_unique FROM ranks WHERE rank_id = %s"
+                cursor_2.execute(request, (dspam_row[4],))
                 rank = cursor_2.fetchone()
                 response += "Звание: <b>"
                 if rank[1]:
@@ -287,8 +287,8 @@ def reg(bot, update):
         request = "INSERT INTO users(user_castle, telegram_id, telegram_username, username, last_update, dspam_user) VALUES ('🔒', %s, %s, %s, %s, '1')"
         cursor.execute(request, (mes.from_user.id, mes.from_user.username, mes.from_user.username, time.strftime('%Y-%m-%d %H:%M:%S'),))
         conn.commit()
-        request = "SELECT user_id FROM users WHERE telegram_id = '{0}'".format(mes.from_user.id)
-        cursor.execute(request)
+        request = "SELECT user_id FROM users WHERE telegram_id = %s"
+        cursor.execute(request, (mes.from_user.id,))
         row = cursor.fetchone()
         request = "INSERT INTO dspam_users(user_id, telegram_id, username) VALUES (%s, %s, %s)"
         cursor.execute(request, (int(row[0]), mes.from_user.id, mes.from_user.username))
@@ -384,8 +384,8 @@ def requests(bot, update):
     response = ""
     while row:
         if int(row[1]) == 1:
-            request = "SELECT telegram_username, username FROM users WHERE user_id = '{0}'".format(row[2])
-            cursor_2.execute(request)
+            request = "SELECT telegram_username, username FROM users WHERE user_id = %s"
+            cursor_2.execute(request, (row[2],))
             names = cursor_2.fetchone()
             response_new = ""
             response_new += "\nЗапрос на изменение позывного от <b>" + names[1] + "</b>"

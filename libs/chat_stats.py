@@ -72,7 +72,7 @@ class ChatStats:
         request = "update stats set message_count = %s, text_messages_count = %s, stickers_messages_count = %s, " \
                   "audio_messages_count = %s, photo_messages_count = %s," \
                   "video_messages_count = %s, document_messages_count = %s, voice__messages_count = %s" \
-                  "  where chat_id = %s".format()
+                  "  where chat_id = %s"
         cursor.execute(request, (self.message_count, self.text_messages_count,
                                                    self.stickers_messages_count, self.audio_messages_count,
                                                    self.photo_messages_count, self.video_messages_count,

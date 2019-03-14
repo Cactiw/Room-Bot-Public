@@ -504,7 +504,7 @@ def textMessage(bot, update):
                     cursor.execute(request, (reputation, row[0]))
                     conn.commit()
 
-                    request = "SELECT call_sign, reputation FROM dspam_users WHERE telegram_id = %s".format()
+                    request = "SELECT call_sign, reputation FROM dspam_users WHERE telegram_id = %s"
                     cursor.execute(request, (mes.from_user.id,))
                     user_from = cursor.fetchone()
                     response = ""
@@ -815,7 +815,7 @@ def textMessage(bot, update):
                         stock = int(mes.text[mes.text.find("📦Stock"):].split()[1])
                     critical = 0
                     guardian = 0
-                    request = "SELECT * FROM reports WHERE user_id = %s AND battle_id = %s".format()
+                    request = "SELECT * FROM reports WHERE user_id = %s AND battle_id = %s"
                     cursor.execute(request, (row[0], battle_id))
                     response = cursor.fetchone()
                     if response != None:
