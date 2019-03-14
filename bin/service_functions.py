@@ -7,9 +7,8 @@ def get_time_remaining_to_battle():
     if now < datetime.timedelta(hours=1):
 
         return datetime.timedelta(hours=1) - now
-    else:
-        time_from_first_battle = now - datetime.timedelta(hours=1)
-        while time_from_first_battle > datetime.timedelta(hours=8):
-            time_from_first_battle -= datetime.timedelta(hours=8)
-        time_remaining = datetime.timedelta(hours=8) - time_from_first_battle
-        return time_remaining
+    time_from_first_battle = now - datetime.timedelta(hours=1)
+    while time_from_first_battle > datetime.timedelta(hours=8):
+        time_from_first_battle -= datetime.timedelta(hours=8)
+    time_remaining = datetime.timedelta(hours=8) - time_from_first_battle
+    return time_remaining

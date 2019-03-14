@@ -99,7 +99,7 @@ def add_to_playlist(bot, update, args):
                                       performer,
                                       title,
                                       mes.reply_to_message.audio.duration))
-    except:
+    except Exception:
         bot.send_message(chat_id=update.message.chat_id, text='Что-то пошло не так, проверьте правильность id плейлиста')
         return
     conn.commit()
@@ -163,7 +163,7 @@ def remove_song(bot, update):
     request = "DELETE FROM songs WHERE song_id = %s"
     try:
         cursor.execute(request, (mes.text.partition('@')[0].partition('_')[2].partition('_')[2],))
-    except:
+    except Exception:
         bot.send_message(chat_id=update.message.chat_id, text='Ошибка', parse_mode='HTML')
         return
     conn.commit()

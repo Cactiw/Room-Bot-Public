@@ -292,14 +292,13 @@ def dr(bot, update):    #   TODO починить дни рождения
                 response = "Вот это да! Сегодня у <b>'{0}'</b> день рождения! Поздравляем! Накидываем нюдесы в лс!".format(users_by_dr[i].username)
                 bot.send_message(chat_id=update.message.chat_id, text=response, parse_mode = 'HTML')
                 return
-            else:
-                request = "SELECT birthday FROM users WHERE username = %s"
-                cursor.execute(request, (users_by_dr[i].username,))
-                row = cursor.fetchone()
-                date = str(row[0])[5:].split("-")
-                response = "Сегодня день рождения никто не празднует, однако ближайший день рождения у <b>{0}</b>, готовим поздравления к <b>{1}</b>\nЭто через <b>{2}</b>".format(users_by_dr[i].username, date[1] + '/' + date[0], users_by_dr[i].delta)
-                bot.send_message(chat_id=update.message.chat_id, text=response, parse_mode='HTML')
-                return
+            request = "SELECT birthday FROM users WHERE username = %s"
+            cursor.execute(request, (users_by_dr[i].username,))
+            row = cursor.fetchone()
+            date = str(row[0])[5:].split("-")
+            response = "Сегодня день рождения никто не празднует, однако ближайший день рождения у <b>{0}</b>, готовим поздравления к <b>{1}</b>\nЭто через <b>{2}</b>".format(users_by_dr[i].username, date[1] + '/' + date[0], users_by_dr[i].delta)
+            bot.send_message(chat_id=update.message.chat_id, text=response, parse_mode='HTML')
+            return
 
 
 def battle_history(bot, update):
@@ -331,7 +330,7 @@ def sql(bot, update, user_data):
     request = mes.text.partition(" ")[2]
     try:
         cursor.execute(request)
-    except:
+    except Exception:
         error = sys.exc_info()
         response = ""
         for i in range(0, len(error)):
