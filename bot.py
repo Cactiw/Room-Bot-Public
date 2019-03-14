@@ -511,12 +511,12 @@ def reports_sent_restore():
         battle_id = battle_id + 1
     logging.info("restoring reports with battle_id = {0}".format(battle_id))
 
-    request = "select user_id, report_attack, report_defense, report_lvl, report_exp, report_gold, report_stock " \
-              "from reports where battle_id = %s"
+    request = "select user_id, report_attack, report_defense, report_lvl, report_exp, report_gold, report_stock, " \
+              "date_in from reports where battle_id = %s"
     cursor.execute(request, (battle_id,))
     row = cursor.fetchone()
     while row is not None:
-        request = "select telegram_id, user_castle, telegram_username, guild from users where user_id = %s"
+        request = "select telegram_id, user_castle, username, guild from users where user_id = %s"
         cursor_2.execute(request, (row[0],))
         row2 = cursor_2.fetchone()
 
@@ -529,7 +529,7 @@ def reports_sent_restore():
             row = cursor.fetchone()
             continue
 
-        current_report = Report(row2[0], row2[1], row2[2], row[3], row[4], row[5], row[6], row[1], row[2])
+        current_report = Report(row2[0], row2[1], row2[2], row[3], row[4], row[5], row[6], row[1], row[2], row[7])
         guild_reports = reports_count.get(guild_tag)
         if guild_reports is None:
             guild_reports = GuildReports(guild_tag)

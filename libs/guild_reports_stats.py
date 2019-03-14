@@ -2,7 +2,7 @@ from libs.guild import User
 from work_materials.globals import conn
 
 class Report:
-    def __init__(self, report_id, castle, nickname, lvl, exp, gold, stock, attack, defense):
+    def __init__(self, report_id, castle, nickname, lvl, exp, gold, stock, attack, defense, date_sent):
         self.id = report_id
         self.castle = castle
         self.nickname = nickname
@@ -12,6 +12,7 @@ class Report:
         self.stock = int(stock)
         self.attack = attack
         self.defense = defense
+        self.date_sent = date_sent
 
 
 class GuildReports:

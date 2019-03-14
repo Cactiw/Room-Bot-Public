@@ -1,6 +1,5 @@
 from work_materials.globals import *
 import datetime
-import time
 import logging
 import work_materials.globals as globals
 
@@ -8,11 +7,12 @@ from bin.class_func import rangers_notify_start
 
 job_silence = None
 
+
 def battle_stats_send(bot, update = None):
     if update is not None:
         chat_id = update.message.chat_id
     else:
-        chat_id = -1001213987604
+        chat_id = SUPER_ADMIN_ID
     d = datetime.datetime(2018, 5, 27, 7, 0, 0, 0)  # 8 для летнего времени
     c = datetime.datetime(2018, 5, 26, 23, 0, 0, 0)
     c = d - c
@@ -31,6 +31,18 @@ def battle_stats_send(bot, update = None):
     if row is None:
         bot.send_message(chat_id = chat_id, text = "Я не нашёл репорты за прошедшую битву. Вы их кидали? Возможно, на сервере сбилось время")  # GH: -1001381505036 #Test: -1001468891144
         return
+    first_reports_guilds = {}
+    for guild_tag in list(reports_count):
+        print(guild_tag)
+        guild_chat_id = guilds_chat_ids.get(guild_tag)
+        print(guild_chat_id)
+        if guild_chat_id is None:
+            continue
+        guild_reports = reports_count.get(guild_tag)
+        first_report = min(guild_reports.reports, key=lambda report: report.date_sent)
+        print(first_report)
+        first_reports_guilds.update({guild_tag: first_report})
+
     response = "Отчёт по отряду за битву, прошедшую 8 часов назад:\n\n"
     total_attack = 0
     additional_attack = 0
@@ -40,7 +52,7 @@ def battle_stats_send(bot, update = None):
     guardian_angels = 0
     i = 1
     while row:
-        request = "SELECT user_castle, username FROM users WHERE user_id = %s and (guild = 'KYS' or guild = 'СКИ')"
+        request = "SELECT user_castle, username, guild FROM users WHERE user_id = %s and (guild = 'KYS' or guild = 'СКИ')"
         cursor_2.execute(request, (row[0],))
         user = cursor_2.fetchone()
         if user is None:
@@ -69,6 +81,10 @@ def battle_stats_send(bot, update = None):
             response_new += '<b>🔱Guardian angel</b>\n'
             guardian_angels += 1
             additional_defense += row[10]
+        first_report = first_reports_guilds.get(user[2])
+        if first_report is not None:
+            if user[1] == first_report.nickname:
+                response_new += "<b>🏅 Первый репорт в гильдии!</b>"
         response_new += "\n\n"
         if len(response + response_new) >= 4096:  # Превышение лимита длины сообщения
             bot.send_message(chat_id=chat_id, text=response, parse_mode='HTML')

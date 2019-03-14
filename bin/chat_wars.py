@@ -195,7 +195,7 @@ def add_report(bot, update):
                 if guild_reports is None:
                     guild_reports = GuildReports(guild_tag)
                 current_report = Report(mes.from_user.id, mes.text[0], mes.text[1:].partition('⚔')[0], lvl, exp,
-                                        gold, stock, attack, defense)
+                                        gold, stock, attack, defense, datetime.datetime.now(moscow_tz).replace(tzinfo=None))
                 guild_reports.add_report(current_report)
                 reports_count.update({guild_tag: guild_reports})
                 chat_id = guilds_chat_ids.get(guild_tag)
@@ -205,7 +205,7 @@ def add_report(bot, update):
                                "от общего числа\n".format(current_report.nickname, guild_reports.num_reports,
                                                           percent)
                     if guild_reports.num_reports == 1:
-                        response += '{0} \n \n 🏅 это самый первый репорт после битвы '.format(response)
+                        response += '{0} \n \n 🏅 Первый репорт в гильдии!'.format(response)
                     if percent == 100:
                         response += "Все сдали репорты! Какие вы лапочки!"
 
