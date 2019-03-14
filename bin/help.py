@@ -10,4 +10,3 @@ def help(bot, update):
 
 def dspam_help(bot, update):
     bot.send_message(chat_id = update.message.chat_id, text = 'https://telegra.ph/DSPAM-Bot-Help-10-05')
-

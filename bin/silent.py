@@ -102,9 +102,6 @@ def battle_stats_send(bot, update = None):
     #if row[9]:
     #    response_new += '<b>\n🔱Guardian angel</b>'
 
-    pass
-
-
 
 def add_silent(bot, update):
     mes = update.message

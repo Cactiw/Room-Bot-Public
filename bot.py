@@ -63,6 +63,7 @@ all_chats_stats.update_from_database()
 
 stats.update({0 : all_chats_stats})
 
+status = 0
 
 def empty(bot, update): #Пустая функия для объявления очереди
     return 0
