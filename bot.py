@@ -67,14 +67,6 @@ stats.update({0 : all_chats_stats})
 def empty(bot, update): #Пустая функия для объявления очереди
     return 0
 
-class Battles:
-    def __init__(self, castle, number):
-        self.castle = castle
-        self.number = int(number)
-
-    def __lt__(self, other):
-        return self.number < other.number
-
 
 
 # Обработка команд
@@ -310,105 +302,6 @@ def dr(bot, update):    #   TODO починить дни рождения
                 return
 
 
-
-
-
-def add_battle(bot, update):
-    global Battles_OSA
-    global Battles_MTR
-    global split_OSA
-    global split_MTR
-    global number_battles
-    global castles
-    Battles_OSA.seek(0)
-    Battles_MTR.seek(0)
-    OSA = Battles_OSA.readlines()
-    MTR = Battles_MTR.readlines()
-    mes = update.message.text[12:len(update.message.text)]
-    alliance = 0
-    split = 0
-    for i in range (0, len(mes)):
-        if mes[i] == ' ':
-            alliance = 1
-            split = 0
-        else:
-            for j in range (0, 7):
-                if mes[i] == castles[j]:
-                    if split == 0:
-                        if alliance == 0:
-                            OSA[j] = str(int(OSA[j].split()[0]) + 1) + ' ' + OSA[j].split()[1] + '\n'
-                        else:
-                            MTR[j] = str(int(MTR[j].split()[0]) + 1) + ' ' + MTR[j].split()[1] + '\n'
-                        split = 1
-                    else:
-                        if alliance == 0:
-                            OSA[j] = OSA[j].split()[0] + ' ' + str(int(OSA[j].split()[1]) + 1) + '\n'
-                            split_OSA = split_OSA + 1
-                        else:
-                            MTR[j] = MTR[j].split()[0] + ' ' + str(int(MTR[j].split()[1]) + 1) + '\n'
-                            split_MTR = split_MTR +  1
-
-    #print(OSA)
-    Battles_OSA.close()
-    Battles_OSA = open('Battles_OSA.txt', 'w')
-    Battles_OSA.writelines(OSA)
-    Battles_OSA.close()
-    Battles_OSA = open('Battles_OSA.txt', 'r')
-
-    #print(MTR)
-    Battles_MTR.close()
-    Battles_MTR = open('Battles_MTR.txt', 'w')
-    Battles_MTR.writelines(MTR)
-    Battles_MTR.close()
-    Battles_MTR = open('Battles_MTR.txt', 'r')
-
-    number_battles = number_battles + 1
-    bot.send_message(chat_id=update.message.chat_id, text='Битва добавлена.\nВсего битв учтено: ' + str(number_battles))
-
-def battles_stats(bot, update):
-    global castles
-    global number_battles
-    global split_OSA
-    global split_MTR
-    global Battles_OSA
-    global Battles_MTR
-    Battles_OSA.seek(0)
-    Battles_MTR.seek(0)
-    OSA = Battles_OSA.readlines()
-    MTR = Battles_MTR.readlines()
-    Stats_battles_OSA = [None] * 7
-    Stats_split_OSA = [None] * 7
-    Stats_battles_MTR = [None] * 7
-    Stats_split_MTR = [None] * 7
-    for i in range (0, 7):
-        Stats_battles_OSA[i] = Battles(castles[i], OSA[i].split()[0])
-        Stats_split_OSA[i] = Battles(castles[i], OSA[i].split()[1])
-        Stats_battles_MTR[i] = Battles(castles[i], MTR[i].split()[0])
-        Stats_split_MTR[i] = Battles(castles[i], MTR[i].split()[1])
-    Stats_battles_OSA.sort(reverse = True)
-    Stats_split_OSA.sort(reverse = True)
-    Stats_battles_MTR.sort(reverse = True)
-    Stats_split_MTR.sort(reverse = True)
-    response = 'Статистика Битв. Альянс ОСА, заблаговременные пины:\n'
-    for i in range (0, 7):
-        response = response + Stats_battles_OSA[i].castle + ' ' + str(Stats_battles_OSA[i].number) + '(' + str(int(Stats_battles_OSA[i].number) / number_battles * 100) + '%)\n'
-    response = response + '\nАльянс ОСА, сплиты / развороты:\n'
-    for i in range (0, 7):
-        response = response + Stats_split_OSA[i].castle + ' ' + str(Stats_split_OSA[i].number) + '(' + str(int(Stats_split_OSA[i].number) / split_OSA * 100) + '%)\n'
-    response = response + 'Всего сплитов у ОСА учтено:' + str(split_OSA) + '\n\nАльянс МТР, заблаговременные пины:\n'
-    for i in range (0, 7):
-        response = response + Stats_battles_MTR[i].castle + ' ' + str(Stats_battles_MTR[i].number) + '(' + str(int(Stats_battles_MTR[i].number) / number_battles * 100) + '%)\n'
-    response = response + '\nАльянс МТР, сплиты / развороты:\n'
-    for i in range (0, 7):
-        response = response + Stats_split_MTR[i].castle + ' ' + str(Stats_split_MTR[i].number) + '(' + str(int(Stats_split_MTR[i].number) / split_MTR * 100) + '%)\n'
-    response = response + 'Всего сплитов у МТР учтено:' + str(split_MTR) + '\n\nВсего битв учтено в статистике : ' + str(number_battles)
-
-    response += "\n<b>Предупреждение: в связи с выходом Амбера из ОСА данная статистика более не актуальна и не обновляется.</b>\n"
-    bot.send_message(chat_id=update.message.chat_id, text=response, parse_mode='HTML')
-
-
-
-
 def battle_history(bot, update):
     mes = update.message
     request = "SELECT user_id FROM users WHERE telegram_id = %s"
@@ -631,91 +524,8 @@ def textMessage(bot, update):
             row = cursor.fetchone()
         bot.send_message(chat_id=update.message.chat_id, text=response, parse_mode='HTML')
 
-
-    #Статистика по пину
-    #attack = update.message.text.find("⚔")
-    attack = -1 # Функция вывода статистики отключена
-    if attack != -1:
-        global castles
-        global number_battles
-        global split_OSA
-        global split_MTR
-        global Battles_OSA
-        global Battles_MTR
-        Battles_OSA.seek(0)
-        Battles_MTR.seek(0)
-        OSA = Battles_OSA.readlines()
-        MTR = Battles_MTR.readlines()
-        Stats_battles_OSA = [None] * 7
-        Stats_split_OSA = [None] * 7
-        Stats_battles_MTR = [None] * 7
-        Stats_split_MTR = [None] * 7
-        for i in range (0, 7):
-            Stats_battles_OSA[i] = Battles(castles[i], OSA[i].split()[0])
-            Stats_split_OSA[i] = Battles(castles[i], OSA[i].split()[1])
-            Stats_battles_MTR[i] = Battles(castles[i], MTR[i].split()[0])
-            Stats_split_MTR[i] = Battles(castles[i], MTR[i].split()[1])
-        mes = update.message.text
-        first = None
-        two = False
-        global first_OSA
-        global fisrt_MTR
-        global second_OSA
-        global second_MTR
-        first_OSA = False
-        first_MTR = False
-        second_OSA = False
-        second_MTR = False
-        #print(mes)
-        #out = mes [attack + 1] + '\n' + mes [attack + 2]
-        #print(out)
-        for i in range(0, 7):
-            if mes[attack + 1] == castles[i]:
-                first = mes[attack + 1]
-                print (i)
-                if i >= 3:
-                    first_OSA = True
-                if (i < 3) or (i == 6):
-                    first_MTR = True
-            if attack + 2 < len(mes):
-                if mes[attack + 2] == castles[i]:
-                    second = mes[attack + 2]
-                    two = True
-                    if i >= 3:
-                        second_OSA = True
-                    if (i < 3) or (i == 6):
-                        second_MTR = True
-        #print(first_OSA, first_MTR, second_OSA, second_MTR)
-
-        for i in range (0, 7):
-            if first_OSA:
-                if first == Stats_battles_OSA[i].castle:
-                    response = 'ОСА ходили в ' + first + ' ' + str(Stats_battles_OSA[i].number) + ' раз, это ' + str(int(Stats_battles_OSA[i].number) / number_battles * 100) + '% от общего количества битв,\n'
-                    response = response + 'А сплитовали ОСА в ' + first + ' ' + str(Stats_split_OSA[i].number) + ' раз, что равно ' + str(int(Stats_split_OSA[i].number) / split_OSA * 100) + '% от общего количества сплитов\n'
-                    bot.send_message(chat_id=update.message.chat_id, text=response)
-            if first_MTR:
-                if first == Stats_battles_MTR[i].castle:
-                    response = 'МТР ходили в ' + first + ' ' + str(Stats_battles_MTR[i].number) + ' раз, это ' + str(int(Stats_battles_MTR[i].number) / number_battles * 100) + '% от общего количества битв,\n'
-                    response = response + 'А сплитовали МТР в ' + first + ' ' + str(Stats_split_MTR[i].number) + ' раз, что равно ' + str(int(Stats_split_MTR[i].number) / split_MTR * 100) + '% от общего количества сплитов\n'
-                    bot.send_message(chat_id=update.message.chat_id, text=response)
-        if two:
-            for i in range (0, 7):
-                if second_OSA:
-                   if second == Stats_battles_OSA[i].castle:
-                        response = 'ОСА ходили в ' + second + ' ' + str(Stats_battles_OSA[i].number) + ' раз, это ' + str(int(Stats_battles_OSA[i].number) / number_battles * 100) + '% от общего количества битв,\n'
-                        response = response + 'А сплитовали ОСА в ' + second + ' ' + str(Stats_split_OSA[i].number) + ' раз, что равно ' + str(int(Stats_split_OSA[i].number) / split_OSA * 100) + '% от общего количества сплитов\n'
-                        bot.send_message(chat_id=update.message.chat_id, text=response)
-                if second_MTR:
-                    if second == Stats_battles_MTR[i].castle:
-                        response = 'МТР ходили в ' + second + ' ' + str(Stats_battles_MTR[i].number) + ' раз, это ' + str(int(Stats_battles_MTR[i].number) / number_battles * 100) + '% от общего количества битв,\n'
-                        response = response + 'А сплитовали МТР в ' + second + ' ' + str(Stats_split_MTR[i].number) + ' раз, что равно ' + str(int(Stats_split_MTR[i].number) / split_MTR * 100) + '% от общего количества сплитов\n'
-                        bot.send_message(chat_id=update.message.chat_id, text=response)
-
-
-    #Приём профилей
-    #print(update.message.forward_from.id, update.message.chat_id)
+    # Приём профилей
     if (update.message.forward_from) and update.message.forward_from.id == 265204902: #and (update.message.chat_id == -1001330929174 or update.message.chat_id == 231900398  or update.message.chat_id == -1001209754716):
-        #print('yes')
         mes = update.message
         is_hero = False
         if mes.text.find('Уровень:') != -1 and mes.text.find('Класс: /class') != -1:
@@ -1062,26 +872,6 @@ def stats_count(bot, update):
 
 
 
-# Открываем файлы
-Battles_OSA = open('Battles_OSA.txt', 'r')
-Battles_MTR = open('Battles_MTR.txt', 'r')
-OSA = Battles_OSA.readlines()
-MTR = Battles_MTR.readlines()
-global number_battles
-global split_OSA
-global split_MTR
-number_battles = 0
-split_OSA = 0
-split_MTR = 0
-for i in range (0, 7):
-    number_battles = number_battles + int(OSA[i].split()[0])
-    split_OSA = split_OSA + int(OSA[i].split()[1])
-    split_MTR = split_MTR + int(MTR[i].split()[1])
-print ('Количество битв в статистике', number_battles)
-print ('Количество сплитов у ОСА', split_OSA, '\nКоличество сплитов у МТР', split_MTR)
-
-
-
 # Хендлеры
 start_command_handler = CommandHandler('start', startCommand)
 try:
@@ -1152,8 +942,6 @@ g_help_handler = CommandHandler('g_help', g_help)
 
 
 battle_history_handler = CommandHandler('battle_history', battle_history)
-add_battle_handler = CommandHandler('add_battle', add_battle,filters=Filters.user(user_id = 231900398))
-battles_stats_handler = CommandHandler('battles_stats', battles_stats)
 
 text_message_handler = MessageHandler(Filters.text | Filters.command, textMessage)
 stats_send_handler = CommandHandler('stats_send', stats_send)
@@ -1245,8 +1033,6 @@ dispatcher.add_handler(CommandHandler('calculate_pogs', calculate_pogs, pass_arg
 dispatcher.add_handler(CommandHandler('pogs', calculate_pogs, pass_args=True))
 
 dispatcher.add_handler(battle_history_handler)
-dispatcher.add_handler(add_battle_handler)
-dispatcher.add_handler(battles_stats_handler)
 
 dispatcher.add_handler(CommandHandler("sql", sql, pass_user_data = True, filters=Filters.user(user_id=231900398)))
 
