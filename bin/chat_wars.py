@@ -82,146 +82,144 @@ def add_report(bot, update):
             battle_id = battle_id + 1
         # print(a)
         print(battle_id)
-        if mes.text[1:mes.text.find('⚔') - 1] == row[4]:
-            attack = int(mes.text[mes.text.find('⚔') + 2:].split()[0].split('(')[0])
-            defense = int(mes.text[mes.text.find('🛡') + 2:].split()[0].split('(')[0])
-            lvl = int(mes.text[mes.text.find("Lvl") + 4:].split()[0])
-            if mes.text.find("🔥Exp:") == -1:
-                exp = 0
-            else:
-                exp = int(mes.text[mes.text.find("🔥Exp:"):].split()[1])
-            if mes.text.find("💰Gold") == -1:
-                gold = 0
-            else:
-                gold = int(mes.text[mes.text.find("💰Gold"):].split()[1])
-            if mes.text.find("📦Stock") == -1:
-                stock = 0
-            else:
-                stock = int(mes.text[mes.text.find("📦Stock"):].split()[1])
-            critical = 0
-            guardian = 0
-            request = "SELECT * FROM reports WHERE user_id = %s AND battle_id = %s"
-            cursor.execute(request, (row[0], battle_id))
-            response = cursor.fetchone()
-            if response != None:
-                bot.send_message(chat_id=update.message.chat_id, text='Репорт за эту битву уже учтён!')
-                return
-            else:
-                # print(mes.text)
-                # print (mes.text.find('⚡Critical strike'))
-                additional_attack = 0
-                additional_defense = 0
-                guild_tag = str(mes.text[2:mes.text.find(']')].upper())
-                if mes.text.find('⚡Critical strike') != -1:
-                    critical = 1
-                    if guild_tag in list(guilds_chat_ids):
-                        knight_critical(bot, update)
-                    text = mes.text.partition('🛡')[0]
-                    try:
-                        additional_attack = int(text[text.find('+') + 1:text.find(')')])
-                    except ValueError:
-                        try:
-                            additional_attack = int(text[text.find('-'): text.find(')')])
-                        except ValueError:
-                            logging.error(traceback.format_exc())
-                            additional_attack = 0
-                elif mes.text.find('⚡Lucky Defender!') != -1:
-                    critical = 1
-                    if guild_tag in list(guilds_chat_ids):
-                        sentinel_critical(bot, update)
-                    text = mes.text.partition('🛡')[2]
-                    try:
-                        additional_defense = int(text[text('+') + 1:text.find(')')])
-                    except ValueError:
-                        try:
-                            additional_defense = int(text[text.find('-'): text.find(')')])
-                        except ValueError:
-                            logging.error(traceback.format_exc())
-                            additional_defense = 0
-                elif mes.text.find('🔱Guardian angel') != -1:
-                    guardian = 1
-                    if guild_tag in list(guilds_chat_ids):
-                        sentinel_critical(bot, update)
-                    text = mes.text.partition('🛡')[2]
-                    try:
-                        additional_defense = int(text[text.find('+') + 1:text.find(')')])
-                    except ValueError:
-                        try:
-                            additional_defense = int(text[text.find('-'): text.find(')')])
-                        except ValueError:
-                            logging.error(traceback.format_exc())
-                            additional_defense = 0
-
-                request = "INSERT INTO reports(user_id, battle_id, date_in, report_attack, report_defense," \
-                          " report_lvl, report_exp, report_gold, report_stock, critical_strike, guardian_angel," \
-                          " additional_attack, additional_defense) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
-                cursor.execute(request, (
-                row[0], battle_id, time.strftime('%Y-%m-%d %H:%M:%S'), attack, defense, lvl, exp, gold, stock, critical,
-                guardian, additional_attack, additional_defense))
-
-                # bot.send_message(chat_id=-1001197381190, text='Репорт успешно учтён для пользователя @' + mes.from_user.username)
-                try:
-                    bot.send_message(chat_id=update.message.from_user.id, text='Репорт учтён. Спасибо!')
-                except TelegramError:
-                    pass
-                now = datetime.datetime.now(tz=moscow_tz).replace(
-                    tzinfo=None) - datetime.datetime.combine(datetime.datetime.now().date(), datetime.time(hour=0))
-                if now < datetime.timedelta(hours=1):
-                    remaining_time = datetime.timedelta(hours=1) - now
-                    time_from_battle = datetime.timedelta(hours=8) - remaining_time
-                    print("interval =", (datetime.timedelta(hours=1) - now))
-                else:
-                    time_from_battle = now - datetime.timedelta(hours=1)
-                    while time_from_battle > datetime.timedelta(hours=8):
-                        time_from_battle -= datetime.timedelta(hours=8)
-
-                time_from_receiving_report = datetime.datetime.now(tz=moscow_tz).replace(
-                    tzinfo=None) - forward_message_date
-                logging.info(
-                    "time_from_receiving_report = {0}, time_from_battle = {1}".format(time_from_receiving_report,
-                                                                                      time_from_battle))
-
-                if time_from_receiving_report < time_from_battle:
-                    #   Репорт с последней битвы
-                    if mes.text.find("]") > 0:
-                        guild_tag = str(mes.text[2:mes.text.find(']')].upper())
-                        print(guild_tag)
-                        guild_reports = reports_count.get(guild_tag)
-                        if guild_reports is None:
-                            guild_reports = GuildReports(guild_tag)
-                        current_report = Report(mes.from_user.id, mes.text[0], mes.text[1:].partition('⚔')[0], lvl, exp,
-                                                gold, stock, attack, defense)
-                        guild_reports.add_report(current_report)
-                        reports_count.update({guild_tag: guild_reports})
-                        chat_id = guilds_chat_ids.get(guild_tag)
-                        if chat_id is not None:
-                            percent = (guild_reports.num_reports / guild_reports.num_players) * 100
-                            response = "Репорт от <b>{0}</b> принят.\nВсего сдало репортов <b>{1}</b> человек, это <b>{2:.2f}</b>% " \
-                                       "от общего числа\n".format(current_report.nickname, guild_reports.num_reports,
-                                                                  percent)
-                            if guild_reports.num_reports == 1:
-                                response += '{0} \n \n 🏅 это самый первый репорт после битвы '.format(response)
-                            if percent == 100:
-                                response += "Все сдали репорты! Какие вы лапочки!"
-
-                            else:
-                                if time_from_battle > datetime.timedelta(hours=1):
-                                    response += "Всё ещё не сдали репорты:\n"
-                                    for user in guild_reports.users:
-                                        if not user.report_sent:
-                                            response += "<b>{0}</b>,    ".format(user.username)
-                                    response = response[:-5]    # Обрезаю последнюю запятую
-
-                                else:
-                                    return  # В первый час бот не сообщает о репорте в чат
-                            try:
-                                bot.sync_send_message(chat_id=chat_id, text=response, parse_mode='HTML')
-                            except TelegramError:
-                                bot.send_message(chat_id=admin_ids[0], text=response, parse_mode='HTML')
-
-        else:
+        if mes.text[1:mes.text.find('⚔') - 1] != row[4]:
             try:
                 bot.send_message(chat_id=update.message.from_user.id,
                                  text='Это не ваш репорт. В случае возникновения ошибок обновите профиль')
             except TelegramError:
                 return
+            return
+        attack = int(mes.text[mes.text.find('⚔') + 2:].split()[0].split('(')[0])
+        defense = int(mes.text[mes.text.find('🛡') + 2:].split()[0].split('(')[0])
+        lvl = int(mes.text[mes.text.find("Lvl") + 4:].split()[0])
+        if mes.text.find("🔥Exp:") == -1:
+            exp = 0
+        else:
+            exp = int(mes.text[mes.text.find("🔥Exp:"):].split()[1])
+        if mes.text.find("💰Gold") == -1:
+            gold = 0
+        else:
+            gold = int(mes.text[mes.text.find("💰Gold"):].split()[1])
+        if mes.text.find("📦Stock") == -1:
+            stock = 0
+        else:
+            stock = int(mes.text[mes.text.find("📦Stock"):].split()[1])
+        critical = 0
+        guardian = 0
+        request = "SELECT * FROM reports WHERE user_id = %s AND battle_id = %s"
+        cursor.execute(request, (row[0], battle_id))
+        response = cursor.fetchone()
+        if response != None:
+            bot.send_message(chat_id=update.message.chat_id, text='Репорт за эту битву уже учтён!')
+            return
+        # print(mes.text)
+        # print (mes.text.find('⚡Critical strike'))
+        additional_attack = 0
+        additional_defense = 0
+        guild_tag = str(mes.text[2:mes.text.find(']')].upper())
+        if mes.text.find('⚡Critical strike') != -1:
+            critical = 1
+            if guild_tag in list(guilds_chat_ids):
+                knight_critical(bot, update)
+            text = mes.text.partition('🛡')[0]
+            try:
+                additional_attack = int(text[text.find('+') + 1:text.find(')')])
+            except ValueError:
+                try:
+                    additional_attack = int(text[text.find('-'): text.find(')')])
+                except ValueError:
+                    logging.error(traceback.format_exc())
+                    additional_attack = 0
+        elif mes.text.find('⚡Lucky Defender!') != -1:
+            critical = 1
+            if guild_tag in list(guilds_chat_ids):
+                sentinel_critical(bot, update)
+            text = mes.text.partition('🛡')[2]
+            try:
+                additional_defense = int(text[text('+') + 1:text.find(')')])
+            except ValueError:
+                try:
+                    additional_defense = int(text[text.find('-'): text.find(')')])
+                except ValueError:
+                    logging.error(traceback.format_exc())
+                    additional_defense = 0
+        elif mes.text.find('🔱Guardian angel') != -1:
+            guardian = 1
+            if guild_tag in list(guilds_chat_ids):
+                sentinel_critical(bot, update)
+            text = mes.text.partition('🛡')[2]
+            try:
+                additional_defense = int(text[text.find('+') + 1:text.find(')')])
+            except ValueError:
+                try:
+                    additional_defense = int(text[text.find('-'): text.find(')')])
+                except ValueError:
+                    logging.error(traceback.format_exc())
+                    additional_defense = 0
+
+        request = "INSERT INTO reports(user_id, battle_id, date_in, report_attack, report_defense," \
+                  " report_lvl, report_exp, report_gold, report_stock, critical_strike, guardian_angel," \
+                  " additional_attack, additional_defense) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
+        cursor.execute(request, (
+        row[0], battle_id, time.strftime('%Y-%m-%d %H:%M:%S'), attack, defense, lvl, exp, gold, stock, critical,
+        guardian, additional_attack, additional_defense))
+
+        # bot.send_message(chat_id=-1001197381190, text='Репорт успешно учтён для пользователя @' + mes.from_user.username)
+        try:
+            bot.send_message(chat_id=update.message.from_user.id, text='Репорт учтён. Спасибо!')
+        except TelegramError:
+            pass
+        now = datetime.datetime.now(tz=moscow_tz).replace(
+            tzinfo=None) - datetime.datetime.combine(datetime.datetime.now().date(), datetime.time(hour=0))
+        if now < datetime.timedelta(hours=1):
+            remaining_time = datetime.timedelta(hours=1) - now
+            time_from_battle = datetime.timedelta(hours=8) - remaining_time
+            print("interval =", (datetime.timedelta(hours=1) - now))
+        else:
+            time_from_battle = now - datetime.timedelta(hours=1)
+            while time_from_battle > datetime.timedelta(hours=8):
+                time_from_battle -= datetime.timedelta(hours=8)
+
+        time_from_receiving_report = datetime.datetime.now(tz=moscow_tz).replace(
+            tzinfo=None) - forward_message_date
+        logging.info(
+            "time_from_receiving_report = {0}, time_from_battle = {1}".format(time_from_receiving_report,
+                                                                              time_from_battle))
+
+        if time_from_receiving_report < time_from_battle:
+            #   Репорт с последней битвы
+            if mes.text.find("]") > 0:
+                guild_tag = str(mes.text[2:mes.text.find(']')].upper())
+                print(guild_tag)
+                guild_reports = reports_count.get(guild_tag)
+                if guild_reports is None:
+                    guild_reports = GuildReports(guild_tag)
+                current_report = Report(mes.from_user.id, mes.text[0], mes.text[1:].partition('⚔')[0], lvl, exp,
+                                        gold, stock, attack, defense)
+                guild_reports.add_report(current_report)
+                reports_count.update({guild_tag: guild_reports})
+                chat_id = guilds_chat_ids.get(guild_tag)
+                if chat_id is not None:
+                    percent = (guild_reports.num_reports / guild_reports.num_players) * 100
+                    response = "Репорт от <b>{0}</b> принят.\nВсего сдало репортов <b>{1}</b> человек, это <b>{2:.2f}</b>% " \
+                               "от общего числа\n".format(current_report.nickname, guild_reports.num_reports,
+                                                          percent)
+                    if guild_reports.num_reports == 1:
+                        response += '{0} \n \n 🏅 это самый первый репорт после битвы '.format(response)
+                    if percent == 100:
+                        response += "Все сдали репорты! Какие вы лапочки!"
+
+                    else:
+                        if time_from_battle > datetime.timedelta(hours=1):
+                            response += "Всё ещё не сдали репорты:\n"
+                            for user in guild_reports.users:
+                                if not user.report_sent:
+                                    response += "<b>{0}</b>,    ".format(user.username)
+                            response = response[:-5]    # Обрезаю последнюю запятую
+
+                        else:
+                            return  # В первый час бот не сообщает о репорте в чат
+                    try:
+                        bot.sync_send_message(chat_id=chat_id, text=response, parse_mode='HTML')
+                    except TelegramError:
+                        bot.send_message(chat_id=admin_ids[0], text=response, parse_mode='HTML')
