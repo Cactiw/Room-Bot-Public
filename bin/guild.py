@@ -1,7 +1,8 @@
-from work_materials.globals import cursor, guilds_name_to_tag, admin_ids, get_admin_ids
+from work_materials.globals import cursor, guilds_name_to_tag, admin_ids, get_admin_ids, g_attacking_users, g_defending_users
 from libs.guild import User_for_attack, User
 from bin.service_functions import get_time_remaining_to_battle
 import datetime
+import work_materials.globals as globals
 
 ping_by_chat_id = {}
 
@@ -252,8 +253,6 @@ def g_all_attack(bot, update):
 def g_add_attack(bot, update):
     mes = update.message
     id = mes.reply_to_message.from_user.id
-    global g_added_attack
-    global g_attacking_users
     request = "SELECT user_attack, username FROM users WHERE telegram_id = %s"
     cursor.execute(request, (mes.reply_to_message.from_user.id,))
     row = cursor.fetchone()
@@ -265,9 +264,9 @@ def g_add_attack(bot, update):
         if i.id == id:
             bot.send_message(chat_id=update.message.chat_id, text="Игрок уже атакует")
             return
-    g_added_attack += row[0]
+    globals.g_added_attack += row[0]
     g_attacking_users.append(current)
-    response = "Пользователь добавлен. Всего атаки на цель: ⚔<b>{0}</b>\n".format(g_added_attack)
+    response = "Пользователь добавлен. Всего атаки на цель: ⚔<b>{0}</b>\n".format(globals.g_added_attack)
     response += "Атакующие игроки:\n"
     g_attacking_users.sort(key = lambda curr:curr.attack, reverse = True)
     for i in g_attacking_users:
@@ -278,11 +277,9 @@ def g_add_attack(bot, update):
 def g_del_attack(bot, update):
     mes = update.message
     id = mes.reply_to_message.from_user.id
-    global g_added_attack
-    global g_attacking_users
     for i in g_attacking_users:
         if i.id == id:
-            g_added_attack -= i.attack
+            globals.g_added_attack -= i.attack
             g_attacking_users.remove(i)
             bot.send_message(chat_id=update.message.chat_id, text="Игрок успешно удалён")
             return
@@ -294,15 +291,13 @@ def g_attacking_list(bot, update):
     g_attacking_users.sort(key=lambda curr: curr.attack, reverse=True)
     for i in g_attacking_users:
         response += "<b>{0}</b> ⚔<b>{1}</b>\n".format(i.username, i.attack)
-    response += "\n\nВсего атаки: ⚔<b>{0}</b>".format(g_added_attack)
+    response += "\n\nВсего атаки: ⚔<b>{0}</b>".format(globals.g_added_attack)
 
     bot.send_message(chat_id=update.message.chat_id, text=response, parse_mode='HTML')
 
 def g_add_defense(bot, update):
     mes = update.message
     id = mes.reply_to_message.from_user.id
-    global g_added_defense
-    global g_defending_users
     request = "SELECT user_defense, username FROM users WHERE telegram_id = %s"
     cursor.execute(request, (mes.reply_to_message.from_user.id,))
     row = cursor.fetchone()
@@ -314,9 +309,9 @@ def g_add_defense(bot, update):
         if i.id == id:
             bot.send_message(chat_id=update.message.chat_id, text="Игрок уже защищает")
             return
-    g_added_defense += row[0]
+    globals.g_added_defense += row[0]
     g_defending_users.append(current)
-    response = "Пользователь добавлен. Всего защиты: 🛡<b>{0}</b>\n".format(g_added_defense)
+    response = "Пользователь добавлен. Всего защиты: 🛡<b>{0}</b>\n".format(globals.g_added_defense)
     response += "Атакующие игроки:\n"
     g_defending_users.sort(key = lambda curr:curr.defense, reverse = True)
     for i in g_defending_users:
@@ -328,11 +323,9 @@ def g_add_defense(bot, update):
 def g_del_defense(bot, update):
     mes = update.message
     id = mes.reply_to_message.from_user.id
-    global g_added_defense
-    global g_defending_users
     for i in g_defending_users:
         if i.id == id:
-            g_added_defense -= i.defense
+            globals.g_added_defense -= i.defense
             g_defending_users.remove(i)
             bot.send_message(chat_id=update.message.chat_id, text="Игрок успешно удалён")
             return
@@ -343,7 +336,7 @@ def g_defending_list(bot, update):
     g_defending_users.sort(key=lambda curr: curr.defense, reverse=True)
     for i in g_defending_users:
         response += "<b>{0}</b> 🛡<b>{1}</b>\n".format(i.username, i.defense)
-    response += "\n\nВсего защиты: 🛡<b>{0}</b>".format(g_added_defense)
+    response += "\n\nВсего защиты: 🛡<b>{0}</b>".format(globals.g_added_defense)
 
     bot.send_message(chat_id=update.message.chat_id, text=response, parse_mode='HTML')
 
