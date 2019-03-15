@@ -136,13 +136,13 @@ def silent_end(bot, job_queue):
             bot.send_message(chat_id = chat_id, text = "Режим тишины отменён!")
         except TelegramError:
             pass
+    battle_stats_send(bot)
     silent_start(bot, admin_ids[0], None)
     g_attacking_users.clear()
     g_defending_users.clear()
     reports_count.clear()
     globals.g_added_attack = 0
     globals.g_added_defense = 0
-    battle_stats_send(bot)
 
 def silent_clear_start(bot, job_queue):
     request = "SELECT COUNT(1) FROM silent where enabled = 1"
