@@ -50,7 +50,7 @@ def remove_trigger(bot, update):
         bot.send_message(chat_id=update.message.chat_id, text='Ошибка. Доступ только у админов')
     else:
         request = "SELECT chat_id, type FROM triggers WHERE trigger_in = %s AND (chat_id = %s OR chat_id = 0)"
-        cursor.execute(request, (mes.text[16:], mes.chat_id))
+        cursor.execute(request, (mes.text[16:].lower(), mes.chat_id))
         row = cursor.fetchone()
         if row is None:
             response = 'Ошибка. Триггер не найден'
