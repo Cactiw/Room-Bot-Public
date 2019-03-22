@@ -16,6 +16,7 @@ import threading
 import traceback
 
 import sys
+from multiprocessing import Process
 
 from psycopg2 import ProgrammingError
 
@@ -49,6 +50,8 @@ from bin.help import bot_help, dspam_help
 from bin.calculate import calculate_pogs
 from bin.stickers import create_sticker_set, send_sticker_emoji
 from bin.chat_wars import add_hero, add_report
+from bin.telethon_script import script_work
+from bin.stats_parse_monitor import parse_stats
 
 #--------------------------------------------------------------     Выставляем логгирование
 console = logging.StreamHandler()
@@ -767,17 +770,18 @@ reports_sent_restore()
 
 # Начинаем поиск обновлений
 updater.start_polling(clean=False)
+telethon_script = Process(target=script_work, args=())
+telethon_script.start()
+parse_stats = threading.Thread(target=parse_stats, args=())
+parse_stats.start()
 bot.send_message(chat_id = admin_ids[0], text = "Бот запущен.\nНе забудьте запустить тишину!: /silent_start")
-#job_stats = job.run_repeating(stats_send, interval=(1*60*60), first=0) #Рассылка статистики - отключена на текущий момент //TODO починить статистику
-#global silent_running = 1
 job_silence = job.run_once(empty, 0)
-#threading.Thread(target=stats_send).start()
 
 # Останавливаем бота, если были нажаты Ctrl + C
 updater.idle()
 # Загружаем необновлённую статистику в базу данных
 update_chat_stats()
 
+castles_stats_queue.put(None)
 # Разрываем подключение.
 conn.close()
-#print("COMPLETED, FEEL SAFE TO CLOSE THE BOT")

@@ -8,7 +8,7 @@ from telegram.error import (TelegramError, Unauthorized, BadRequest,
 import psycopg2
 import pytz
 import tzlocal
-
+from multiprocessing import Queue
 
 from mwt import MWT     # Для кэширования
 from config import psql_creditals, Production_token, DEV_token
@@ -26,13 +26,15 @@ JANE_ID = 116028074
 admin_ids = [231900398]
 chat_wars_id = 265204902
 DSPAM_CHAT_ID = -1001197381190
-STATS_SEND_CHAT_ID =  -1001213987604
+STATS_SEND_CHAT_ID = -1001213987604
+RESULTS_PARSE_CHANNEL_ID = 1369273162
+TEST_CHANNEL_ID = 1353017829
 
 classes_list = ['Alchemist', 'Blacksmith', 'Collector', 'Ranger', 'Knight', 'Sentinel']
 ranger_aiming_minutes = [0, 180, 165, 150, 135, 120, 105, 95, 85, 75, 65, 60, 55, 50, 45, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40, 40]
 
 castles = ['🍁', '☘', '🖤', '🐢', '🦇', '🌹', '🍆']
-ranks_specials = ['','🎗','🎖']
+ranks_specials = ['', '🎗', '🎖']
 
 moscow_tz = pytz.timezone('Europe/Moscow')
 try:
@@ -54,6 +56,8 @@ cursor = conn.cursor()
 
 cursor_2 = conn.cursor()
 
+castles_stats_queue = Queue()
+
 stats = {}
 triggers_in = []
 
@@ -63,7 +67,8 @@ g_attacking_users = []
 g_defending_users = []
 reports_count = {}
 
-guilds_chat_ids = { "KYS" : -1001377426029, "СКИ" : -1001315600160}
+SQUAD_GUILDS_TAGS = ["KYS", "СКИ"]
+guilds_chat_ids = {"KYS" : -1001377426029, "СКИ" : -1001315600160}
 guilds_name_to_tag = {"Kiss Your Sis" : "KYS" , "СкиньКусокИнтима" : "СКИ"}
 
 status = 0
