@@ -14,6 +14,7 @@ def parse_stats():
                     except TypeError:
                         attacked_castle = "???"
                     nicknames_list = re.findall(".\[{}[^🍁☘🖤🐢🦇🌹🍆]+".format(tag), castle_results_string)
+                    print(nicknames_list)
                     for nickname in nicknames_list:
                         if response == "":
                             response = "Игроки, попавшие в топ:\n"

@@ -18,7 +18,6 @@ def add_hero(bot, update):
         guild = None
         if mes.text[1] == '[':
             guild = mes.text[1:].split(']')[0][1:]
-            print("yes, guild = ", guild)
         username = mes.text[1:].split('\n')[0]
         lvl = int(mes.text[mes.text.find('🏅Уровень:'):].split()[1])
         attack = int(mes.text[mes.text.find('⚔Атака:'):].split()[1])
@@ -35,7 +34,6 @@ def add_hero(bot, update):
             guild = mes.text[1:].split(']')[0][1:]
         attack = int(mes.text[mes.text.find('⚔Атака:'):].split()[1])
         defense = int(mes.text[mes.text.find('⚔Атака:'):].split()[3])
-        print(mes.from_user.id, mes.text[0], username, lvl, attack, defense)
         request = "UPDATE users SET telegram_id = %s, telegram_username = %s,user_castle = %s, username = %s, " \
                   "guild = %s, user_lvl = %s, user_attack = %s, user_defense = %s, last_update = %s WHERE telegram_id = %s"
         cursor.execute(request, (mes.from_user.id, mes.from_user.username, mes.text[0], username, guild, lvl, attack,
@@ -74,14 +72,11 @@ def add_report(bot, update):
                     tzinfo=None)
             except ValueError:
                 forward_message_date = update.message.forward_date
-        print(forward_message_date)
         a = forward_message_date - d
         battle_id = 0
         while a > c:
             a = a - c
             battle_id = battle_id + 1
-        # print(a)
-        print(battle_id)
         if mes.text[1:mes.text.find('⚔') - 1] != row[4]:
             try:
                 bot.send_message(chat_id=update.message.from_user.id,
@@ -112,8 +107,6 @@ def add_report(bot, update):
         if response != None:
             bot.send_message(chat_id=update.message.chat_id, text='Репорт за эту битву уже учтён!')
             return
-        # print(mes.text)
-        # print (mes.text.find('⚡Critical strike'))
         additional_attack = 0
         additional_defense = 0
         guild_tag = str(mes.text[2:mes.text.find(']')].upper())
@@ -174,7 +167,6 @@ def add_report(bot, update):
         if now < datetime.timedelta(hours=1):
             remaining_time = datetime.timedelta(hours=1) - now
             time_from_battle = datetime.timedelta(hours=8) - remaining_time
-            print("interval =", (datetime.timedelta(hours=1) - now))
         else:
             time_from_battle = now - datetime.timedelta(hours=1)
             while time_from_battle > datetime.timedelta(hours=8):
@@ -190,7 +182,6 @@ def add_report(bot, update):
             #   Репорт с последней битвы
             if mes.text.find("]") > 0:
                 guild_tag = str(mes.text[2:mes.text.find(']')].upper())
-                print(guild_tag)
                 guild_reports = reports_count.get(guild_tag)
                 if guild_reports is None:
                     guild_reports = GuildReports(guild_tag)

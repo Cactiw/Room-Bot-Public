@@ -22,7 +22,7 @@ def script_work():
 
 def stats_handler(event):
     text = event.message.message
-    #print(text.split("\n\n"))
     if event.message.to_id == PeerChannel(TEST_CHANNEL_ID):
+        print("put stats in queue")
         castles_stats_queue.put(text)
         return

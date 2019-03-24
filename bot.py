@@ -71,9 +71,9 @@ stats.update({0 : all_chats_stats})
 status = 0
 globalstatus = 0
 
+
 def empty(bot, update): #Пустая функия для объявления очереди
     return 0
-
 
 
 # Обработка команд
@@ -100,11 +100,10 @@ def mute(bot, update, args):
     try:
         bot.restrictChatMember(chat_id=mes.chat_id, user_id = mes.reply_to_message.from_user.id, until_date=current)
     except TelegramError:
-        bot.send_message(chat_id=update.message.chat_id, text='Бот не имеет требуемые права, неправильный формат времени, чат не является супергруппой или другая ошибка')
+        bot.send_message(chat_id=update.message.chat_id, text='Бот не имеет требуемые права, или неправильный формат времени')
         return
     bot.send_message(chat_id=update.message.chat_id, text='Выполнено!')
     return
-
 
 
 def infoCommand(bot, update):
@@ -163,7 +162,6 @@ def infoCommand(bot, update):
     bot.send_message(chat_id=update.message.chat_id, text=response, parse_mode = 'HTML')
 
 
-
 def add_admin(bot, update):
     mes = update.message
     request = "SELECT * FROM admins WHERE user_id = %s"
@@ -178,6 +176,7 @@ def add_admin(bot, update):
 
         response = 'Админ добавлен'
         bot.send_message(chat_id=update.message.chat_id, text=response)
+
 
 def profile(bot, update):#Вывод профиля
     mes = update.message
@@ -227,8 +226,6 @@ def profile(bot, update):#Вывод профиля
         bot.send_message(chat_id=update.message.chat_id, text=response)
 
 
-
-
 def setdr(bot, update):#Задание дня рождения
     mes = update.message #/setdr mm-dd
 
@@ -247,10 +244,12 @@ def setdr(bot, update):#Задание дня рождения
     conn.commit()
     bot.send_message(chat_id=update.message.chat_id, text='День рождения обновлён')
 
+
 class Dr_user:
     def __init__(self, username, delta):
         self.username = username
         self.delta = delta
+
 
 def dr(bot, update):    #   TODO починить дни рождения
     mes = update.message
@@ -281,8 +280,6 @@ def dr(bot, update):    #   TODO починить дни рождения
 
         row = cursor.fetchone()
     users_by_dr = [Dr_user] * num_users
-
-
 
     users_by_dr = sorted(users, key=lambda Dr_user: Dr_user.delta, reverse=False)
     print(users_by_dr[0].username, users_by_dr[0].delta)
@@ -331,6 +328,7 @@ def battle_history(bot, update):
 
         row = cursor.fetchone()
     bot.send_message(chat_id=update.message.chat_id, text=response, parse_mode='HTML')
+
 
 def sql(bot, update, user_data):
     mes = update.message
@@ -540,7 +538,6 @@ def reports_sent_restore():
         reports_count.update({guild_tag: guild_reports})
         logging.debug(str(guild_reports.num_reports))
 
-
         row = cursor.fetchone()
 
     logging.info("reports restoring complete")
@@ -745,8 +742,6 @@ dispatcher.add_handler(MessageHandler(Filters.command & filter_complete_todo, co
 
 dispatcher.add_handler(CommandHandler('create_sticker_set', create_sticker_set, filters=filter_super_admin))
 dispatcher.add_handler(CommandHandler('send_sticker_emoji', send_sticker_emoji))
-
-
 
 
 dispatcher.add_handler(MessageHandler(filter_any_message, stats_count), group=1)
