@@ -486,7 +486,6 @@ def stats_send(bot, update):
         users_by_gold = sorted(users, key = lambda user_stats : user_stats.gold, reverse = True)
         users_by_exp = sorted(users, key = lambda user_stats : user_stats.exp, reverse = True)
         users_by_stock = sorted(users, key = lambda user_stats : user_stats.stock, reverse = True)
-        #print(users_by_gold[0])
         response = 'Топ пользователей за сутки:\n\n'
         response_gold = '\n\nПо добытому золоту:'
         response_exp = '\n\nПо опыту в битвах:'
@@ -557,7 +556,6 @@ def stats_count(bot, update):
     data.process_message(update.message)
 
 
-
 # Хендлеры
 start_command_handler = CommandHandler('start', startCommand)
 try:
@@ -586,7 +584,6 @@ add_admin_command_handler = CommandHandler('add_admin', add_admin,filters=Filter
 add_trigger_handler = CommandHandler('add_trigger', add_trigger)
 add_global_trigger_handler = CommandHandler('add_global_trigger', add_global_trigger, filters=(Filters.user(user_id = SUPER_ADMIN_ID) & Filters.chat(chat_id = SUPER_ADMIN_ID)))
 remove_trigger_handler = CommandHandler('remove_trigger', remove_trigger)
-
 
 
 profile_handler = CommandHandler('profile', profile)
@@ -631,6 +628,7 @@ battle_history_handler = CommandHandler('battle_history', battle_history)
 
 text_message_handler = MessageHandler(Filters.text | Filters.command, textMessage)
 stats_send_handler = CommandHandler('stats_send', stats_send)
+
 # Добавляем хендлеры в диспетчер
 dispatcher.add_handler(start_command_handler)
 try:
@@ -682,7 +680,6 @@ dispatcher.add_handler(r_set_description_handler)
 dispatcher.add_handler(r_set_unique_handler)
 
 
-
 dispatcher.add_handler(reg_handler)
 dispatcher.add_handler(set_call_sign_handler)
 dispatcher.add_handler(force_call_sign_handler)
@@ -690,11 +687,9 @@ dispatcher.add_handler(force_call_sign_handler)
 dispatcher.add_handler(dspam_list_handler)
 
 
-
 dispatcher.add_handler(requests_handler)
 dispatcher.add_handler(confirm_handler)
 dispatcher.add_handler(reject_handler)
-
 
 
 dispatcher.add_handler(setdr_handler)
