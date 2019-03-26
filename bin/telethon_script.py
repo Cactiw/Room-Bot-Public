@@ -15,14 +15,13 @@ def script_work():
     admin_client.get_entity("ChatWarsBot")
     client.add_event_handler(stats_handler, event=events.NewMessage)
     print("telegram script launched")
-    #timer = Timer(interval=5, function=update_guild_stats, args=[client, True]).start()
 
     admin_client.idle()
 
 
 def stats_handler(event):
     text = event.message.message
-    if event.message.to_id == PeerChannel(TEST_CHANNEL_ID):
+    if event.message.to_id == PeerChannel(RESULTS_PARSE_CHANNEL_ID):
         print("put stats in queue")
         castles_stats_queue.put(text)
         return
