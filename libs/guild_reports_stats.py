@@ -39,7 +39,6 @@ class GuildReports:
             row = cursor.fetchone()
         cursor.close()
 
-
     def add_report(self, report):
         self.reports.append(report)
         self.num_reports += 1

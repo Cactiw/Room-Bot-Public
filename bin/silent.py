@@ -41,6 +41,7 @@ def battle_stats_send(bot, update = None):
         guild_reports = reports_count.get(guild_tag)
         first_report = min(guild_reports.reports, key=lambda report: report.date_sent)
         print(first_report)
+        logging.error("first report: {}, date:{}".format(first_report, first_report.date_sent))
         first_reports_guilds.update({guild_tag: first_report})
 
     response = "Отчёт по отряду за битву, прошедшую 8 часов назад:\n\n"
@@ -83,7 +84,7 @@ def battle_stats_send(bot, update = None):
             additional_defense += row[10]
         first_report = first_reports_guilds.get(user[2])
         if first_report is not None:
-            print(user[1], first_report.nickname)
+            #print(user[1], first_report.nickname)
             if user[1] == first_report.nickname:
                 response_new += "<b>🏅 Первый репорт в гильдии!</b>"
         response_new += "\n\n"
@@ -144,6 +145,7 @@ def silent_end(bot, job_queue):
     globals.g_added_attack = 0
     globals.g_added_defense = 0
 
+
 def silent_clear_start(bot, job_queue):
     request = "SELECT COUNT(1) FROM silent where enabled = 1"
     cursor.execute(request)
@@ -193,6 +195,7 @@ def silent_setup(bot, update, job_queue):
             response = response + "\nenable - /sil_run_{0}_1".format(row[0])
         row = cursor.fetchone()
     bot.send_message(chat_id=update.message.chat_id, text=response)
+
 
 def silent_start(bot, update, job_queue):
     print("Starting...")
