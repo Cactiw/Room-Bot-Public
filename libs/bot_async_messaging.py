@@ -77,10 +77,15 @@ class AsyncBot(Bot):
             release = threading.Timer(interval=1, function=self.__releasing_resourse, args=[chat_id])
             release.start()
             return BADREQUEST_ERROR_CODE
-        except TimedOut:
-            time.sleep(0.1)
-            message = super(AsyncBot, self).send_message(*args, **kwargs)
-        except NetworkError:
+        except (TimedOut, NetworkError):
+            retry = kwargs.get('retry')
+            if retry is None:
+                retry = 0
+            if retry == 3:
+                self.send_message(*args, **kwargs)
+                return
+            retry += 1
+            kwargs.update({"retry": retry})
             time.sleep(0.1)
             message = super(AsyncBot, self).send_message(*args, **kwargs)
         release = threading.Timer(interval=1, function=self.__releasing_resourse, args=[chat_id])
