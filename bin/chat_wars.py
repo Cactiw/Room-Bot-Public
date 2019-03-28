@@ -22,7 +22,8 @@ def add_hero(bot, update):
         lvl = int(mes.text[mes.text.find('🏅Уровень:'):].split()[1])
         attack = int(mes.text[mes.text.find('⚔Атака:'):].split()[1])
         defense = int(mes.text[mes.text.find('⚔Атака:'):].split()[3])
-        request = "INSERT INTO users(telegram_id, telegram_username, user_castle, username, guild, user_lvl, user_attack, user_defense, last_update) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)"
+        request = "INSERT INTO users(telegram_id, telegram_username, user_castle, username, guild, user_lvl, " \
+                  "user_attack, user_defense, last_update) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)"
         cursor.execute(request, (mes.from_user.id, mes.from_user.username, mes.text[0], username, guild, lvl, attack,
                                   defense, time.strftime('%Y-%m-%d %H:%M:%S')))
         bot.send_message(chat_id=update.message.chat_id, text='Профиль успешно добавлен')
@@ -174,9 +175,6 @@ def add_report(bot, update):
 
         time_from_receiving_report = datetime.datetime.now(tz=moscow_tz).replace(
             tzinfo=None) - forward_message_date
-        logging.info(
-            "time_from_receiving_report = {0}, time_from_battle = {1}".format(time_from_receiving_report,
-                                                                              time_from_battle))
 
         if time_from_receiving_report < time_from_battle:
             #   Репорт с последней битвы

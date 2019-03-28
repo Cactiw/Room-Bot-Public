@@ -41,7 +41,7 @@ def battle_stats_send(bot, update = None):
         guild_reports = reports_count.get(guild_tag)
         first_report = min(guild_reports.reports, key=lambda report: report.date_sent)
         print(first_report)
-        logging.error("first report: {}, date:{}".format(first_report, first_report.date_sent))
+        logging.error("first report: {}, date:{}".format(first_report, first_report.date_sent, first_report.nickname))
         first_reports_guilds.update({guild_tag: first_report})
 
     response = "Отчёт по отряду за битву, прошедшую 8 часов назад:\n\n"
@@ -62,11 +62,11 @@ def battle_stats_send(bot, update = None):
         response_new = "<b>" + str(i) + "</b>. " + user[0] + "<b>" + user[1] + "</b>\n🏅:" + str(row[3]) + ' ⚔:' + str(row[1])
         if row[7] and row[9] > 0:
             response_new += "(+{0})".format(row[9])
-        response_new +=' 🛡:'
+        response_new += ' 🛡:'
         response_add = ""
         if row[8] or (row[7] and row[10] > 0):
             response_add += "(+{0})".format(row[10])
-        response_new += str(row[2])  + response_add + '\n' + ' 🔥:' + str(row[4]) + ' 💰:' + str(row[5]) + ' 📦:' + str(row[6]) + '\n'
+        response_new += str(row[2]) + response_add + '\n' + ' 🔥:' + str(row[4]) + ' 💰:' + str(row[5]) + ' 📦:' + str(row[6]) + '\n'
         total_attack += row[1]
         total_defense += row[2]
 
@@ -84,7 +84,7 @@ def battle_stats_send(bot, update = None):
             additional_defense += row[10]
         first_report = first_reports_guilds.get(user[2])
         if first_report is not None:
-            #print(user[1], first_report.nickname)
+            print(user[1], first_report.nickname, user[1] == first_report.nickname)
             if user[1] == first_report.nickname:
                 response_new += "<b>🏅 Первый репорт в гильдии!</b>"
         response_new += "\n\n"
