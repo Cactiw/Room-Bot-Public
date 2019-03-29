@@ -3,7 +3,7 @@ backup/
 backups
 config.py
 .idea
-
+*.log
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
