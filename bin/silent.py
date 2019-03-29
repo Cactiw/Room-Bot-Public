@@ -1,6 +1,7 @@
 from work_materials.globals import *
 import datetime
 import logging
+import traceback
 import work_materials.globals as globals
 
 from bin.class_func import rangers_notify_start
@@ -24,8 +25,8 @@ def battle_stats_send(bot, update = None):
         battle_id = battle_id + 1
     print(battle_id)
     request = "SELECT user_id, report_attack, report_defense, report_lvl, report_exp, " \
-              "report_gold, report_stock, critical_strike, guardian_angel, additional_attack, additional_defense " \
-              "FROM reports WHERE battle_id = %s ORDER BY report_lvl DESC"
+              "report_gold, report_stock, critical_strike, guardian_angel, additional_attack, additional_defense, " \
+              "report_id FROM reports WHERE battle_id = %s ORDER BY report_lvl DESC"
     cursor.execute(request, (battle_id,))
     row = cursor.fetchone()
     if row is None:
@@ -84,9 +85,13 @@ def battle_stats_send(bot, update = None):
             additional_defense += row[10]
         first_report = first_reports_guilds.get(user[2])
         if first_report is not None:
-            print(user[1], first_report.nickname, user[1] == first_report.nickname)
-            if user[1] == first_report.nickname:
-                response_new += "<b>🏅 Первый репорт в гильдии!</b>"
+            try:
+                print(user[1], first_report.nickname, user[1] == first_report.nickname, first_report.id, row[11], first_report.id == row[11])
+                # if user[1] == first_report.nickname:
+                if row[11] == first_report.report_id:
+                    response_new += "<b>🏅 Первый репорт в гильдии!</b>"
+            except Exception:
+                logging.error(traceback.format_exc())
         response_new += "\n\n"
         if len(response + response_new) >= 4096:  # Превышение лимита длины сообщения
             bot.send_message(chat_id=chat_id, text=response, parse_mode='HTML')
