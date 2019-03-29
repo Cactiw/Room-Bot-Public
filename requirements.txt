@@ -3,4 +3,3 @@ psycopg2-binary
 pytz
 tzlocal
 PySocks
-telethon==0.18.0
