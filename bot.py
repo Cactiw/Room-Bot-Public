@@ -557,8 +557,10 @@ def stats_count(bot, update):
     data = stats.get(0)
     data.process_message(update.message)
 
+
 if len(sys.argv) > 1 and sys.argv[1] == '-t':
     message_test()
+
 
 # Хендлеры
 start_command_handler = CommandHandler('start', startCommand)
@@ -768,7 +770,7 @@ telethon_script = Process(target=script_work, args=())
 telethon_script.start()
 parse_stats = threading.Thread(target=parse_stats, args=())
 parse_stats.start()
-bot.send_message(chat_id = admin_ids[0], text="Бот запущен.\nНе забудьте запустить тишину!: /silent_start")
+bot.send_message(chat_id = admin_ids[0], text = "Бот запущен.\nНе забудьте запустить тишину!: /silent_start")
 job_silence = job.run_once(empty, 0)
 
 # Останавливаем бота, если были нажаты Ctrl + C

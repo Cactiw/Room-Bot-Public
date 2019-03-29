@@ -3,7 +3,10 @@ from telethon.utils import PeerChannel
 
 from work_materials.globals import RESULTS_PARSE_CHANNEL_ID, TEST_CHANNEL_ID, castles_stats_queue
 
-from config import phone, username, password, api_id, api_hash
+try:
+    from config import phone, username, password, api_id, api_hash
+except ImportError:
+    pass
 
 
 def script_work():
