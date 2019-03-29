@@ -8,6 +8,7 @@ from telegram.error import (TelegramError, Unauthorized, BadRequest,
 import psycopg2
 import pytz
 import tzlocal
+import sys
 from multiprocessing import Queue
 
 from mwt import MWT     # Для кэширования
@@ -42,8 +43,12 @@ try:
 except pytz.UnknownTimeZoneError:
     local_tz = pytz.timezone('Europe/Andorra')
 
+if len(sys.argv) > 1 and sys.argv[1] == '-t':
+    print("Performing test...")
+    AUTO_TEST_CHANNEL_ID = -1001196220429
+    Production_token = sys.argv[2]
 bot = AsyncBot(token=Production_token, workers=8, request_kwargs=request_kwargs)
-updater = AsyncUpdater(bot = bot)
+updater = AsyncUpdater(bot=bot)
 
 dispatcher = updater.dispatcher
 job = updater.job_queue
