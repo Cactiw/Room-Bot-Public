@@ -43,7 +43,9 @@ try:
 except pytz.UnknownTimeZoneError:
     local_tz = pytz.timezone('Europe/Andorra')
 
+test = False
 if len(sys.argv) > 1 and sys.argv[1] == '-t':
+    test = True
     print("Performing test...")
     AUTO_TEST_CHANNEL_ID = -1001196220429
     Production_token = sys.argv[2]
@@ -53,13 +55,17 @@ updater = AsyncUpdater(bot=bot)
 dispatcher = updater.dispatcher
 job = updater.job_queue
 
+if not test:
+    # Подключаем базу данных, выставляем кодировку
+    conn = psycopg2.connect("dbname={0} user={1} password={2}".format(psql_creditals['dbname'], psql_creditals['user'], psql_creditals['pass']))
+    conn.set_session(autocommit = True)
+    cursor = conn.cursor()
 
-#Подключаем базу данных, выставляем кодировку
-conn = psycopg2.connect("dbname={0} user={1} password={2}".format(psql_creditals['dbname'], psql_creditals['user'], psql_creditals['pass']))
-conn.set_session(autocommit = True)
-cursor = conn.cursor()
-
-cursor_2 = conn.cursor()
+    cursor_2 = conn.cursor()
+else:
+    conn = None
+    cursor = None
+    cursor_2 = None
 
 castles_stats_queue = Queue()
 
