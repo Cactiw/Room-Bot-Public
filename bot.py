@@ -65,10 +65,7 @@ log_file.setLevel(logging.ERROR)
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level = logging.INFO, handlers=[log_file, console])
 #--------------------------------------------------------------
 
-all_chats_stats = ChatStats(0, "all", 0, 0, 0, 0, 0, 0, 0, 0)
-all_chats_stats.update_from_database()
 
-stats.update({0 : all_chats_stats})
 
 status = 0
 globalstatus = 0
@@ -761,6 +758,11 @@ dispatcher.add_handler(text_message_handler)
 dispatcher.add_handler(stats_send_handler)
 
 
+#   ---------------------------------------------------------
+all_chats_stats = ChatStats(0, "all", 0, 0, 0, 0, 0, 0, 0, 0)
+all_chats_stats.update_from_database()
+
+stats.update({0 : all_chats_stats})
 cache_full()
 reports_sent_restore()
 
