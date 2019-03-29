@@ -21,7 +21,7 @@ def script_work():
 
 def stats_handler(event):
     text = event.message.message
-    if event.message.to_id == PeerChannel(RESULTS_PARSE_CHANNEL_ID):
+    if event.message.to_id == PeerChannel(RESULTS_PARSE_CHANNEL_ID) and 'Результаты сражений:' in text:
         print("put stats in queue")
         castles_stats_queue.put(text)
         return
