@@ -83,7 +83,8 @@ def pult_update(bot, update, user_data):
 
 def edit_pult_message(bot, chat_id, message_id, text, reply_markup, callback_query_id):
     try:
-        bot.editMessageText(chat_id=chat_id, message_id=message_id, text=text, parse_mode='HTML')
+        bot.editMessageText(chat_id=chat_id, message_id=message_id, text=text, parse_mode='HTML',
+                            reply_markup=reply_markup)
         # bot.editMessageReplyMarkup(chat_id=chat_id, message_id=message_id, reply_markup=reply_markup)
     except BadRequest:
         pass
