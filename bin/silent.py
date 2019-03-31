@@ -88,7 +88,7 @@ def battle_stats_send(bot, update = None):
             try:
                 print(user[1], first_report.nickname, user[1] == first_report.nickname, first_report.id, row[11], first_report.id == row[11])
                 # if user[1] == first_report.nickname:
-                if row[11] == first_report.report_id:
+                if row[11] == first_report.id:
                     response_new += "<b>🏅 Первый репорт в гильдии!</b>"
             except Exception:
                 logging.error(traceback.format_exc())

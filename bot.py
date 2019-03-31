@@ -494,8 +494,8 @@ def stats_send(bot, update):
             response_exp = response_exp + '\n' + str(i + 1) + ': ' + '*' + str(users_by_exp[i].username) + '*' + ' ' + str(users_by_exp[i].exp) + '🔥'
             response_stock = response_stock + '\n' + str(i + 1) + ': ' + '*' + str(users_by_stock[i].username) + '*' + ' ' + str(users_by_stock[i].stock) + '📦'
         response = response + response_gold + response_exp + response_stock
-        #bot.send_message(chat_id = -1001330929174, text = response, parse_mode = 'Markdown')
-        #bot.send_message(chat_id = SUPER_ADMIN_ID, text = response, parse_mode = 'Markdown')
+        # bot.send_message(chat_id = -1001330929174, text = response, parse_mode = 'Markdown')
+        # bot.send_message(chat_id = SUPER_ADMIN_ID, text = response, parse_mode = 'Markdown')
         print("YES")
 
 
