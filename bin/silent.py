@@ -5,6 +5,7 @@ import traceback
 import work_materials.globals as globals
 
 from bin.class_func import rangers_notify_start
+from bin.guild_damage_count import damage_count_send
 
 job_silence = None
 
@@ -149,6 +150,7 @@ def silent_end(bot, job_queue):
     reports_count.clear()
     globals.g_added_attack = 0
     globals.g_added_defense = 0
+    damage_count_send()
 
 
 def silent_clear_start(bot, job_queue):

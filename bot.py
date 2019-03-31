@@ -1,5 +1,5 @@
 # Настройки
-from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, BaseFilter
+from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, BaseFilter, CallbackQueryHandler
 
 
 from telegram import KeyboardButton, ReplyKeyboardMarkup, ReplyKeyboardRemove
@@ -53,6 +53,7 @@ from bin.chat_wars import add_hero, add_report
 from bin.telethon_script import script_work
 from bin.stats_parse_monitor import parse_stats
 
+from bin.guild_damage_count import pult_callback
 from bin.test import message_test
 
 #--------------------------------------------------------------     Выставляем логгирование
@@ -555,6 +556,12 @@ def stats_count(bot, update):
     data.process_message(update.message)
 
 
+def inline_callback(bot, update, user_data):
+    if update.callback_query.data.find("p") == 0:
+        pult_callback(bot, update, user_data)
+        return
+
+
 if len(sys.argv) > 1 and sys.argv[1] == '-t':
     message_test()
 
@@ -756,6 +763,9 @@ dispatcher.add_handler(MessageHandler(Filters.text & filter_report, add_report))
 dispatcher.add_handler(text_message_handler)
 
 dispatcher.add_handler(stats_send_handler)
+
+dispatcher.add_handler(CallbackQueryHandler(inline_callback, pass_update_queue=False, pass_user_data=True))
+
 
 
 #   ---------------------------------------------------------
