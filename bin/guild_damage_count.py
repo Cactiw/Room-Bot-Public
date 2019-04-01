@@ -35,11 +35,14 @@ def pult_callback(bot, update, user_data):
 def pult_castles_callback(bot, update, user_data):
     data = update.callback_query.data
     chat_id = update.callback_query.message.chat_id
-    status = pults_statuses.get(guilds_chat_ids.get(chat_id))
+    status = pults_statuses.get(chat_id)
+    print(status, pults_statuses)
     telegram_id = update.callback_query.from_user.id
     if status is None:
+        logging.warning("status is None for {}".format(update.callback_query.message.chat_id))
         status = {'🍁': [], '☘': [], '🖤': [], '🐢': [], '🦇': [], '🌹': [], '🍆': []}
-        pults_statuses.update({update.callback_query.message.chat_id: status})
+        pults_statuses.update({chat_id: status})
+        print(pults_statuses)
     player = Player(telegram_id)
     if player.update_from_database() == 1:
         bot.answerCallbackQuery(callback_query_id=update.callback_query.id, text="Ваш профиль не найден в базе данных",
@@ -59,8 +62,8 @@ def pult_castles_callback(bot, update, user_data):
                                     show_alert=True)
             return
     for players_list in list(status.values()):
-        if Player in players_list:
-            players_list.remove(Player)
+        if player in players_list:
+            players_list.remove(player)
     players_list =list(status.values())[int(data[2])]
     players_list.append(player)
     reply_markup, response = rebuild_pult("change castle", context=status, user_data=user_data)

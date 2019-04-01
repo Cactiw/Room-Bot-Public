@@ -53,7 +53,7 @@ from bin.chat_wars import add_hero, add_report
 from bin.telethon_script import script_work
 from bin.stats_parse_monitor import parse_stats
 
-from bin.guild_damage_count import pult_callback
+from bin.guild_damage_count import pult_callback, damage_count_send
 from bin.test import message_test
 
 #--------------------------------------------------------------     Выставляем логгирование
