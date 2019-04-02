@@ -1,12 +1,14 @@
 from telegram.error import BadRequest, TelegramError
 import logging
 import traceback
+import datetime
 
-from work_materials.globals import dispatcher, guilds_chat_ids, SQUAD_GUILDS_TAGS, admin_ids
+from work_materials.globals import dispatcher, guilds_chat_ids, SQUAD_GUILDS_TAGS, admin_ids, DARK_DESIRE_ORDER_ID, job
 from libs.damage_count_pult import rebuild_pult
 from libs.player import Player
 
 pults_statuses = {}
+
 
 def damage_count_send():
     response = "Распределение урона по замкам:\n"
@@ -22,6 +24,26 @@ def damage_count_send():
                                             disable_notification=True)
         except TelegramError:
             pass
+        try:
+            dispatcher.bot.promote_chat_member(chat_id=chat_id, user_id=DARK_DESIRE_ORDER_ID, can_change_info=False,
+                                               can_delete_messages=False, can_edit_messages=False,
+                                               can_invite_users=False, can_pin_messages=False,
+                                               can_restrict_members=False, can_promote_members=False)
+            job.run_once(callback=return_full_admin, when=datetime.timedelta(minutes=1),
+                         context=[chat_id, DARK_DESIRE_ORDER_ID])
+        except TelegramError:
+            logging.error(traceback.format_exc())
+
+
+def return_full_admin(bot, job):
+    chat_id = job.context[1]
+    user_id = job.context[1]
+    try:
+        bot.promote_chat_member(chat_id=chat_id, user_id=user_id, can_change_info=True, can_delete_messages=True,
+                                can_edit_messages=True, can_invite_users=True, can_pin_messages=True,
+                                can_restrict_members=True, can_promote_members=True)
+    except TelegramError:
+        logging.error(traceback.format_exc())
 
 
 def pult_callback(bot, update, user_data):
