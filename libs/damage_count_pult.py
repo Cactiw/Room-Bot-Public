@@ -15,9 +15,9 @@ def __build_pult(castles):
             InlineKeyboardButton(castles[5], callback_data="pc5"),
             InlineKeyboardButton(castles[6], callback_data="pc6"),
         ],
-        """[
-            InlineKeyboardButton("🔄 Обновить", callback_data="pupdate"),
-        ],"""
+        #[
+        #    InlineKeyboardButton("🔄 Обновить", callback_data="pupdate"),
+        #],
     ]
     PultMarkup = InlineKeyboardMarkup(__pult_buttons)
     return PultMarkup
