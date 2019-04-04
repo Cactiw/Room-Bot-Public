@@ -11,6 +11,7 @@ pults_statuses = {}
 
 
 def damage_count_send():
+    pults_statuses.clear()
     response = "Распределение урона по замкам:\n"
     reply_markup = rebuild_pult("default", None, None)
     for tag in SQUAD_GUILDS_TAGS:
