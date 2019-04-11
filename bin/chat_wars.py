@@ -240,9 +240,7 @@ def guild_parts(bot, update, user_data):
     for string in mes.text.splitlines()[1:]:
         item_code = re.match("k\S+", string).group()[1:]
         item_count = int(string.partition("x ")[2])
-        print(item_code, item_count)
         recipes_count = recipes.get(item_code)
-        print(recipes_count)
         if recipes_count is None:
             continue
         item = items.get(item_code)
