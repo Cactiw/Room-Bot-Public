@@ -1,6 +1,7 @@
 import logging
 from work_materials.globals import *
 
+
 def chat_stats_send(bot, update):
     response = "Топ-10 чатов по сообщениям:\n"
     update_chat_stats()
