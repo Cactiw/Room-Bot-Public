@@ -1,5 +1,6 @@
 import math
 
+
 def calculate_pogs(bot, update, args):
     mes = update.message
     if not args or len(args) < 2:
