@@ -34,7 +34,8 @@ from libs.filters.pin import *
 from libs.filters.mute_filters import *
 from libs.filters.class_filters import filter_set_class
 from libs.filters.guild_filters import filter_guild_list
-from libs.filters.chat_wars_filters import filter_hero, filter_report
+from libs.filters.chat_wars_filters import filter_hero, filter_report, filter_guild_stock_parts, \
+    filter_guild_stock_recipes
 
 from bin.pin import *
 from bin.silent import *
@@ -49,7 +50,7 @@ from bin.class_func import set_class, knight_critical, sentinel_critical
 from bin.help import bot_help, dspam_help
 from bin.calculate import calculate_pogs
 from bin.stickers import create_sticker_set, send_sticker_emoji
-from bin.chat_wars import add_hero, add_report
+from bin.chat_wars import add_hero, add_report, guild_recipes, guild_parts
 from bin.telethon_script import script_work
 from bin.stats_parse_monitor import parse_stats
 
@@ -756,6 +757,10 @@ dispatcher.add_handler(CommandHandler("current_chat_stats", current_chat_stats_s
 
 dispatcher.add_handler(CommandHandler('help', bot_help))
 dispatcher.add_handler(CommandHandler('dspam_help', dspam_help))
+
+dispatcher.add_handler(MessageHandler(Filters.text & filter_guild_stock_recipes, guild_recipes, pass_user_data=True))
+dispatcher.add_handler(MessageHandler(Filters.text & filter_guild_stock_parts, guild_parts, pass_user_data=True))
+
 
 dispatcher.add_handler(MessageHandler(Filters.text & filter_hero, add_hero))
 dispatcher.add_handler(MessageHandler(Filters.text & filter_report, add_report))

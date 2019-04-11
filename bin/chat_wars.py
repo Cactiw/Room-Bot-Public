@@ -6,9 +6,14 @@
 from work_materials.globals import cursor, moscow_tz, local_tz, guilds_chat_ids, reports_count, admin_ids
 from bin.class_func import knight_critical, sentinel_critical
 from libs.guild_reports_stats import GuildReports, Report
+from work_materials.item_consts import items
 
 from telegram.error import TelegramError
-import time, datetime, logging, traceback
+import time
+import datetime
+import logging
+import traceback
+import re
 
 
 # Приём профилей
@@ -210,3 +215,44 @@ def add_report(bot, update):
                     bot.sync_send_message(chat_id=chat_id, text=response, parse_mode='HTML')
                 except TelegramError:
                     bot.send_message(chat_id=admin_ids[0], text=response, parse_mode='HTML')
+
+
+# Получает и сохраняет в user_data список шмоток, на которые есть рецепты для дальнейшего использования
+def guild_recipes(bot, update, user_data):
+    mes = update.message
+    user_recipes = {}
+    for string in mes.text.splitlines()[1:]:
+        item_code = re.match("r\S+", string).group()[1:]
+        item_count = int(string.partition("x ")[2])
+        user_recipes.update({item_code: item_count})
+    user_data.update({"recipes": user_recipes})
+    bot.send_message(chat_id=mes.chat_id, text="Отлично! Теперь пришли мне форвард /g_stock_parts из @ChatWarsBot")
+
+
+def guild_parts(bot, update, user_data):
+    mes = update.message
+    response = "Шмотки, которые можно скрафтить:\n"
+    recipes = user_data.get("recipes")
+    if recipes is None:
+        # Необходим список рецептов
+        bot.send_message(chat_id=mes.chat_id, text="Пришли мне форвард /g_stock_rec из @ChatWarsBot")
+        return
+    for string in mes.text.splitlines()[1:]:
+        item_code = re.match("k\S+", string).group()[1:]
+        item_count = int(string.partition("x ")[2])
+        print(item_code, item_count)
+        recipes_count = recipes.get(item_code)
+        print(recipes_count)
+        if recipes_count is None:
+            continue
+        item = items.get(item_code)
+        if item is None:
+            continue
+        need_frags = item[2]
+        try:
+            item_count = min(recipes_count, item_count // need_frags)
+        except Exception:
+            item_count = 0
+        if item_count > 0:
+            response += "<b>{}</b> x <b>{}</b>\n".format(item[0], item_count)
+    bot.send_message(chat_id=mes.chat_id, text=response, parse_mode='HTML')
