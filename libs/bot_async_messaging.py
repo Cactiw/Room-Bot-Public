@@ -14,6 +14,7 @@ MESSAGE_PER_CHAT_LIMIT = 3
 UNAUTHORIZED_ERROR_CODE = 2
 BADREQUEST_ERROR_CODE = 3
 
+MESSAGE_LENGTH_LIMIT = 4096
 
 class AsyncBot(Bot):
 
@@ -39,6 +40,15 @@ class AsyncBot(Bot):
         message = MessageInQueue(*args, **kwargs)
         self.message_queue.put(message)
         return 0
+
+    @staticmethod
+    def group_send_message(self, group, *args, **kwargs):
+        message = MessageInQueue(*args, **kwargs)
+        if isinstance(group, int):
+            group = message_groups.get(group)
+        if group is None:
+            raise TypeError
+        group.add_message(message)
 
     def sync_send_message(self, *args, **kwargs):
         return super(AsyncBot, self).send_message(*args, **kwargs)
@@ -141,6 +151,22 @@ class AsyncBot(Bot):
             if message_in_queue is None:
                 return 0
         return 0
+
+    def __group_work(self):
+        group = groups_need_to_be_sent.get()
+        while self.processing and group is not None:
+            while True:
+                message = group.get_message()
+                if message is 1:
+                    group.busy = False
+                    break
+                if message is None:
+                    group = None
+                    break
+                self.actually_send_message(*message.args, **message.kwargs)
+            if group is not None:
+                group.busy = False
+            group = groups_need_to_be_sent.get()
 
 
 class MessageInQueue():
