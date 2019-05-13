@@ -46,7 +46,8 @@ def notify_guild_attack(bot, update):
     if remaining_time > datetime.timedelta(minutes=30):
         return 0
     if mes.from_user.id not in get_admin_ids(bot, chat_id=mes.chat_id) and mes.from_user.id not in admin_ids:
-        bot.send_message(chat_id=mes.chat_id, text="Доступ только у админов", parse_mode='HTML')
+        bot.send_message(chat_id=mes.chat_id, text="Доступ только у админов", parse_mode='HTML',
+                         reply_to_message_id=mes.message_id)
         return
     ready_to_battle = mes.text.count("[⚔]") + mes.text.count("[🛡]")
     sleeping = mes.text.count("[🛌]")

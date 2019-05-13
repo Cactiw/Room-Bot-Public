@@ -717,9 +717,10 @@ dispatcher.add_handler(CommandHandler("g_add_defense", g_add_defense, filters=(F
 dispatcher.add_handler(CommandHandler("g_del_defense", g_del_defense, filters=(Filters.user(user_id=SUPER_ADMIN_ID) | Filters.user(user_id = JANE_ID))))
 dispatcher.add_handler(CommandHandler("g_defending_list", g_defending_list, filters=(Filters.user(user_id=SUPER_ADMIN_ID) | Filters.user(user_id = JANE_ID))))
 
-dispatcher.add_handler(MessageHandler(filter_guild_list, notify_guild_attack))
-dispatcher.add_handler(CommandHandler('notify_guild_sleeping', notify_guild_to_battle))
-dispatcher.add_handler(CommandHandler('notify_guild_not_ready', notify_guild_to_battle))
+# Функции отключены в виду реализации аналогичных в замковом боте
+# dispatcher.add_handler(MessageHandler(filter_guild_list, notify_guild_attack))
+# dispatcher.add_handler(CommandHandler('notify_guild_sleeping', notify_guild_to_battle))
+# dispatcher.add_handler(CommandHandler('notify_guild_not_ready', notify_guild_to_battle))
 
 dispatcher.add_handler(CommandHandler('calculate_pogs', calculate_pogs, pass_args=True))
 dispatcher.add_handler(CommandHandler('pogs', calculate_pogs, pass_args=True))

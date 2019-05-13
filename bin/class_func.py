@@ -33,6 +33,7 @@ def sentinel_critical(bot, update):
     bot.sendPhoto(chat_id = update.message.chat_id, reply_to_message_id = update.message.message_id,
                      caption = response, photo=file_id)
 
+
 def ranger_notify(bot, job):
     context = job.context
     response = "Поднимай свой лук, <b>{0}</b>\n@{1}".format(context[1], context[0])

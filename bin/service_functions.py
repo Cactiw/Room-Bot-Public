@@ -1,6 +1,7 @@
 from work_materials.globals import moscow_tz
 import datetime
 
+
 def get_time_remaining_to_battle():
     now = datetime.datetime.now(tz=moscow_tz).replace(tzinfo=None) - datetime.datetime.combine(
         datetime.datetime.now().date(), datetime.time(hour=0))
