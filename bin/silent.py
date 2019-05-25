@@ -7,6 +7,8 @@ import work_materials.globals as globals
 from bin.class_func import rangers_notify_start
 from bin.guild_damage_count import damage_count_send
 
+from psycopg2 import ProgrammingError
+
 job_silence = None
 
 
@@ -98,7 +100,10 @@ def battle_stats_send(bot, update = None):
             bot.send_message(chat_id=chat_id, text=response, parse_mode='HTML')
             response = ""
         response += response_new
-        row = cursor.fetchone()
+        try:
+            row = cursor.fetchone()
+        except ProgrammingError:
+            break
         i += 1
 
     response_new = "\n\n👁‍🗨Total people counted: <b>" + str(i - 1) + "</b>\n"
