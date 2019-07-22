@@ -180,8 +180,8 @@ def add_report(bot, update):
     time_from_receiving_report = datetime.datetime.now(tz=moscow_tz).replace(
         tzinfo=None) - forward_message_date
 
-    if time_from_receiving_report < time_from_battle:
-        #   Репорт с последней битвы
+    if False and time_from_receiving_report < time_from_battle:
+        #   Репорт с последней битвы -- отключено из-за спама в чаты
         if mes.text.find("]") > 0:
             guild_tag = str(mes.text[2:mes.text.find(']')].upper())
             guild_reports = reports_count.get(guild_tag)
