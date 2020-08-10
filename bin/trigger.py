@@ -60,7 +60,7 @@ def remove_trigger(bot, update):
                 bot.send_message(chat_id=update.message.chat_id, text='Этот триггер глобальный. Удалить его может только @Cactiw')
                 return
             request = "DELETE FROM triggers WHERE trigger_in = %s AND (chat_id = %s OR chat_id = 0)"
-            cursor.execute(request, (mes.text[16:], mes.chat_id))
+            cursor.execute(request, (mes.text[16:].lower(), mes.chat_id))
             conn.commit()
             bot.send_message(chat_id=update.message.chat_id, text='Триггер успешно удалён')
             cache_full()
